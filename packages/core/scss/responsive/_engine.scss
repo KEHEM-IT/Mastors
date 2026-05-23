@@ -2,5 +2,42 @@
 // Core responsive variant generation engine.
 // ─────────────────────────────────────────────────────────────
 
-// TODO: Iterate $breakpoints and generate responsive prefixed variants
-// Example output: .sm\:flex, .md\:hidden, .lg\:grid-cols-3
+@use "sass:map";
+@use "../variables/breakpoints" as bpvars;
+@use "../config/flags";
+
+// Responsive engine — generates breakpoint-prefixed variants
+// of any utility that declares responsive: true.
+//
+// Class pattern:  .{bp}\:{utility}
+// Example output: .sm\:hidden, .md\:flex, .lg\:gap-8
+//
+// Sub-packages pass their $utilities map here via @include engine.run()
+// so the engine iterates breakpoints and re-emits the classes.
+
+@mixin run($utilities) {
+  @if flags.$enable-responsive {
+    @each $bp-key, $bp-value in bpvars.$breakpoints {
+      // Skip xs — no prefix, already emitted as base classes
+      @if $bp-value != 0px {
+        @media (min-width: #{$bp-value}) {
+          @each $name, $config in $utilities {
+            @if map.get($config, responsive) == true {
+              $prop:   map.get($config, property);
+              $values: map.get($config, values);
+              $prefix: map.get($config, prefix);
+
+              @each $suffix, $value in $values {
+                $class: if($prefix, "#{$prefix}-#{$suffix}", "#{$suffix}");
+                // Escape the colon in the class name
+                .#{$bp-key}\:#{$class} {
+                  #{$prop}: $value;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

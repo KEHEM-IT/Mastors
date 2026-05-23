@@ -2,5 +2,12 @@
 // Semantic typography aliases (role-based naming).
 // ─────────────────────────────────────────────────────────────
 
-// TODO: Define semantic type roles
-// Example: $font-display, $font-heading, $font-body, $font-mono, $font-ui
+@use "../tokens/typography" as ty;
+
+// Semantic typography role aliases.
+
+$font-display:  ty.font-family("sans")  !default; // Hero headings
+$font-heading:  ty.font-family("sans")  !default; // h1–h6
+$font-body:     ty.font-family("sans")  !default; // p, li, td
+$font-mono:     ty.font-family("mono")  !default; // code, pre, kbd
+$font-ui:       ty.font-family("sans")  !default; // labels, buttons, nav

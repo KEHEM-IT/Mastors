@@ -2,4 +2,32 @@
 // Shared theme structure — inherited by light and dark themes.
 // ─────────────────────────────────────────────────────────────
 
-// TODO: Define base theme token map structure
+@use "../tokens/color" as ct;
+
+// Base theme — shared semantic custom property structure.
+// Light and dark themes override these variables.
+
+:root {
+  // Surfaces
+  --mastors-bg:              #{ct.color("white")};
+  --mastors-bg-subtle:       #{ct.color("neutral", 50)};
+  --mastors-surface:         #{ct.color("white")};
+  --mastors-surface-raised:  #{ct.color("neutral", 50)};
+  --mastors-surface-overlay: #{ct.color("neutral", 100)};
+
+  // Text
+  --mastors-text:            #{ct.color("neutral", 900)};
+  --mastors-text-muted:      #{ct.color("neutral", 500)};
+  --mastors-text-subtle:     #{ct.color("neutral", 400)};
+  --mastors-text-inverse:    #{ct.color("white")};
+
+  // Borders
+  --mastors-border:          #{ct.color("neutral", 200)};
+  --mastors-border-strong:   #{ct.color("neutral", 400)};
+
+  // Brand
+  --mastors-accent:          #{ct.color("primary", 600)};
+  --mastors-accent-hover:    #{ct.color("primary", 700)};
+  --mastors-accent-subtle:   #{ct.color("primary", 50)};
+  --mastors-accent-text:     #{ct.color("white")};
+}

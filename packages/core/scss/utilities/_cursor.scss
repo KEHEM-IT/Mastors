@@ -2,4 +2,27 @@
 // Cursor utility classes.
 // ─────────────────────────────────────────────────────────────
 
-// TODO: Add cursor utilities (pointer, default, not-allowed, grab, etc.)
+@use "../generators/class-generator" as gen;
+
+@include gen.generate-utilities((
+  "cursor": (
+    property: cursor,
+    prefix: "cursor",
+    values: (
+      "auto":         auto,
+      "default":      default,
+      "pointer":      pointer,
+      "wait":         wait,
+      "text":         text,
+      "move":         move,
+      "help":         help,
+      "not-allowed":  not-allowed,
+      "none":         none,
+      "grab":         grab,
+      "grabbing":     grabbing,
+      "crosshair":    crosshair,
+      "zoom-in":      zoom-in,
+      "zoom-out":     zoom-out,
+    ),
+  ),
+));

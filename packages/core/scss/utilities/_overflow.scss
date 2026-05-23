@@ -2,4 +2,35 @@
 // Overflow utility classes.
 // ─────────────────────────────────────────────────────────────
 
-// TODO: Add overflow utilities (auto, hidden, scroll, visible, clip)
+@use "../generators/class-generator" as gen;
+
+@include gen.generate-utilities((
+  "overflow": (
+    property: overflow,
+    values: (
+      "auto":    auto,
+      "hidden":  hidden,
+      "scroll":  scroll,
+      "visible": visible,
+      "clip":    clip,
+    ),
+  ),
+  "overflow-x": (
+    property: overflow-x,
+    prefix: "overflow-x",
+    values: (
+      "auto":   auto,
+      "hidden": hidden,
+      "scroll": scroll,
+    ),
+  ),
+  "overflow-y": (
+    property: overflow-y,
+    prefix: "overflow-y",
+    values: (
+      "auto":   auto,
+      "hidden": hidden,
+      "scroll": scroll,
+    ),
+  ),
+));

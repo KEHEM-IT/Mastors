@@ -2,4 +2,25 @@
 // Display utility classes.
 // ─────────────────────────────────────────────────────────────
 
-// TODO: Add display utilities (block, inline, inline-block, flex, grid, hidden, etc.)
+@use "../generators/class-generator" as gen;
+
+@include gen.generate-utilities((
+  "display": (
+    property: display,
+    values: (
+      "block":        block,
+      "inline-block": inline-block,
+      "inline":       inline,
+      "flex":         flex,
+      "inline-flex":  inline-flex,
+      "grid":         grid,
+      "inline-grid":  inline-grid,
+      "table":        table,
+      "table-cell":   table-cell,
+      "table-row":    table-row,
+      "contents":     contents,
+      "hidden":       none,
+    ),
+    responsive: true,
+  ),
+));

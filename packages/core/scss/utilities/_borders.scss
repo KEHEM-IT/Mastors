@@ -2,4 +2,40 @@
 // Border width, style, and radius utility classes.
 // ─────────────────────────────────────────────────────────────
 
-// TODO: Add border utilities and .rounded-* from $radius-tokens
+@use "../tokens/color"  as ct;
+@use "../tokens/radii"  as ra;
+
+// Border width
+.border       { border-width: 1px; border-style: solid; }
+.border-0     { border-width: 0; }
+.border-2     { border-width: 2px; border-style: solid; }
+.border-4     { border-width: 4px; border-style: solid; }
+.border-8     { border-width: 8px; border-style: solid; }
+
+.border-t     { border-top-width: 1px; border-top-style: solid; }
+.border-r     { border-right-width: 1px; border-right-style: solid; }
+.border-b     { border-bottom-width: 1px; border-bottom-style: solid; }
+.border-l     { border-left-width: 1px; border-left-style: solid; }
+
+// Border style
+.border-solid  { border-style: solid; }
+.border-dashed { border-style: dashed; }
+.border-dotted { border-style: dotted; }
+.border-none   { border-style: none; }
+
+// Border color (semantic + key primitive steps)
+.border-transparent { border-color: transparent; }
+.border-current     { border-color: currentColor; }
+.border-default     { border-color: var(--mastors-border); }
+.border-strong      { border-color: var(--mastors-border-strong); }
+
+// Border radius
+@each $key, $val in ra.$radius-tokens {
+  .rounded-#{$key} { border-radius: $val; }
+}
+// Shorthand: .rounded = base radius
+.rounded { border-radius: ra.radius("base"); }
+
+// Directional radius
+.rounded-t-#{"lg"}  { border-top-left-radius: ra.radius("lg"); border-top-right-radius: ra.radius("lg"); }
+.rounded-b-#{"lg"}  { border-bottom-left-radius: ra.radius("lg"); border-bottom-right-radius: ra.radius("lg"); }

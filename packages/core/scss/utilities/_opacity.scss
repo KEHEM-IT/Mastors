@@ -2,4 +2,8 @@
 // Opacity utility classes from opacity tokens.
 // ─────────────────────────────────────────────────────────────
 
-// TODO: Generate .opacity-* from $opacity-tokens
+@use "../tokens/opacity" as op;
+
+@each $key, $val in op.$opacity-tokens {
+  .opacity-#{$key} { opacity: $val; }
+}

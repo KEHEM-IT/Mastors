@@ -2,6 +2,41 @@
 // Margin and padding utility classes from spacing tokens.
 // ─────────────────────────────────────────────────────────────
 
-// TODO: Generate .m-*, .mt-*, .mr-*, .mb-*, .ml-*, .mx-*, .my-*
-//       and .p-*, .pt-*, .pr-*, .pb-*, .pl-*, .px-*, .py-*
-//       from $spacing-tokens
+@use "sass:map";
+@use "../tokens/spacing"  as sp;
+@use "../generators/class-generator" as gen;
+
+// Margin utilities
+$-margin-values: map.merge(sp.$spacing-tokens, ("auto": auto));
+
+@each $key, $val in $-margin-values {
+  .m-#{$key}  { margin: $val; }
+  .mx-#{$key} { margin-left: $val; margin-right: $val; }
+  .my-#{$key} { margin-top: $val; margin-bottom: $val; }
+  .mt-#{$key} { margin-top: $val; }
+  .mr-#{$key} { margin-right: $val; }
+  .mb-#{$key} { margin-bottom: $val; }
+  .ml-#{$key} { margin-left: $val; }
+  .ms-#{$key} { margin-inline-start: $val; }
+  .me-#{$key} { margin-inline-end: $val; }
+}
+
+// Padding utilities
+@each $key, $val in sp.$spacing-tokens {
+  .p-#{$key}  { padding: $val; }
+  .px-#{$key} { padding-left: $val; padding-right: $val; }
+  .py-#{$key} { padding-top: $val; padding-bottom: $val; }
+  .pt-#{$key} { padding-top: $val; }
+  .pr-#{$key} { padding-right: $val; }
+  .pb-#{$key} { padding-bottom: $val; }
+  .pl-#{$key} { padding-left: $val; }
+  .ps-#{$key} { padding-inline-start: $val; }
+  .pe-#{$key} { padding-inline-end: $val; }
+}
+
+// Gap utilities
+@each $key, $val in sp.$spacing-tokens {
+  .gap-#{$key}   { gap: $val; }
+  .gap-x-#{$key} { column-gap: $val; }
+  .gap-y-#{$key} { row-gap: $val; }
+}

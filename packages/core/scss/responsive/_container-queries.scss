@@ -2,4 +2,30 @@
 // CSS container query helpers (@container).
 // ─────────────────────────────────────────────────────────────
 
-// TODO: Add container query mixin and utility support
+// Container query helpers
+// Requires elements to have a containment context set:
+//   .cq-inline  { container-type: inline-size; }
+//   .cq-size    { container-type: size; }
+//   .cq-normal  { container-type: normal; }
+
+.cq-inline  { container-type: inline-size; }
+.cq-size    { container-type: size; }
+.cq-normal  { container-type: normal; }
+
+// Named container helper
+// Usage: <div class="cq-inline" style="container-name: card">...
+// or use data attribute: [data-container] { container-type: inline-size; }
+[data-container] {
+  container-type: inline-size;
+}
+
+// Mixin for inline container queries in component SCSS
+// @use "@mastors/core/api" as m;
+// @include m.cq(40rem) { ... }
+@mixin cq($min-width, $name: null) {
+  @if $name {
+    @container #{$name} (min-width: #{$min-width}) { @content; }
+  } @else {
+    @container (min-width: #{$min-width}) { @content; }
+  }
+}

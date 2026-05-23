@@ -2,4 +2,30 @@
 // Light theme CSS custom property overrides.
 // ─────────────────────────────────────────────────────────────
 
-// TODO: Define light theme token values
+@use "../tokens/color" as ct;
+
+// Light theme — explicit override (identical to base, but declared
+// so a .light class or data-theme can be toggled back from dark).
+
+:root,
+[data-theme="light"],
+.light {
+  --mastors-bg:              #{ct.color("white")};
+  --mastors-bg-subtle:       #{ct.color("neutral", 50)};
+  --mastors-surface:         #{ct.color("white")};
+  --mastors-surface-raised:  #{ct.color("neutral", 50)};
+  --mastors-surface-overlay: #{ct.color("neutral", 100)};
+
+  --mastors-text:            #{ct.color("neutral", 900)};
+  --mastors-text-muted:      #{ct.color("neutral", 500)};
+  --mastors-text-subtle:     #{ct.color("neutral", 400)};
+  --mastors-text-inverse:    #{ct.color("white")};
+
+  --mastors-border:          #{ct.color("neutral", 200)};
+  --mastors-border-strong:   #{ct.color("neutral", 400)};
+
+  --mastors-accent:          #{ct.color("primary", 600)};
+  --mastors-accent-hover:    #{ct.color("primary", 700)};
+  --mastors-accent-subtle:   #{ct.color("primary", 50)};
+  --mastors-accent-text:     #{ct.color("white")};
+}

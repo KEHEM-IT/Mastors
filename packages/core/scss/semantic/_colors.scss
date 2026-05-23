@@ -2,6 +2,28 @@
 // Semantic color aliases mapped from primitive color tokens.
 // ─────────────────────────────────────────────────────────────
 
-// TODO: Define semantic color aliases
-// Example: $color-background, $color-surface, $color-text-primary,
-//          $color-text-muted, $color-border, $color-accent
+// Semantic color aliases — role-based names that map to CSS custom properties.
+// Use these in component CSS instead of raw token references for themability.
+
+// These are SCSS variable aliases pointing to the custom properties
+// emitted by themes/_base-theme.scss, _light.scss, _dark.scss.
+// Downstream packages can @use this file to access semantic names.
+
+$color-bg:              var(--mastors-bg)               !default;
+$color-bg-subtle:       var(--mastors-bg-subtle)        !default;
+$color-surface:         var(--mastors-surface)          !default;
+$color-surface-raised:  var(--mastors-surface-raised)   !default;
+$color-surface-overlay: var(--mastors-surface-overlay)  !default;
+
+$color-text:            var(--mastors-text)             !default;
+$color-text-muted:      var(--mastors-text-muted)       !default;
+$color-text-subtle:     var(--mastors-text-subtle)      !default;
+$color-text-inverse:    var(--mastors-text-inverse)     !default;
+
+$color-border:          var(--mastors-border)           !default;
+$color-border-strong:   var(--mastors-border-strong)    !default;
+
+$color-accent:          var(--mastors-accent)           !default;
+$color-accent-hover:    var(--mastors-accent-hover)     !default;
+$color-accent-subtle:   var(--mastors-accent-subtle)    !default;
+$color-accent-text:     var(--mastors-accent-text)      !default;

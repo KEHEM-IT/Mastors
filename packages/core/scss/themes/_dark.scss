@@ -2,4 +2,57 @@
 // Dark theme CSS custom property overrides.
 // ─────────────────────────────────────────────────────────────
 
-// TODO: Define dark theme token values
+@use "../tokens/color"   as ct;
+@use "../config/settings" as cfg;
+
+// Dark theme — inverts surface/text/border semantics.
+// Activated by .dark class on <html> (class mode)
+// or automatically via prefers-color-scheme (media mode).
+
+$-dark-selectors: '[data-theme="dark"], .dark';
+
+@if cfg.config("dark-mode") == "class" {
+  #{$-dark-selectors} {
+    --mastors-bg:              #{ct.color("neutral", 950)};
+    --mastors-bg-subtle:       #{ct.color("neutral", 900)};
+    --mastors-surface:         #{ct.color("neutral", 900)};
+    --mastors-surface-raised:  #{ct.color("neutral", 800)};
+    --mastors-surface-overlay: #{ct.color("neutral", 700)};
+
+    --mastors-text:            #{ct.color("neutral", 50)};
+    --mastors-text-muted:      #{ct.color("neutral", 400)};
+    --mastors-text-subtle:     #{ct.color("neutral", 500)};
+    --mastors-text-inverse:    #{ct.color("neutral", 900)};
+
+    --mastors-border:          #{ct.color("neutral", 700)};
+    --mastors-border-strong:   #{ct.color("neutral", 500)};
+
+    --mastors-accent:          #{ct.color("primary", 400)};
+    --mastors-accent-hover:    #{ct.color("primary", 300)};
+    --mastors-accent-subtle:   #{ct.color("primary", 950)};
+    --mastors-accent-text:     #{ct.color("neutral", 950)};
+  }
+} @else {
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --mastors-bg:              #{ct.color("neutral", 950)};
+      --mastors-bg-subtle:       #{ct.color("neutral", 900)};
+      --mastors-surface:         #{ct.color("neutral", 900)};
+      --mastors-surface-raised:  #{ct.color("neutral", 800)};
+      --mastors-surface-overlay: #{ct.color("neutral", 700)};
+
+      --mastors-text:            #{ct.color("neutral", 50)};
+      --mastors-text-muted:      #{ct.color("neutral", 400)};
+      --mastors-text-subtle:     #{ct.color("neutral", 500)};
+      --mastors-text-inverse:    #{ct.color("neutral", 900)};
+
+      --mastors-border:          #{ct.color("neutral", 700)};
+      --mastors-border-strong:   #{ct.color("neutral", 500)};
+
+      --mastors-accent:          #{ct.color("primary", 400)};
+      --mastors-accent-hover:    #{ct.color("primary", 300)};
+      --mastors-accent-subtle:   #{ct.color("primary", 950)};
+      --mastors-accent-text:     #{ct.color("neutral", 950)};
+    }
+  }
+}

@@ -2,4 +2,41 @@
 // Color utility classes (text, background, border color).
 // ─────────────────────────────────────────────────────────────
 
-// TODO: Generate .text-*, .bg-*, .border-* from $color-tokens
+@use "../tokens/color" as ct;
+
+// Text color utilities — semantic
+.text-default  { color: var(--mastors-text); }
+.text-muted    { color: var(--mastors-text-muted); }
+.text-subtle   { color: var(--mastors-text-subtle); }
+.text-inverse  { color: var(--mastors-text-inverse); }
+.text-accent   { color: var(--mastors-accent); }
+
+// Text color utilities — primitives (primary, neutral, success, warning, error, info)
+$-text-palettes: "primary", "neutral", "success", "warning", "error", "info";
+$-text-shades:   "50", "100", "200", "300", "400", "500", "600", "700", "800", "900", "950";
+
+@each $palette in $-text-palettes {
+  @each $shade in $-text-shades {
+    .text-#{$palette}-#{$shade} { color: ct.color($palette, $shade); }
+  }
+}
+.text-white { color: ct.color("white"); }
+.text-black { color: ct.color("black"); }
+.text-current { color: currentColor; }
+.text-transparent { color: transparent; }
+
+// Background color utilities — semantic
+.bg-default  { background-color: var(--mastors-bg); }
+.bg-subtle   { background-color: var(--mastors-bg-subtle); }
+.bg-surface  { background-color: var(--mastors-surface); }
+.bg-accent   { background-color: var(--mastors-accent); }
+
+// Background color utilities — primitives
+@each $palette in $-text-palettes {
+  @each $shade in $-text-shades {
+    .bg-#{$palette}-#{$shade} { background-color: ct.color($palette, $shade); }
+  }
+}
+.bg-white { background-color: ct.color("white"); }
+.bg-black { background-color: ct.color("black"); }
+.bg-transparent { background-color: transparent; }

@@ -2,4 +2,24 @@
 // Text truncation and overflow helpers.
 // ─────────────────────────────────────────────────────────────
 
-// TODO: Add single-line and multi-line clamp truncation helpers
+// Single-line truncation
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// Multi-line clamp helpers (.line-clamp-{n})
+@each $n in 1, 2, 3, 4, 5, 6 {
+  .line-clamp-#{$n} {
+    display: -webkit-box;
+    -webkit-line-clamp: $n;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+// Break long words
+.break-words  { overflow-wrap: break-word; word-break: break-word; }
+.break-all    { word-break: break-all; }
+.break-keep   { word-break: keep-all; }

@@ -2,4 +2,8 @@
 // Z-index utility classes from z-index tokens.
 // ─────────────────────────────────────────────────────────────
 
-// TODO: Generate .z-* from $z-index-tokens
+@use "../tokens/z-index" as zi;
+
+@each $key, $val in zi.$z-index-tokens {
+  .z-#{$key} { z-index: $val; }
+}

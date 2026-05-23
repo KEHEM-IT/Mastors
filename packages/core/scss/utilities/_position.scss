@@ -2,5 +2,31 @@
 // Position utility classes.
 // ─────────────────────────────────────────────────────────────
 
-// TODO: Add position utilities (static, relative, absolute, fixed, sticky)
-// TODO: Add inset utilities (top, right, bottom, left, inset)
+@use "../generators/class-generator" as gen;
+
+@include gen.generate-utilities((
+  "position": (
+    property: position,
+    values: (
+      "static":   static,
+      "relative": relative,
+      "absolute": absolute,
+      "fixed":    fixed,
+      "sticky":   sticky,
+    ),
+    responsive: true,
+  ),
+));
+
+// Inset utilities
+$-inset-values: ("0": 0px, "auto": auto, "full": 100%, "1\/2": 50%);
+
+@each $key, $val in $-inset-values {
+  .inset-#{$key}        { inset: $val; }
+  .inset-x-#{$key}      { left: $val; right: $val; }
+  .inset-y-#{$key}      { top: $val; bottom: $val; }
+  .top-#{$key}          { top: $val; }
+  .right-#{$key}        { right: $val; }
+  .bottom-#{$key}       { bottom: $val; }
+  .left-#{$key}         { left: $val; }
+}

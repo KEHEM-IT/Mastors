@@ -2,4 +2,10 @@
 // Box-shadow utility classes from shadow tokens.
 // ─────────────────────────────────────────────────────────────
 
-// TODO: Generate .shadow-* from $shadow-tokens
+@use "../tokens/shadows" as sh;
+
+@each $key, $val in sh.$shadow-tokens {
+  .shadow-#{$key} { box-shadow: $val; }
+}
+// Shorthand
+.shadow { box-shadow: sh.shadow("md"); }

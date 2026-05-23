@@ -2,4 +2,40 @@
 // Transform utility classes.
 // ─────────────────────────────────────────────────────────────
 
-// TODO: Add translate, rotate, scale, skew transform utilities
+// Transform utilities
+
+// GPU compositing layer
+.transform-gpu    { transform: translateZ(0); }
+.transform-none   { transform: none; }
+
+// Translate
+$-translate-values: ("0": 0px, "1": 0.25rem, "2": 0.5rem, "4": 1rem, "8": 2rem,
+                     "full": 100%, "1\/2": 50%, "-full": -100%, "-1\/2": -50%);
+
+@each $key, $val in $-translate-values {
+  .translate-x-#{$key} { transform: translateX($val); }
+  .translate-y-#{$key} { transform: translateY($val); }
+}
+
+// Rotate
+@each $deg in 0, 1, 2, 3, 6, 12, 45, 90, 180 {
+  .rotate-#{$deg}  { transform: rotate(#{$deg}deg); }
+  .-rotate-#{$deg} { transform: rotate(-#{$deg}deg); }
+}
+
+// Scale
+@each $scale in ("0": 0, "50": .5, "75": .75, "90": .9, "95": .95,
+                  "100": 1, "105": 1.05, "110": 1.1, "125": 1.25, "150": 1.5) {
+  $key: nth($scale, 1);
+  $val: nth($scale, 2);
+  .scale-#{$key}   { transform: scale($val); }
+  .scale-x-#{$key} { transform: scaleX($val); }
+  .scale-y-#{$key} { transform: scaleY($val); }
+}
+
+// Transform origin
+.origin-center  { transform-origin: center; }
+.origin-top     { transform-origin: top; }
+.origin-right   { transform-origin: right; }
+.origin-bottom  { transform-origin: bottom; }
+.origin-left    { transform-origin: left; }
