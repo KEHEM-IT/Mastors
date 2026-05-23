@@ -29,11 +29,11 @@
     "@mastors/build-utils": "workspace:*",
     "@mastors/sass-config": "workspace:*",
     "rimraf": "^5.0.0",
-    "sass": "^1.70.0"
+    "sass": "^1.80.0"
   },
   "peerDependencies": {
-    "@mastors/core": "workspace:*",
-    "sass": ">=1.60.0"
+    "@mastors/core": ">=1.0.0",
+    "sass": ">=1.80.0"
   },
   "sideEffects": ["dist/*.css", "scss/**/*.scss"]
 }

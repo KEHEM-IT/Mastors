@@ -1,33 +1,33 @@
 // themes/_base-theme.scss
-// Shared theme structure — inherited by light and dark themes.
+// Shared theme structure — reference doc only, not emitted.
 // ─────────────────────────────────────────────────────────────
 
-@use "../tokens/color" as ct;
+// The light and dark themes (_light.scss, _dark.scss) are the actual emitters.
+// This file documents the full semantic custom property contract
+// that all themes must implement, without producing any CSS output.
+//
+// Semantic custom properties contract:
+//
+//   Surfaces
+//   --mastors-bg              ← page background
+//   --mastors-bg-subtle       ← subdued page background
+//   --mastors-surface         ← card / panel surface
+//   --mastors-surface-raised  ← elevated surface (dropdowns, tooltips)
+//   --mastors-surface-overlay ← modal/overlay surface
+//
+//   Text
+//   --mastors-text            ← primary text
+//   --mastors-text-muted      ← secondary / supporting text
+//   --mastors-text-subtle     ← tertiary / placeholder text
+//   --mastors-text-inverse    ← text on dark/accent surfaces
+//
+//   Borders
+//   --mastors-border          ← default border
+//   --mastors-border-strong   ← emphasis border
+//
+//   Brand / Accent
+//   --mastors-accent          ← primary brand color
+//   --mastors-accent-hover    ← accent hover state
+//   --mastors-accent-subtle   ← light accent tint
+//   --mastors-accent-text     ← text on accent backgrounds
 
-// Base theme — shared semantic custom property structure.
-// Light and dark themes override these variables.
-
-:root {
-  // Surfaces
-  --mastors-bg:              #{ct.color("white")};
-  --mastors-bg-subtle:       #{ct.color("neutral", 50)};
-  --mastors-surface:         #{ct.color("white")};
-  --mastors-surface-raised:  #{ct.color("neutral", 50)};
-  --mastors-surface-overlay: #{ct.color("neutral", 100)};
-
-  // Text
-  --mastors-text:            #{ct.color("neutral", 900)};
-  --mastors-text-muted:      #{ct.color("neutral", 500)};
-  --mastors-text-subtle:     #{ct.color("neutral", 400)};
-  --mastors-text-inverse:    #{ct.color("white")};
-
-  // Borders
-  --mastors-border:          #{ct.color("neutral", 200)};
-  --mastors-border-strong:   #{ct.color("neutral", 400)};
-
-  // Brand
-  --mastors-accent:          #{ct.color("primary", 600)};
-  --mastors-accent-hover:    #{ct.color("primary", 700)};
-  --mastors-accent-subtle:   #{ct.color("primary", 50)};
-  --mastors-accent-text:     #{ct.color("white")};
-}

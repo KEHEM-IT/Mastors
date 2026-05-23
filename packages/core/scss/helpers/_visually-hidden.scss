@@ -2,8 +2,8 @@
 // Visually hides content while keeping it accessible to screen readers.
 // ─────────────────────────────────────────────────────────────
 
-.visually-hidden,
-.vh {
+// Shared styles as a placeholder to avoid cross-module @extend issues
+%visually-hidden-base {
   position: absolute !important;
   width: 1px !important;
   height: 1px !important;
@@ -15,7 +15,12 @@
   border: 0 !important;
 }
 
+.visually-hidden,
+.vh {
+  @extend %visually-hidden-base;
+}
+
 // Undo visually-hidden when focused (e.g. skip links)
 .visually-hidden-focusable:not(:focus):not(:focus-within) {
-  @extend .visually-hidden;
+  @extend %visually-hidden-base;
 }

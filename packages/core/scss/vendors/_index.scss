@@ -2,5 +2,6 @@
 // Third-party CSS/SCSS integrations and overrides.
 // ─────────────────────────────────────────────────────────────
 
-// TODO: Forward any vendor override partials here
-// Example: @forward "normalize-overrides";
+// Reserved for third-party CSS overrides (e.g. normalize.css patches,
+// component library resets). Currently empty — add partials here
+// as @forward "vendor-name-overrides" when needed.

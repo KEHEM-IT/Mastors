@@ -2,4 +2,6 @@
 // Shared silent SCSS placeholder selectors (%placeholder).
 // ─────────────────────────────────────────────────────────────
 
-// TODO: Define shared placeholder selectors
+// Package-scoped placeholders live in their own partials (e.g. helpers/_visually-hidden.scss).
+// Add cross-cutting placeholders here when they are shared by 3+ unrelated files.
+

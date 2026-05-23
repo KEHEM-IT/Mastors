@@ -2,4 +2,11 @@
 // Shared SCSS maps used across the Mastors ecosystem.
 // ─────────────────────────────────────────────────────────────
 
-// TODO: Define shared utility maps (breakpoints, spacing, etc.)
+// Reserved for shared utility maps that don't belong in tokens or variables.
+// Example use cases:
+//   - Display value maps for generator consumption
+//   - Shared prefix/suffix lookup tables
+//   - Cross-package utility config maps
+//
+// Currently empty — token maps live in tokens/, breakpoints in variables/.
+

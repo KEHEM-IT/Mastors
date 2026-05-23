@@ -14,6 +14,6 @@
     "lint": "echo 'No lint for sass-config'"
   },
   "devDependencies": {
-    "sass": "^1.70.0"
+    "sass": "^1.80.0"
   }
 }
