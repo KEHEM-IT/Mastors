@@ -19,7 +19,7 @@
 ));
 
 // Inset utilities
-$-inset-values: ("0": 0px, "auto": auto, "full": 100%, "1\/2": 50%);
+$-inset-values: ("0": 0px, "auto": auto, "full": 100%, "1\\/2": 50%);
 
 @each $key, $val in $-inset-values {
   .inset-#{$key}        { inset: $val; }
