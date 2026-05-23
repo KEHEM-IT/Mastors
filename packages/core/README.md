@@ -4,7 +4,7 @@
 
 [![npm](https://img.shields.io/npm/v/@mastors/core.svg)](https://www.npmjs.com/package/@mastors/core)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](../../LICENSE)
-[![sass](https://img.shields.io/badge/requires-sass%20%3E%3D1.60-CC6699.svg)](https://sass-lang.com)
+[![sass](https://img.shields.io/badge/requires-sass%20%3E%3D1.80-CC6699.svg)](https://sass-lang.com)
 
 ---
 
@@ -74,7 +74,7 @@ npm install @mastors/core sass
 pnpm add @mastors/core sass
 ```
 
-`sass >= 1.60.0` is required as a peer dependency.
+`sass >= 1.80.0` is required as a peer dependency.
 
 ---
 
@@ -599,7 +599,7 @@ import type { MastorsConfig, Breakpoint, ThemeMode, Tokens } from '@mastors/core
 
 | Package | Version |
 |---|---|
-| `sass` | `>= 1.60.0` |
+| `sass` | `>= 1.80.0` |
 
 ---
 

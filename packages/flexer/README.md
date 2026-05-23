@@ -4,7 +4,7 @@
 
 [![npm](https://img.shields.io/npm/v/@mastors/flexer.svg)](https://www.npmjs.com/package/@mastors/flexer)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](../../LICENSE)
-[![sass](https://img.shields.io/badge/requires-sass%20%3E%3D1.60-CC6699.svg)](https://sass-lang.com)
+[![sass](https://img.shields.io/badge/requires-sass%20%3E%3D1.80-CC6699.svg)](https://sass-lang.com)
 
 ---
 
@@ -466,7 +466,7 @@ Utilities that support responsive variants: `flex` display, `flex-direction`, `f
 | Package | Version |
 |---|---|
 | `@mastors/core` | `workspace:*` |
-| `sass` | `>= 1.60.0` |
+| `sass` | `>= 1.80.0` |
 
 ---
 

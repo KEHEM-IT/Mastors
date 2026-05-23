@@ -98,7 +98,7 @@ npm install @mastors/animator
 
 ### Peer dependency
 
-All packages require `sass >= 1.60.0`:
+All packages require `sass >= 1.80.0`:
 
 ```bash
 npm install --save-dev sass
