@@ -2,6 +2,9 @@
 // Master feature flags and global configuration map.
 // ─────────────────────────────────────────────────────────────
 
+// @use must come before everything else
+@use "sass:map";
+
 $mastors-config: (
   "prefix":       "",
   "important":    false,
@@ -13,5 +16,3 @@ $mastors-config: (
 @function config($key) {
   @return map.get($mastors-config, $key);
 }
-
-@use "sass:map";
