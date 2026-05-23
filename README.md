@@ -717,16 +717,30 @@ Please follow the existing SCSS architecture and naming conventions. All new uti
 
 ## Roadmap
 
-- [ ] Implement all SCSS token maps (`tokens/`)
-- [ ] Implement `functions/` layer (rem, em, color, math)
-- [ ] Implement `mixins/` layer (breakpoint, theme, elevation, transition)
-- [ ] Implement `generators/class-generator.scss` engine
-- [ ] Implement `@mastors/core` base and utility CSS output
-- [ ] Implement `@mastors/flexer` full utility set
-- [ ] Implement `@mastors/gridder` full utility set
-- [ ] Implement `@mastors/typography` type scale and prose system
-- [ ] Implement `@mastors/themes` dark mode and custom theme support
-- [ ] Implement `@mastors/animator` keyframe and transition utilities
+### Completed
+
+- [x] All SCSS token maps (`tokens/`) — color, spacing, typography, radii, shadows, z-index, opacity, transitions, sizing
+- [x] `functions/` layer — `rem()`, `em()`, `color()`, `spacing()`, `tint()`, `shade()`, `alpha()`, `contrast()`, `fluid()`, `str-replace()`, `map-deep-get()`, `map-collect()`
+- [x] `mixins/` layer — `bp()`, `dark-mode()`, `light-mode()`, `theme()`, `elevation()`, `transition()`, `container()`, `pseudo()`
+- [x] Generator engine — `generate-utilities()`, `emit-custom-properties()`, `generate-responsive()`
+- [x] Responsive engine — `engine.run()` with breakpoint-prefixed variant output
+- [x] Container queries — `.cq-inline`, `.cq-size`, `cq()` mixin
+- [x] Fluid typography — `fluid-type()` mixin, function, and `fluid-scale()` preset
+- [x] `@mastors/core` base and utility CSS output (display, position, overflow, spacing, sizing, colors, borders, shadows, opacity, cursor, z-index, transforms)
+- [x] `@mastors/core` helpers — `.truncate`, `.line-clamp-{n}`, `.visually-hidden`, `.ratio-*`, `.clearfix`
+- [x] `@mastors/core` accessibility — focus ring, reduced motion, screen reader utilities
+- [x] `@mastors/flexer` — full utility set (display, direction, wrap, flow, grow, shrink, basis, shorthand, justify, align, place, order, gap)
+- [x] `@mastors/gridder` — full utility set (display, template columns/rows/areas, auto flow/cols/rows, col/row span/start/end, justify, align, place, layout presets)
+
+### In Progress
+
+- [ ] `@mastors/typography` — type scale, font utilities, prose system
+- [ ] `@mastors/themes` — dark mode and custom theme support
+- [ ] `@mastors/animator` — keyframe and transition utilities
+- [ ] `@mastors/flexer` mixins — `flex-container()`, `flex-item()`, `flex-center()`
+
+### Planned
+
 - [ ] CLI tool (`mastors init`, `mastors add`, `mastors build`)
 - [ ] VSCode IntelliSense extension
 - [ ] Documentation site at [mastorscdn.kehem.com](https://mastorscdn.kehem.com)
