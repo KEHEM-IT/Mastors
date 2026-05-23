@@ -50,4 +50,4 @@ scss/
 
 ## Documentation
 
-[https://mastors.dev/packages/core](https://mastors.dev/packages/core)
+[https://mastorscdn.kehem.com/packages/core](https://mastorscdn.kehem.com/packages/core)

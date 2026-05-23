@@ -4,7 +4,7 @@
   "description": "Mastors Core — foundational tokens, mixins, functions, and SCSS architecture",
   "license": "MIT",
   "author": "Mastors Contributors",
-  "homepage": "https://mastors.dev/packages/core",
+  "homepage": "https://mastorscdn.kehem.com/packages/core",
   "repository": {
     "type": "git",
     "url": "https://github.com/mastors/mastors.git",

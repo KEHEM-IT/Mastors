@@ -33,7 +33,7 @@ ${BOLD}  Optional packages:${RESET}
   ${CYAN}→${RESET} ${DIM}npm install${RESET} @mastors/animator
 
 ${BOLD}  Documentation:${RESET}
-  ${YELLOW}https://mastors.dev${RESET}
+  ${YELLOW}https://mastorscdn.kehem.com${RESET}
 
 ${line()}
 `

@@ -18,4 +18,4 @@ Requires `@mastors/core` as a peer dependency.
 
 ## Documentation
 
-[https://mastors.dev/packages/flexer](https://mastors.dev/packages/flexer)
+[https://mastorscdn.kehem.com/packages/flexer](https://mastorscdn.kehem.com/packages/flexer)

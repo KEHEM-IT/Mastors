@@ -729,7 +729,7 @@ Please follow the existing SCSS architecture and naming conventions. All new uti
 - [ ] Implement `@mastors/animator` keyframe and transition utilities
 - [ ] CLI tool (`mastors init`, `mastors add`, `mastors build`)
 - [ ] VSCode IntelliSense extension
-- [ ] Documentation site at [mastors.dev](https://mastors.dev)
+- [ ] Documentation site at [mastorscdn.kehem.com](https://mastorscdn.kehem.com)
 - [ ] Plugin API stabilisation
 
 ---
