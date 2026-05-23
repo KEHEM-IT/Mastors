@@ -1,0 +1,11 @@
+{
+  "name": "@mastors/tsconfig",
+  "version": "1.0.0",
+  "description": "Shared TypeScript configurations for the Mastors monorepo",
+  "private": true,
+  "license": "MIT",
+  "exports": {
+    "./base": "./base.json",
+    "./package": "./package.json"
+  }
+}

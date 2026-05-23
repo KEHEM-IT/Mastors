@@ -1,0 +1,18 @@
+// @mastors/flexer — scss/index.scss
+// ─────────────────────────────────────────────────────────────
+// Entry point for the Flexer package.
+// Provides flex container and item utility classes.
+// ─────────────────────────────────────────────────────────────
+
+// Consume core public API (tokens, mixins, functions — no CSS output)
+@use "@mastors/core/api" as core;
+
+// Flexer internals
+@use "mixins/index"     as *;
+@use "generators/index" as *;
+
+// Utility output
+@use "utilities/index";
+
+// Responsive variants
+@use "responsive/index";

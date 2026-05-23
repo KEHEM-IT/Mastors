@@ -1,0 +1,13 @@
+// @mastors/gridder — scss/index.scss
+// ─────────────────────────────────────────────────────────────
+// Entry point for the Gridder package.
+// Provides CSS Grid container and item utility classes.
+// ─────────────────────────────────────────────────────────────
+
+@use "@mastors/core/api" as core;
+
+@use "mixins/index"     as *;
+@use "generators/index" as *;
+
+@use "utilities/index";
+@use "responsive/index";

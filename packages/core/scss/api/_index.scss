@@ -1,0 +1,12 @@
+// api/_index.scss
+// Public SCSS API — the surface that downstream packages @use.
+// ─────────────────────────────────────────────────────────────
+// Consumers: @use "@mastors/core/api" as m;
+// This file exposes only what is intended to be public API.
+// Internal implementation files are NOT forwarded here.
+// ─────────────────────────────────────────────────────────────
+
+@forward "../functions/index";
+@forward "../mixins/index";
+@forward "../tokens/index";
+@forward "../variables/index";

@@ -1,0 +1,22 @@
+// flexer/scss/utilities/_index.scss
+// ─────────────────────────────────────────────────────────────
+
+@forward "flex-display";
+@forward "flex-direction";
+@forward "flex-wrap";
+@forward "flex-flow";
+@forward "flex-grow";
+@forward "flex-shrink";
+@forward "flex-basis";
+@forward "flex-shorthand";
+@forward "justify-content";
+@forward "justify-items";
+@forward "justify-self";
+@forward "align-content";
+@forward "align-items";
+@forward "align-self";
+@forward "place-content";
+@forward "place-items";
+@forward "place-self";
+@forward "order";
+@forward "gap";

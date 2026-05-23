@@ -1,0 +1,41 @@
+// @mastors/core — scss/index.scss
+// ─────────────────────────────────────────────────────────────
+// Main entry point for @mastors/core.
+// Import order is intentional — do not reorder without reason.
+// ─────────────────────────────────────────────────────────────
+
+// 1. Config & Settings (no output)
+@use "config/settings"  as *;
+@use "config/flags"     as *;
+
+// 2. Abstracts (no output)
+@use "abstracts/index"  as *;
+
+// 3. Variables & Tokens (no output)
+@use "variables/index"  as *;
+@use "tokens/index"     as *;
+
+// 4. Functions (no output)
+@use "functions/index"  as *;
+
+// 5. Mixins (no output)
+@use "mixins/index"     as *;
+
+// 6. Base & Reset (outputs CSS)
+@use "base/index";
+
+// 7. Themes (outputs CSS custom properties)
+@use "themes/index";
+
+// 8. Semantic layer (outputs CSS)
+@use "semantic/index";
+
+// 9. Responsive engine (outputs CSS)
+@use "responsive/index";
+
+// 10. Helpers & Utilities
+@use "helpers/index";
+@use "utilities/index";
+
+// 11. Accessibility
+@use "accessibility/index";

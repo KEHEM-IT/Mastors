@@ -1,0 +1,16 @@
+// utilities/_index.scss
+// ─────────────────────────────────────────────────────────────
+
+@forward "display";
+@forward "position";
+@forward "overflow";
+@forward "spacing";
+@forward "sizing";
+@forward "colors";
+@forward "borders";
+@forward "shadows";
+@forward "opacity";
+@forward "cursor";
+@forward "pointer-events";
+@forward "z-index";
+@forward "transform";

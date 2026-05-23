@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.turbo/
+coverage/
+*.css
+*.css.map
+.DS_Store
+Thumbs.db
+.env
+.env.local
+*.log
+pnpm-lock.yaml

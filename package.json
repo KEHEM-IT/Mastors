@@ -1,0 +1,68 @@
+{
+  "name": "mastors",
+  "version": "1.0.0",
+  "description": "Mastors – A professional-grade, scalable frontend SCSS utility ecosystem",
+  "private": false,
+  "license": "MIT",
+  "author": "Mastors Contributors",
+  "homepage": "https://mastors.dev",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mastors/mastors.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mastors/mastors/issues"
+  },
+  "keywords": [
+    "mastors",
+    "css",
+    "scss",
+    "utility",
+    "framework",
+    "frontend",
+    "design-system"
+  ],
+  "main": "packages/core/dist/index.js",
+  "module": "packages/core/dist/index.mjs",
+  "exports": {
+    ".": {
+      "import": "./packages/core/dist/index.mjs",
+      "require": "./packages/core/dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "build:core": "turbo run build --filter=@mastors/core",
+    "build:all": "turbo run build --parallel",
+    "dev": "turbo run dev --parallel",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,js,scss,json,md}\"",
+    "clean": "turbo run clean",
+    "test": "turbo run test",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "turbo run build --filter=./packages/* && changeset publish",
+    "publish:all": "pnpm -r publish --access public",
+    "publish:dry": "pnpm -r publish --access public --dry-run",
+    "postinstall": "node scripts/postinstall.js"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.27.0",
+    "@types/node": "^20.0.0",
+    "prettier": "^3.2.0",
+    "sass": "^1.70.0",
+    "turbo": "^1.12.0",
+    "typescript": "^5.3.0"
+  },
+  "dependencies": {
+    "@mastors/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "sass": ">=1.60.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "packageManager": "pnpm@8.15.0"
+}

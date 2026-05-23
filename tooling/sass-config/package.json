@@ -1,0 +1,18 @@
+{
+  "name": "@mastors/sass-config",
+  "version": "1.0.0",
+  "description": "Shared Sass/SCSS build configuration for the Mastors monorepo",
+  "private": true,
+  "license": "MIT",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./compile": "./compile.js"
+  },
+  "scripts": {
+    "lint": "echo 'No lint for sass-config'"
+  },
+  "devDependencies": {
+    "sass": "^1.70.0"
+  }
+}

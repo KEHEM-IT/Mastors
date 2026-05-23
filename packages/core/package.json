@@ -1,0 +1,58 @@
+{
+  "name": "@mastors/core",
+  "version": "1.0.0",
+  "description": "Mastors Core — foundational tokens, mixins, functions, and SCSS architecture",
+  "license": "MIT",
+  "author": "Mastors Contributors",
+  "homepage": "https://mastors.dev/packages/core",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mastors/mastors.git",
+    "directory": "packages/core"
+  },
+  "keywords": ["mastors", "core", "scss", "tokens", "design-system", "css-framework"],
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "sass": "./scss/index.scss",
+  "style": "./dist/mastors-core.css",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./scss": "./scss/index.scss",
+    "./scss/*": "./scss/*",
+    "./api": "./scss/api/_index.scss",
+    "./dist/mastors-core.css": "./dist/mastors-core.css"
+  },
+  "files": [
+    "dist",
+    "scss",
+    "src",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "node build.js",
+    "build:prod": "node build.js --prod",
+    "dev": "node build.js --watch",
+    "clean": "rimraf dist",
+    "typecheck": "tsc --noEmit",
+    "lint": "echo 'No lint configured yet'"
+  },
+  "devDependencies": {
+    "@mastors/build-utils": "workspace:*",
+    "@mastors/sass-config": "workspace:*",
+    "@mastors/tsconfig": "workspace:*",
+    "@types/node": "^20.0.0",
+    "rimraf": "^5.0.0",
+    "sass": "^1.70.0",
+    "typescript": "^5.3.0"
+  },
+  "peerDependencies": {
+    "sass": ">=1.60.0"
+  },
+  "sideEffects": ["dist/*.css", "scss/**/*.scss"]
+}

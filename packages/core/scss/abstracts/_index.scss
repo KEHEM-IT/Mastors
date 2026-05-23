@@ -1,0 +1,6 @@
+// abstracts/_index.scss
+// Re-exports all abstracts as a single namespace.
+// ─────────────────────────────────────────────────────────────
+
+@forward "maps";
+@forward "placeholders";
