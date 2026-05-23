@@ -1,2 +1,20 @@
-// utilities/_justify-self.scss
-// TODO: Add justify-self utilities
+// @mastors/flexer — utilities/_justify-self.scss
+// justify-self utility classes (inline-axis alignment for a single flex item).
+// ─────────────────────────────────────────────────────────────
+
+@use "@mastors/core/scss/generators/class-generator" as gen;
+
+@include gen.generate-utilities((
+  "justify-self": (
+    property: justify-self,
+    prefix: "justify-self",
+    values: (
+      "auto":    auto,
+      "start":   start,
+      "end":     end,
+      "center":  center,
+      "stretch": stretch,
+    ),
+    responsive: true,
+  ),
+));

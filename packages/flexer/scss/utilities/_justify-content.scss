@@ -1,2 +1,23 @@
-// utilities/_justify-content.scss
-// TODO: Add justify-content utilities
+// @mastors/flexer — utilities/_justify-content.scss
+// justify-content utility classes (main-axis alignment for flex items).
+// ─────────────────────────────────────────────────────────────
+
+@use "@mastors/core/scss/generators/class-generator" as gen;
+
+@include gen.generate-utilities((
+  "justify-content": (
+    property: justify-content,
+    prefix: "justify",
+    values: (
+      "start":         flex-start,
+      "end":           flex-end,
+      "center":        center,
+      "between":       space-between,
+      "around":        space-around,
+      "evenly":        space-evenly,
+      "stretch":       stretch,
+      "normal":        normal,
+    ),
+    responsive: true,
+  ),
+));

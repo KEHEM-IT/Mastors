@@ -1,2 +1,16 @@
-// utilities/_flex-shrink.scss
-// TODO: Add flex-shrink utilities (0, 1)
+// @mastors/flexer — utilities/_flex-shrink.scss
+// flex-shrink utility classes.
+// ─────────────────────────────────────────────────────────────
+
+@use "@mastors/core/scss/generators/class-generator" as gen;
+
+@include gen.generate-utilities((
+  "flex-shrink": (
+    property: flex-shrink,
+    prefix: "shrink",
+    values: (
+      "":  1,   // .shrink   → flex-shrink: 1
+      "0": 0,   // .shrink-0 → flex-shrink: 0
+    ),
+  ),
+));

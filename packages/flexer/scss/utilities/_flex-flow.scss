@@ -1,2 +1,21 @@
-// utilities/_flex-flow.scss
-// TODO: Add flex-flow shorthand utilities
+// @mastors/flexer — utilities/_flex-flow.scss
+// flex-flow shorthand utilities (direction + wrap in one property).
+// ─────────────────────────────────────────────────────────────
+
+@use "@mastors/core/scss/generators/class-generator" as gen;
+
+@include gen.generate-utilities((
+  "flex-flow": (
+    property: flex-flow,
+    prefix: "flex-flow",
+    values: (
+      "row-wrap":            row wrap,
+      "row-nowrap":          row nowrap,
+      "row-wrap-reverse":    row wrap-reverse,
+      "col-wrap":            column wrap,
+      "col-nowrap":          column nowrap,
+      "col-wrap-reverse":    column wrap-reverse,
+    ),
+    responsive: true,
+  ),
+));

@@ -1,2 +1,23 @@
-// utilities/_place-content.scss
-// TODO: Add place-content shorthand utilities
+// @mastors/flexer — utilities/_place-content.scss
+// place-content shorthand (align-content + justify-content).
+// ─────────────────────────────────────────────────────────────
+
+@use "@mastors/core/scss/generators/class-generator" as gen;
+
+@include gen.generate-utilities((
+  "place-content": (
+    property: place-content,
+    prefix: "place-content",
+    values: (
+      "center":  center,
+      "start":   start,
+      "end":     end,
+      "between": space-between,
+      "around":  space-around,
+      "evenly":  space-evenly,
+      "stretch": stretch,
+      "baseline":baseline,
+    ),
+    responsive: true,
+  ),
+));

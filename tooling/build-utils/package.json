@@ -4,6 +4,7 @@
   "description": "Shared build utilities for the Mastors monorepo",
   "private": true,
   "license": "MIT",
+  "type": "commonjs",
   "main": "index.js",
   "exports": {
     ".": "./index.js"

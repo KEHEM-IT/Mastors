@@ -4,6 +4,7 @@
   "description": "Mastors – A professional-grade, scalable frontend SCSS utility ecosystem",
   "private": false,
   "license": "MIT",
+  "type": "commonjs",
   "author": "Mastors Contributors",
   "homepage": "https://mastorscdn.kehem.com",
   "repository": {

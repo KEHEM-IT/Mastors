@@ -1,0 +1,11 @@
+// @mastors/gridder — utilities/_grid-row.scss
+// grid-row shorthand utilities.
+// ─────────────────────────────────────────────────────────────
+
+// .grid-row-auto — let the browser place the item
+.grid-row-auto { grid-row: auto; }
+
+// .grid-row-{n} — explicit row shorthand
+@each $n in 1, 2, 3, 4, 5, 6 {
+  .grid-row-#{$n} { grid-row: $n; }
+}

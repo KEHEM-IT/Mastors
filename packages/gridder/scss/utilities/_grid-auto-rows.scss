@@ -1,19 +1,18 @@
-// @mastors/flexer — utilities/_flex-direction.scss
-// flex-direction utility classes.
+// @mastors/gridder — utilities/_grid-auto-rows.scss
+// grid-auto-rows utility classes.
 // ─────────────────────────────────────────────────────────────
 
 @use "@mastors/core/scss/generators/class-generator" as gen;
 
 @include gen.generate-utilities((
-  "flex-direction": (
-    property: flex-direction,
-    prefix: "flex",
+  "auto-rows": (
+    property: grid-auto-rows,
+    prefix: "auto-rows",
     values: (
-      "row":         row,
-      "row-reverse": row-reverse,
-      "col":         column,
-      "col-reverse": column-reverse,
+      "auto":    auto,
+      "min":     min-content,
+      "max":     max-content,
+      "fr":      minmax(0, 1fr),
     ),
-    responsive: true,
   ),
 ));

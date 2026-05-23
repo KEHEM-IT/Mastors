@@ -1,14 +1,15 @@
-// @mastors/flexer — utilities/_justify-items.scss
-// justify-items utility classes (inline-axis alignment for all flex items).
+// @mastors/gridder — utilities/_place-self.scss
+// place-self shorthand utility classes (align-self + justify-self).
 // ─────────────────────────────────────────────────────────────
 
 @use "@mastors/core/scss/generators/class-generator" as gen;
 
 @include gen.generate-utilities((
-  "justify-items": (
-    property: justify-items,
-    prefix: "justify-items",
+  "place-self": (
+    property: place-self,
+    prefix: "place-self",
     values: (
+      "auto":    auto,
       "start":   start,
       "end":     end,
       "center":  center,

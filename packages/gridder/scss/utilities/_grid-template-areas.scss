@@ -1,2 +1,71 @@
-// utilities/_grid-template-areas.scss
-// TODO: Add named grid-template-areas utilities
+// @mastors/gridder — utilities/_grid-template-areas.scss
+// Named grid-template-areas helpers.
+// ─────────────────────────────────────────────────────────────
+//
+// Named areas cannot be generated as atomic utilities because the area
+// strings are layout-specific. This file provides:
+//   1. A mixin for defining named areas declaratively in component SCSS.
+//   2. Common single-purpose layout presets.
+//
+// Usage (mixin):
+//   @use "@mastors/gridder/scss/utilities/grid-template-areas" as areas;
+//
+//   .page-layout {
+//     @include areas.define-areas("header header" "sidebar main" "footer footer");
+//   }
+
+/// Define grid-template-areas with named row strings.
+/// @param {String...} $rows - One quoted string per row, space-separated area names.
+/// @example
+///   @include define-areas("header header" "nav main" "footer footer");
+@mixin define-areas($rows...) {
+  grid-template-areas: $rows;
+}
+
+/// Assign an element to a named grid area.
+/// @param {String} $name - The grid-area name.
+@mixin area($name) {
+  grid-area: $name;
+}
+
+// ─── Named area placement utilities ─────────────────────────────────────────
+// Common area names used in common layouts.
+// Consumers apply these to child elements within a named-area grid parent.
+
+.area-header  { grid-area: header; }
+.area-nav     { grid-area: nav; }
+.area-sidebar { grid-area: sidebar; }
+.area-main    { grid-area: main; }
+.area-aside   { grid-area: aside; }
+.area-footer  { grid-area: footer; }
+
+// ─── Common layout presets ───────────────────────────────────────────────────
+
+// Holy grail layout: header / (nav + main + aside) / footer
+.layout-holy-grail {
+  display: grid;
+  grid-template-areas:
+    "header header  header"
+    "nav    main    aside"
+    "footer footer  footer";
+  grid-template-columns: auto 1fr auto;
+  grid-template-rows: auto 1fr auto;
+}
+
+// Sidebar layout: sidebar + main
+.layout-sidebar {
+  display: grid;
+  grid-template-areas: "sidebar main";
+  grid-template-columns: auto 1fr;
+}
+
+// Dashboard layout: header + (sidebar + content) + footer
+.layout-dashboard {
+  display: grid;
+  grid-template-areas:
+    "header  header"
+    "sidebar content"
+    "footer  footer";
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto 1fr auto;
+}

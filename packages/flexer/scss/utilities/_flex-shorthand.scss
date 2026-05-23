@@ -1,2 +1,13 @@
-// utilities/_flex-shorthand.scss
-// TODO: Add flex shorthand utilities (flex-1, flex-auto, flex-none, flex-initial)
+// @mastors/flexer — utilities/_flex-shorthand.scss
+// flex shorthand utility classes (grow + shrink + basis combined).
+// ─────────────────────────────────────────────────────────────
+
+// .flex-1      → flex: 1 1 0%      (grow, shrink, zero basis — the workhorse)
+// .flex-auto   → flex: 1 1 auto    (grow, shrink, natural basis)
+// .flex-initial→ flex: 0 1 auto    (don't grow, shrink, natural basis — browser default)
+// .flex-none   → flex: none        (no grow, no shrink, natural basis — rigid)
+
+.flex-1       { flex: 1 1 0%; }
+.flex-auto    { flex: 1 1 auto; }
+.flex-initial { flex: 0 1 auto; }
+.flex-none    { flex: none; }

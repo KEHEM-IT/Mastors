@@ -1,3 +1,155 @@
-// flexer/scss/responsive/_index.scss
-// TODO: Forward responsive flex variants
-// Wraps flex utilities in breakpoint media queries from core engine
+// @mastors/flexer — scss/responsive/_index.scss
+// Responsive breakpoint variants for flexer utilities.
+// ─────────────────────────────────────────────────────────────
+//
+// Wraps all `responsive: true` flex utilities in breakpoint-prefixed
+// media queries via the core responsive engine.
+//
+// Class pattern: .{bp}:{utility}
+// Examples:      .md:flex-row, .lg:justify-between, .sm:items-center
+
+@use "@mastors/core/scss/responsive/engine" as engine;
+
+// ─── Responsive utilities map ─────────────────────────────────────────────────
+// Mirrors every `responsive: true` entry from the utilities layer.
+
+$-responsive-utilities: (
+
+  // Display
+  "flex-display": (
+    property: display,
+    values: ("flex": flex, "inline-flex": inline-flex),
+    responsive: true,
+  ),
+
+  // flex-direction
+  "flex-direction": (
+    property: flex-direction,
+    prefix: "flex",
+    values: (
+      "row": row, "row-reverse": row-reverse,
+      "col": column, "col-reverse": column-reverse,
+    ),
+    responsive: true,
+  ),
+
+  // flex-wrap
+  "flex-wrap": (
+    property: flex-wrap,
+    prefix: "flex",
+    values: ("wrap": wrap, "wrap-reverse": wrap-reverse, "nowrap": nowrap),
+    responsive: true,
+  ),
+
+  // flex-flow
+  "flex-flow": (
+    property: flex-flow,
+    prefix: "flex-flow",
+    values: (
+      "row-wrap":         row wrap,
+      "row-nowrap":       row nowrap,
+      "row-wrap-reverse": row wrap-reverse,
+      "col-wrap":         column wrap,
+      "col-nowrap":       column nowrap,
+      "col-wrap-reverse": column wrap-reverse,
+    ),
+    responsive: true,
+  ),
+
+  // justify-content
+  "justify-content": (
+    property: justify-content,
+    prefix: "justify",
+    values: (
+      "start": flex-start, "end": flex-end, "center": center,
+      "between": space-between, "around": space-around,
+      "evenly": space-evenly, "stretch": stretch, "normal": normal,
+    ),
+    responsive: true,
+  ),
+
+  // justify-items
+  "justify-items": (
+    property: justify-items,
+    prefix: "justify-items",
+    values: ("start": start, "end": end, "center": center, "stretch": stretch),
+    responsive: true,
+  ),
+
+  // justify-self
+  "justify-self": (
+    property: justify-self,
+    prefix: "justify-self",
+    values: ("auto": auto, "start": start, "end": end, "center": center, "stretch": stretch),
+    responsive: true,
+  ),
+
+  // align-content
+  "align-content": (
+    property: align-content,
+    prefix: "content",
+    values: (
+      "normal": normal, "center": center, "start": flex-start, "end": flex-end,
+      "between": space-between, "around": space-around,
+      "evenly": space-evenly, "stretch": stretch, "baseline": baseline,
+    ),
+    responsive: true,
+  ),
+
+  // align-items
+  "align-items": (
+    property: align-items,
+    prefix: "items",
+    values: (
+      "start": flex-start, "end": flex-end, "center": center,
+      "stretch": stretch, "baseline": baseline,
+    ),
+    responsive: true,
+  ),
+
+  // align-self
+  "align-self": (
+    property: align-self,
+    prefix: "self",
+    values: (
+      "auto": auto, "start": flex-start, "end": flex-end,
+      "center": center, "stretch": stretch, "baseline": baseline,
+    ),
+    responsive: true,
+  ),
+
+  // place-content
+  "place-content": (
+    property: place-content,
+    prefix: "place-content",
+    values: (
+      "center": center, "start": start, "end": end,
+      "between": space-between, "around": space-around,
+      "evenly": space-evenly, "stretch": stretch, "baseline": baseline,
+    ),
+    responsive: true,
+  ),
+
+  // place-items
+  "place-items": (
+    property: place-items,
+    prefix: "place-items",
+    values: (
+      "start": start, "end": end, "center": center,
+      "stretch": stretch, "baseline": baseline,
+    ),
+    responsive: true,
+  ),
+
+  // place-self
+  "place-self": (
+    property: place-self,
+    prefix: "place-self",
+    values: ("auto": auto, "start": start, "end": end, "center": center, "stretch": stretch),
+    responsive: true,
+  ),
+
+);
+
+// ─── Emit breakpoint-prefixed variants ───────────────────────────────────────
+@include engine.run($-responsive-utilities);

@@ -1,0 +1,11 @@
+// @mastors/gridder — utilities/_grid-column.scss
+// grid-column shorthand utilities.
+// ─────────────────────────────────────────────────────────────
+
+// .grid-col-auto — let the browser place the item
+.grid-col-auto { grid-column: auto; }
+
+// .grid-col-{n} — explicit column shorthand (start / span)
+@each $n in 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 {
+  .grid-col-#{$n} { grid-column: $n; }
+}

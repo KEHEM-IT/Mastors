@@ -1,2 +1,16 @@
-// utilities/_flex-display.scss
-// TODO: Add flex / inline-flex display utilities
+// @mastors/flexer — utilities/_flex-display.scss
+// Flex container display utilities.
+// ─────────────────────────────────────────────────────────────
+
+@use "@mastors/core/scss/generators/class-generator" as gen;
+
+@include gen.generate-utilities((
+  "flex-display": (
+    property: display,
+    values: (
+      "flex":        flex,
+      "inline-flex": inline-flex,
+    ),
+    responsive: true,
+  ),
+));

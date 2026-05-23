@@ -1,0 +1,10 @@
+// @mastors/gridder — utilities/_row-span.scss
+// Row span utilities: .row-span-{1–6}, .row-span-full, .row-auto
+// ─────────────────────────────────────────────────────────────
+
+@each $n in 1, 2, 3, 4, 5, 6 {
+  .row-span-#{$n} { grid-row: span #{$n} / span #{$n}; }
+}
+
+.row-span-full { grid-row: 1 / -1; }
+.row-auto      { grid-row: auto; }

@@ -1,2 +1,20 @@
-// utilities/_align-items.scss
-// TODO: Add align-items utilities
+// @mastors/flexer — utilities/_align-items.scss
+// align-items utility classes (cross-axis alignment for all flex items).
+// ─────────────────────────────────────────────────────────────
+
+@use "@mastors/core/scss/generators/class-generator" as gen;
+
+@include gen.generate-utilities((
+  "align-items": (
+    property: align-items,
+    prefix: "items",
+    values: (
+      "start":    flex-start,
+      "end":      flex-end,
+      "center":   center,
+      "stretch":  stretch,
+      "baseline": baseline,
+    ),
+    responsive: true,
+  ),
+));

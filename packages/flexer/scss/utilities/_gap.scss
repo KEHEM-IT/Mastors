@@ -1,2 +1,17 @@
-// utilities/_gap.scss
-// TODO: Add gap, row-gap, column-gap utilities from spacing tokens
+// @mastors/flexer — utilities/_gap.scss
+// Gap utilities for flex containers (from spacing tokens).
+// ─────────────────────────────────────────────────────────────
+//
+// NOTE: Generic gap utilities (.gap-*, .gap-x-*, .gap-y-*) are already
+// emitted by @mastors/core's utilities/_spacing.scss and work for both
+// flex and grid containers. They do not need re-declaration here.
+//
+// This stub ensures the _index.scss @forward "gap" resolves without error.
+// If flexer is used standalone (without core), uncomment the block below:
+
+// @use "@mastors/core/scss/tokens/spacing" as sp;
+// @each $key, $val in sp.$spacing-tokens {
+//   .gap-#{$key}   { gap: $val; }
+//   .gap-x-#{$key} { column-gap: $val; }
+//   .gap-y-#{$key} { row-gap: $val; }
+// }

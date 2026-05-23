@@ -1,0 +1,9 @@
+// @mastors/gridder — utilities/_row-end.scss
+// Row end-line utilities: .row-end-{1–7}, .row-end-auto
+// ─────────────────────────────────────────────────────────────
+
+@each $n in 1, 2, 3, 4, 5, 6, 7 {
+  .row-end-#{$n} { grid-row-end: $n; }
+}
+
+.row-end-auto { grid-row-end: auto; }

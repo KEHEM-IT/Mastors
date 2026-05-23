@@ -1,0 +1,9 @@
+// @mastors/gridder — utilities/_col-start.scss
+// Column start-line utilities: .col-start-{1–13}, .col-start-auto
+// ─────────────────────────────────────────────────────────────
+
+@each $n in 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 {
+  .col-start-#{$n} { grid-column-start: $n; }
+}
+
+.col-start-auto { grid-column-start: auto; }

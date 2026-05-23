@@ -1,2 +1,20 @@
-// utilities/_place-items.scss
-// TODO: Add place-items shorthand utilities
+// @mastors/flexer — utilities/_place-items.scss
+// place-items shorthand (align-items + justify-items).
+// ─────────────────────────────────────────────────────────────
+
+@use "@mastors/core/scss/generators/class-generator" as gen;
+
+@include gen.generate-utilities((
+  "place-items": (
+    property: place-items,
+    prefix: "place-items",
+    values: (
+      "start":   start,
+      "end":     end,
+      "center":  center,
+      "stretch": stretch,
+      "baseline":baseline,
+    ),
+    responsive: true,
+  ),
+));

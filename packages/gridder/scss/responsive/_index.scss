@@ -1,0 +1,109 @@
+// @mastors/gridder — scss/responsive/_index.scss
+// Responsive breakpoint variants for gridder utilities.
+// ─────────────────────────────────────────────────────────────
+//
+// Wraps all `responsive: true` grid utilities in breakpoint-prefixed
+// media queries via the core responsive engine.
+//
+// Class pattern: .{bp}:{utility}
+// Example:       .md:grid-cols-3, .lg:grid-flow-col, .sm:items-start
+
+@use "@mastors/core/scss/responsive/engine" as engine;
+
+// ─── Responsive utilities map ─────────────────────────────────────────────────
+// Mirrors every `responsive: true` entry from the utilities layer.
+// Only properties appropriate for breakpoint overrides are included.
+
+$-responsive-utilities: (
+
+  // Display
+  "grid": (
+    property: display,
+    values: ("grid": grid, "inline-grid": inline-grid),
+    responsive: true,
+  ),
+
+  // grid-template-columns (.grid-cols-{1-12} + named)
+  "grid-cols-1":  (property: grid-template-columns, values: ("grid-cols-1":  repeat(1,  minmax(0, 1fr))), responsive: true),
+  "grid-cols-2":  (property: grid-template-columns, values: ("grid-cols-2":  repeat(2,  minmax(0, 1fr))), responsive: true),
+  "grid-cols-3":  (property: grid-template-columns, values: ("grid-cols-3":  repeat(3,  minmax(0, 1fr))), responsive: true),
+  "grid-cols-4":  (property: grid-template-columns, values: ("grid-cols-4":  repeat(4,  minmax(0, 1fr))), responsive: true),
+  "grid-cols-5":  (property: grid-template-columns, values: ("grid-cols-5":  repeat(5,  minmax(0, 1fr))), responsive: true),
+  "grid-cols-6":  (property: grid-template-columns, values: ("grid-cols-6":  repeat(6,  minmax(0, 1fr))), responsive: true),
+  "grid-cols-7":  (property: grid-template-columns, values: ("grid-cols-7":  repeat(7,  minmax(0, 1fr))), responsive: true),
+  "grid-cols-8":  (property: grid-template-columns, values: ("grid-cols-8":  repeat(8,  minmax(0, 1fr))), responsive: true),
+  "grid-cols-9":  (property: grid-template-columns, values: ("grid-cols-9":  repeat(9,  minmax(0, 1fr))), responsive: true),
+  "grid-cols-10": (property: grid-template-columns, values: ("grid-cols-10": repeat(10, minmax(0, 1fr))), responsive: true),
+  "grid-cols-11": (property: grid-template-columns, values: ("grid-cols-11": repeat(11, minmax(0, 1fr))), responsive: true),
+  "grid-cols-12": (property: grid-template-columns, values: ("grid-cols-12": repeat(12, minmax(0, 1fr))), responsive: true),
+  "grid-cols-none": (property: grid-template-columns, values: ("grid-cols-none": none), responsive: true),
+
+  // grid-template-rows (.grid-rows-{1-6})
+  "grid-rows-1": (property: grid-template-rows, values: ("grid-rows-1": repeat(1, minmax(0, 1fr))), responsive: true),
+  "grid-rows-2": (property: grid-template-rows, values: ("grid-rows-2": repeat(2, minmax(0, 1fr))), responsive: true),
+  "grid-rows-3": (property: grid-template-rows, values: ("grid-rows-3": repeat(3, minmax(0, 1fr))), responsive: true),
+  "grid-rows-4": (property: grid-template-rows, values: ("grid-rows-4": repeat(4, minmax(0, 1fr))), responsive: true),
+  "grid-rows-5": (property: grid-template-rows, values: ("grid-rows-5": repeat(5, minmax(0, 1fr))), responsive: true),
+  "grid-rows-6": (property: grid-template-rows, values: ("grid-rows-6": repeat(6, minmax(0, 1fr))), responsive: true),
+  "grid-rows-none": (property: grid-template-rows, values: ("grid-rows-none": none), responsive: true),
+
+  // grid-auto-flow
+  "grid-flow": (
+    property: grid-auto-flow,
+    prefix: "grid-flow",
+    values: ("row": row, "col": column, "dense": dense, "row-dense": row dense, "col-dense": column dense),
+    responsive: true,
+  ),
+
+  // justify-items
+  "justify-items": (
+    property: justify-items,
+    prefix: "justify-items",
+    values: ("start": start, "end": end, "center": center, "stretch": stretch),
+    responsive: true,
+  ),
+
+  // align-items (grid context)
+  "align-items": (
+    property: align-items,
+    prefix: "items",
+    values: ("start": start, "end": end, "center": center, "stretch": stretch, "baseline": baseline),
+    responsive: true,
+  ),
+
+  // place-items
+  "place-items": (
+    property: place-items,
+    prefix: "place-items",
+    values: ("start": start, "end": end, "center": center, "stretch": stretch),
+    responsive: true,
+  ),
+
+  // justify-self
+  "justify-self": (
+    property: justify-self,
+    prefix: "justify-self",
+    values: ("auto": auto, "start": start, "end": end, "center": center, "stretch": stretch),
+    responsive: true,
+  ),
+
+  // align-self
+  "align-self": (
+    property: align-self,
+    prefix: "self",
+    values: ("auto": auto, "start": start, "end": end, "center": center, "stretch": stretch, "baseline": baseline),
+    responsive: true,
+  ),
+
+  // place-self
+  "place-self": (
+    property: place-self,
+    prefix: "place-self",
+    values: ("auto": auto, "start": start, "end": end, "center": center, "stretch": stretch),
+    responsive: true,
+  ),
+
+);
+
+// ─── Emit breakpoint-prefixed variants ───────────────────────────────────────
+@include engine.run($-responsive-utilities);

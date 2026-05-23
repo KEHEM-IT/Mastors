@@ -1,2 +1,20 @@
-// utilities/_place-self.scss
-// TODO: Add place-self shorthand utilities
+// @mastors/flexer — utilities/_place-self.scss
+// place-self shorthand (align-self + justify-self).
+// ─────────────────────────────────────────────────────────────
+
+@use "@mastors/core/scss/generators/class-generator" as gen;
+
+@include gen.generate-utilities((
+  "place-self": (
+    property: place-self,
+    prefix: "place-self",
+    values: (
+      "auto":    auto,
+      "start":   start,
+      "end":     end,
+      "center":  center,
+      "stretch": stretch,
+    ),
+    responsive: true,
+  ),
+));

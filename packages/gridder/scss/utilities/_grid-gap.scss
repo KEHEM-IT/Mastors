@@ -1,0 +1,20 @@
+// @mastors/gridder — utilities/_grid-gap.scss
+// Gap utilities (grid-specific context).
+// ─────────────────────────────────────────────────────────────
+//
+// NOTE: Generic gap utilities (.gap-*, .gap-x-*, .gap-y-*) are already
+// emitted by @mastors/core's utilities/_spacing.scss. These classes work
+// for both flex and grid containers and do not need to be re-declared here.
+//
+// This file exists as a forwarding stub so that the gridder package's
+// utilities/_index.scss can forward "grid-gap" without a Sass compile error.
+// The actual gap classes come from @mastors/core.
+//
+// If gridder is used without core (not recommended), uncomment the block below:
+
+// @use "@mastors/core/scss/tokens/spacing" as sp;
+// @each $key, $val in sp.$spacing-tokens {
+//   .gap-#{$key}   { gap: $val; }
+//   .gap-x-#{$key} { column-gap: $val; }
+//   .gap-y-#{$key} { row-gap: $val; }
+// }

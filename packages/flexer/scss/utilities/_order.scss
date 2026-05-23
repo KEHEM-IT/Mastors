@@ -1,2 +1,23 @@
-// utilities/_order.scss
-// TODO: Add order utilities (first, last, none, numeric scale)
+// @mastors/flexer — utilities/_order.scss
+// order utility classes (visual ordering of flex items).
+// ─────────────────────────────────────────────────────────────
+
+@use "@mastors/core/scss/generators/class-generator" as gen;
+
+// Named convenience values
+@include gen.generate-utilities((
+  "order-named": (
+    property: order,
+    prefix: "order",
+    values: (
+      "first": -9999,
+      "last":   9999,
+      "none":   0,
+    ),
+  ),
+));
+
+// Numeric scale: .order-{1–12}
+@each $n in 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 {
+  .order-#{$n} { order: $n; }
+}

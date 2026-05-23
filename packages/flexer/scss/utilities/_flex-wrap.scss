@@ -1,2 +1,18 @@
-// utilities/_flex-wrap.scss
-// TODO: Add flex-wrap utilities (wrap, nowrap, wrap-reverse)
+// @mastors/flexer — utilities/_flex-wrap.scss
+// flex-wrap utility classes.
+// ─────────────────────────────────────────────────────────────
+
+@use "@mastors/core/scss/generators/class-generator" as gen;
+
+@include gen.generate-utilities((
+  "flex-wrap": (
+    property: flex-wrap,
+    prefix: "flex",
+    values: (
+      "wrap":         wrap,
+      "wrap-reverse": wrap-reverse,
+      "nowrap":       nowrap,
+    ),
+    responsive: true,
+  ),
+));

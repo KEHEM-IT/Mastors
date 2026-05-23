@@ -1,18 +1,19 @@
-// @mastors/flexer — utilities/_justify-items.scss
-// justify-items utility classes (inline-axis alignment for all flex items).
+// @mastors/gridder — utilities/_grid-auto-flow.scss
+// grid-auto-flow utility classes.
 // ─────────────────────────────────────────────────────────────
 
 @use "@mastors/core/scss/generators/class-generator" as gen;
 
 @include gen.generate-utilities((
-  "justify-items": (
-    property: justify-items,
-    prefix: "justify-items",
+  "grid-flow": (
+    property: grid-auto-flow,
+    prefix: "grid-flow",
     values: (
-      "start":   start,
-      "end":     end,
-      "center":  center,
-      "stretch": stretch,
+      "row":         row,
+      "col":         column,
+      "dense":       dense,
+      "row-dense":   row dense,
+      "col-dense":   column dense,
     ),
     responsive: true,
   ),

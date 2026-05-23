@@ -1,2 +1,16 @@
-// utilities/_grid-display.scss
-// TODO: Add grid / inline-grid display utilities
+// @mastors/gridder — utilities/_grid-display.scss
+// Grid container display utilities.
+// ─────────────────────────────────────────────────────────────
+
+@use "@mastors/core/scss/generators/class-generator" as gen;
+
+@include gen.generate-utilities((
+  "grid-display": (
+    property: display,
+    values: (
+      "grid":        grid,
+      "inline-grid": inline-grid,
+    ),
+    responsive: true,
+  ),
+));
