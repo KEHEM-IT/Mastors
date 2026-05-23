@@ -2,11 +2,16 @@
 // Master feature flags and global configuration map.
 // ─────────────────────────────────────────────────────────────
 
-// TODO: Define $mastors-config map with feature toggles
-// Example structure:
-// $mastors-config: (
-//   "prefix":        "m",
-//   "important":     false,
-//   "dark-mode":     "class",   // "class" | "media"
-//   "rtl":           false,
-// ) !default;
+$mastors-config: (
+  "prefix":       "",
+  "important":    false,
+  "dark-mode":    "class",
+  "rtl":          false,
+) !default;
+
+// Convenience accessors
+@function config($key) {
+  @return map.get($mastors-config, $key);
+}
+
+@use "sass:map";

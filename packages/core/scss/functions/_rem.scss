@@ -2,4 +2,15 @@
 // px → rem conversion function.
 // ─────────────────────────────────────────────────────────────
 
-// TODO: Add rem() function with configurable base
+@use "sass:math";
+@use "sass:map";
+@use "../variables/global" as vars;
+
+/// Convert px to rem using the base font size
+/// @param {Number} $px - pixel value (unitless or px)
+/// @return {Number} rem value
+@function rem($px) {
+  $base: if(math.compatible($px, 1px), math.div($px, 1px), $px);
+  $root: if(math.compatible(vars.$base-font-size, 1px), math.div(vars.$base-font-size, 1px), vars.$base-font-size);
+  @return math.div($base, $root) * 1rem;
+}

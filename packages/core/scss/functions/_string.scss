@@ -2,4 +2,21 @@
 // String manipulation functions.
 // ─────────────────────────────────────────────────────────────
 
-// TODO: Add string utility functions (str-replace, to-string, etc.)
+@use "sass:string";
+@use "sass:list";
+
+/// Replace all occurrences of $search in $string with $replace
+@function str-replace($string, $search, $replace: "") {
+  $index: string.index($string, $search);
+  @if $index {
+    @return string.slice($string, 1, $index - 1)
+          + $replace
+          + str-replace(string.slice($string, $index + string.length($search)), $search, $replace);
+  }
+  @return $string;
+}
+
+/// Convert any value to a string
+@function to-string($value) {
+  @return #{$value};
+}

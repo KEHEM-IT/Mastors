@@ -2,4 +2,6 @@
 // Grid system configuration variables.
 // ─────────────────────────────────────────────────────────────
 
-// TODO: Define $grid-columns, $grid-gutter, $grid-row-gap
+$grid-columns:   12   !default;
+$grid-gutter:    1.5rem !default;
+$grid-row-gap:   1.5rem !default;

@@ -2,5 +2,20 @@
 // Design token map: z-index stacking layers.
 // ─────────────────────────────────────────────────────────────
 
-// TODO: Define $z-index-tokens map
-// Example layers: base, dropdown, sticky, overlay, modal, toast, tooltip
+@use "sass:map";
+
+$z-index-tokens: (
+  "base":     0,
+  "raised":   10,
+  "dropdown": 100,
+  "sticky":   200,
+  "overlay":  300,
+  "modal":    400,
+  "toast":    500,
+  "tooltip":  600,
+  "max":      9999,
+) !default;
+
+@function z($key) {
+  @return map.get($z-index-tokens, $key);
+}

@@ -2,4 +2,11 @@
 // Box shadow / elevation scale mixin.
 // ─────────────────────────────────────────────────────────────
 
-// TODO: Add elevation($level) mixin based on shadow tokens
+@use "sass:map";
+@use "../tokens/shadows" as sh;
+
+/// Apply a shadow elevation level
+/// @param {String} $level - shadow key (xs, sm, md, lg, xl, 2xl, inner, none)
+@mixin elevation($level: "md") {
+  box-shadow: sh.shadow($level);
+}

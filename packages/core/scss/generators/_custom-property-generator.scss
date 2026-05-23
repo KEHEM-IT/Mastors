@@ -2,5 +2,27 @@
 // Emits CSS custom properties from SCSS token maps.
 // ─────────────────────────────────────────────────────────────
 
-// TODO: Add emit-custom-properties() mixin
-// Iterates a token map and outputs: --mastors-<key>: <value>;
+@use "sass:map";
+@use "sass:string";
+
+/// Emit CSS custom properties from a token map onto a selector
+/// @param {Map}    $map      - token map (key → value)
+/// @param {String} $prefix   - custom property prefix (e.g. "mastors-color-primary")
+@mixin emit-custom-properties($map, $prefix) {
+  @each $key, $value in $map {
+    --#{$prefix}-#{$key}: #{$value};
+  }
+}
+
+/// Recursively emit nested token maps (e.g. color palette with scales)
+/// @param {Map}    $map      - nested map
+/// @param {String} $prefix   - base prefix (e.g. "mastors-color")
+@mixin emit-nested-custom-properties($map, $prefix) {
+  @each $key, $value in $map {
+    @if type-of($value) == map {
+      @include emit-nested-custom-properties($value, "#{$prefix}-#{$key}");
+    } @else {
+      --#{$prefix}-#{$key}: #{$value};
+    }
+  }
+}

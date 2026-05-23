@@ -2,4 +2,6 @@
 // Global box-sizing strategy.
 // ─────────────────────────────────────────────────────────────
 
-// TODO: Add box-sizing: border-box inheritance pattern
+*, *::before, *::after {
+  box-sizing: border-box;
+}

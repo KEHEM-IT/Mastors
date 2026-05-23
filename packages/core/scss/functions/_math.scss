@@ -2,4 +2,20 @@
 // Math utility functions (clamp, fluid scaling, etc.)
 // ─────────────────────────────────────────────────────────────
 
-// TODO: Add math utility functions
+@use "sass:math";
+
+/// Clamp a value between min and max
+@function clamp-value($min, $val, $max) {
+  @return clamp(#{$min}, #{$val}, #{$max});
+}
+
+/// Fluid value: scales linearly between two sizes across two viewport widths
+/// @param {Number} $min-val   - minimum output value (rem)
+/// @param {Number} $max-val   - maximum output value (rem)
+/// @param {Number} $min-vw    - viewport at which minimum applies (px)
+/// @param {Number} $max-vw    - viewport at which maximum applies (px)
+@function fluid($min-val, $max-val, $min-vw: 320px, $max-vw: 1280px) {
+  $slope: math.div($max-val - $min-val, $max-vw - $min-vw);
+  $intercept: $min-val - $slope * $min-vw;
+  @return clamp(#{$min-val}, #{$slope * 100vw} + #{$intercept}, #{$max-val});
+}

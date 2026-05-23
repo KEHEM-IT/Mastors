@@ -2,4 +2,15 @@
 // px → em conversion function.
 // ─────────────────────────────────────────────────────────────
 
-// TODO: Add em() function with configurable base
+@use "sass:math";
+@use "../variables/global" as vars;
+
+/// Convert px to em relative to a given context
+/// @param {Number} $px - pixel value
+/// @param {Number} $context - context font size in px (default: base)
+/// @return {Number} em value
+@function em($px, $context: vars.$base-font-size) {
+  $base: if(math.compatible($px, 1px), math.div($px, 1px), $px);
+  $ctx:  if(math.compatible($context, 1px), math.div($context, 1px), $context);
+  @return math.div($base, $ctx) * 1em;
+}

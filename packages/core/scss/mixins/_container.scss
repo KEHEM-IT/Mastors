@@ -2,4 +2,19 @@
 // Responsive container width / max-width / padding mixin.
 // ─────────────────────────────────────────────────────────────
 
-// TODO: Add container() mixin with breakpoint-aware sizing
+@use "sass:map";
+@use "../variables/container" as cvars;
+@use "./breakpoint" as bp;
+
+/// Responsive container with max-width and horizontal padding
+@mixin container {
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: cvars.$container-padding-x;
+
+  @each $bp-key, $max-w in cvars.$container-max-widths {
+    @include bp.bp($bp-key) {
+      max-width: $max-w;
+    }
+  }
+}

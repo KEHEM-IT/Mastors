@@ -2,4 +2,31 @@
 // Wraps utility output in responsive breakpoint media queries.
 // ─────────────────────────────────────────────────────────────
 
-// TODO: Add respond-to() mixin and responsive variant generator
+@use "sass:map";
+@use "../variables/breakpoints" as bpvars;
+
+/// Wrap a block of utility output in all responsive breakpoint prefixes
+/// Used internally by sub-packages that call generate-utilities with responsive: true
+///
+/// The generated classes use the pattern: .{bp}\:{class}
+/// e.g. .sm\:flex, .md\:hidden, .lg\:gap-8
+@mixin generate-responsive($utilities) {
+  @each $bp-key, $bp-value in bpvars.$breakpoints {
+    @if $bp-value == 0px {
+      // xs: no media query
+      @each $name, $config in $utilities {
+        @if map.get($config, responsive) {
+          @content($bp-key, $config);
+        }
+      }
+    } @else {
+      @media (min-width: #{$bp-value}) {
+        @each $name, $config in $utilities {
+          @if map.get($config, responsive) {
+            @content($bp-key, $config);
+          }
+        }
+      }
+    }
+  }
+}

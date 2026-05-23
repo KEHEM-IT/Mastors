@@ -2,4 +2,29 @@
 // Color manipulation and derivation functions.
 // ─────────────────────────────────────────────────────────────
 
-// TODO: Add color utility functions (tint, shade, alpha, contrast, etc.)
+@use "sass:color";
+@use "sass:math";
+@use "../tokens/color" as ct;
+
+/// Mix a color with white
+@function tint($c, $pct: 10%) {
+  @return color.mix(white, $c, $pct);
+}
+
+/// Mix a color with black
+@function shade($c, $pct: 10%) {
+  @return color.mix(black, $c, $pct);
+}
+
+/// Adjust a color's alpha channel
+@function alpha($c, $a) {
+  @return color.adjust($c, $alpha: $a - 1);
+}
+
+/// Return black or white for maximum contrast against $bg
+@function contrast($bg, $light: white, $dark: black) {
+  $luminance: 0.2126 * color.channel($bg, "red", $space: rgb) / 255
+            + 0.7152 * color.channel($bg, "green", $space: rgb) / 255
+            + 0.0722 * color.channel($bg, "blue", $space: rgb) / 255;
+  @return if($luminance > 0.179, $dark, $light);
+}

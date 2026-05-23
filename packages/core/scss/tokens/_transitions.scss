@@ -2,4 +2,26 @@
 // Design token map: duration and easing curves.
 // ─────────────────────────────────────────────────────────────
 
-// TODO: Define $duration-tokens and $easing-tokens maps
+@use "sass:map";
+
+$duration-tokens: (
+  "75":   75ms,
+  "100":  100ms,
+  "150":  150ms,
+  "200":  200ms,
+  "300":  300ms,
+  "500":  500ms,
+  "700":  700ms,
+  "1000": 1000ms,
+) !default;
+
+$easing-tokens: (
+  "linear":      linear,
+  "in":          cubic-bezier(0.4, 0, 1, 1),
+  "out":         cubic-bezier(0, 0, 0.2, 1),
+  "in-out":      cubic-bezier(0.4, 0, 0.2, 1),
+  "bounce":      cubic-bezier(0.34, 1.56, 0.64, 1),
+) !default;
+
+@function duration($key) { @return map.get($duration-tokens, "#{$key}"); }
+@function easing($key)   { @return map.get($easing-tokens, $key); }

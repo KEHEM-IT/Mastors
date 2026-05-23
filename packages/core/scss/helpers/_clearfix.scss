@@ -2,4 +2,8 @@
 // Clearfix helper for legacy float layouts.
 // ─────────────────────────────────────────────────────────────
 
-// TODO: Add clearfix helper
+.clearfix::after {
+  content: "";
+  display: table;
+  clear: both;
+}

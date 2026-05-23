@@ -2,4 +2,28 @@
 // Deep map access, merge, and utility functions.
 // ─────────────────────────────────────────────────────────────
 
-// TODO: Add map-deep-get, map-deep-set, map-collect helpers
+@use "sass:map";
+@use "sass:list";
+@use "sass:meta";
+
+/// Deep map get — map.get() for nested maps
+/// Usage: map-deep-get($map, "key1", "key2")
+@function map-deep-get($map, $keys...) {
+  $result: $map;
+  @each $key in $keys {
+    @if meta.type-of($result) != map {
+      @error "map-deep-get: expected a map at key '#{$key}', got #{meta.type-of($result)}";
+    }
+    $result: map.get($result, $key);
+  }
+  @return $result;
+}
+
+/// Merge multiple maps into one (shallow)
+@function map-collect($maps...) {
+  $result: ();
+  @each $m in $maps {
+    $result: map.merge($result, $m);
+  }
+  @return $result;
+}

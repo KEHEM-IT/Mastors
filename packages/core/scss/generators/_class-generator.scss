@@ -2,6 +2,40 @@
 // Core mixin engine for generating utility class output.
 // ─────────────────────────────────────────────────────────────
 
-// TODO: Add generate-utilities() mixin
-// Accepts a config map and emits utility classes with optional
-// responsive variants, dark-mode variants, and !important support.
+@use "sass:map";
+@use "sass:meta";
+@use "../config/settings" as cfg;
+
+/// Core utility class generator engine.
+/// 
+/// @param {Map} $utilities - map of utility configs, each with:
+///   - property {String}   CSS property name
+///   - values   {Map}      class-suffix → value pairs
+///   - prefix   {String}   optional class prefix (e.g. "flex")
+///   - responsive {Boolean} emit responsive variants (default false)
+///
+/// Usage:
+///   @include generate-utilities((
+///     "flex-direction": (
+///       property:    flex-direction,
+///       prefix:      "flex",
+///       values: ("row": row, "col": column, "row-reverse": row-reverse),
+///       responsive:  true,
+///     ),
+///   ));
+@mixin generate-utilities($utilities) {
+  @each $name, $config in $utilities {
+    $prop:       map.get($config, property);
+    $values:     map.get($config, values);
+    $prefix:     map.get($config, prefix);
+    $important:  if(cfg.config("important"), !important, null);
+    $cls-prefix: cfg.config("prefix");
+
+    @each $suffix, $value in $values {
+      $class-name: if($prefix, "#{$cls-prefix}#{$prefix}-#{$suffix}", "#{$cls-prefix}#{$suffix}");
+      .#{$class-name} {
+        #{$prop}: $value $important;
+      }
+    }
+  }
+}

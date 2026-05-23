@@ -2,4 +2,12 @@
 // ::before / ::after pseudo-element helper mixins.
 // ─────────────────────────────────────────────────────────────
 
-// TODO: Add pseudo($display, $pos, $content) mixin
+/// Generate a pseudo-element (::before / ::after)
+/// @param {String} $display  - display value (default: block)
+/// @param {String} $pos      - position value (default: absolute)
+/// @param {String} $content  - content value (default: "")
+@mixin pseudo($display: block, $pos: absolute, $content: "") {
+  content: $content;
+  display: $display;
+  position: $pos;
+}

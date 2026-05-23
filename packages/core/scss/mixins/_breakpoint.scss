@@ -2,4 +2,32 @@
 // Responsive breakpoint mixin and variant helpers.
 // ─────────────────────────────────────────────────────────────
 
-// TODO: Add bp() / respond-to() / breakpoint-up() / breakpoint-down() mixins
+@use "sass:map";
+@use "../variables/breakpoints" as bpvars;
+
+/// Emit styles at and above a named breakpoint (mobile-first)
+/// @param {String} $bp - breakpoint key (sm, md, lg, xl, 2xl)
+@mixin bp($bp) {
+  $value: map.get(bpvars.$breakpoints, $bp);
+  @if $value == null {
+    @error "bp(): unknown breakpoint '#{$bp}'. Available: #{map.keys(bpvars.$breakpoints)}";
+  }
+  @if $value == 0px {
+    @content;
+  } @else {
+    @media (min-width: #{$value}) { @content; }
+  }
+}
+
+// Alias
+@mixin respond-to($bp)      { @include bp($bp) { @content; } }
+@mixin breakpoint-up($bp)   { @include bp($bp) { @content; } }
+
+/// Emit styles below a named breakpoint
+@mixin breakpoint-down($bp) {
+  $value: map.get(bpvars.$breakpoints, $bp);
+  @if $value == null {
+    @error "breakpoint-down(): unknown breakpoint '#{$bp}'";
+  }
+  @media (max-width: #{$value - 0.02px}) { @content; }
+}

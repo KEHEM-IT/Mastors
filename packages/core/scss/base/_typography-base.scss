@@ -2,4 +2,40 @@
 // Base element typography (html, body, headings, p, a, etc.)
 // ─────────────────────────────────────────────────────────────
 
-// TODO: Add base element typography styles
+@use "../variables/global"  as vars;
+@use "../tokens/typography" as ty;
+@use "../tokens/color"      as ct;
+
+html {
+  font-size: vars.$base-font-size;
+  line-height: vars.$base-line-height;
+  font-family: vars.$base-font-family;
+  color: ct.color("neutral", 900);
+  background-color: ct.color("white");
+}
+
+body {
+  font-size: ty.font-size("base");
+  font-weight: ty.font-weight("normal");
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: ty.font-weight("semibold");
+  line-height: ty.line-height("tight");
+}
+
+h1 { font-size: ty.font-size("4xl"); }
+h2 { font-size: ty.font-size("3xl"); }
+h3 { font-size: ty.font-size("2xl"); }
+h4 { font-size: ty.font-size("xl"); }
+h5 { font-size: ty.font-size("lg"); }
+h6 { font-size: ty.font-size("base"); }
+
+p  { line-height: ty.line-height("relaxed"); }
+
+small { font-size: ty.font-size("sm"); }
+
+code, kbd, samp, pre {
+  font-family: ty.font-family("mono");
+  font-size: ty.font-size("sm");
+}

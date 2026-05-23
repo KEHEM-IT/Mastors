@@ -2,5 +2,49 @@
 // Design token map: width / height / size scale.
 // ─────────────────────────────────────────────────────────────
 
-// TODO: Define $sizing-tokens map
-// Includes: fixed sizes, fractional sizes, content/screen/fit keywords
+@use "sass:map";
+
+$sizing-tokens: (
+  // Fixed scale (shares spacing scale keys)
+  "0":    0px,
+  "px":   1px,
+  "1":    0.25rem,
+  "2":    0.5rem,
+  "4":    1rem,
+  "8":    2rem,
+  "12":   3rem,
+  "16":   4rem,
+  "20":   5rem,
+  "24":   6rem,
+  "32":   8rem,
+  "40":   10rem,
+  "48":   12rem,
+  "56":   14rem,
+  "64":   16rem,
+  "72":   18rem,
+  "80":   20rem,
+  "96":   24rem,
+  // Fractions
+  "1\/2":  50%,
+  "1\/3":  33.333333%,
+  "2\/3":  66.666667%,
+  "1\/4":  25%,
+  "3\/4":  75%,
+  "1\/5":  20%,
+  "2\/5":  40%,
+  "3\/5":  60%,
+  "4\/5":  80%,
+  // Keywords
+  "auto":    auto,
+  "full":    100%,
+  "screen":  100vw,
+  "svw":     100svw,
+  "dvw":     100dvw,
+  "min":     min-content,
+  "max":     max-content,
+  "fit":     fit-content,
+) !default;
+
+@function sizing($key) {
+  @return map.get($sizing-tokens, "#{$key}");
+}

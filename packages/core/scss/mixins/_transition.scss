@@ -2,4 +2,19 @@
 // Transition helpers using token-driven durations and easings.
 // ─────────────────────────────────────────────────────────────
 
-// TODO: Add transition() mixin with token-based duration/easing
+@use "sass:list";
+@use "../tokens/transitions" as tr;
+
+/// Emit a transition using named token durations and easings
+/// @param {List} $properties  - CSS properties to transition (default: all)
+/// @param {String} $duration  - duration token key (default: "200")
+/// @param {String} $easing    - easing token key (default: "in-out")
+@mixin transition($properties: (all), $duration: "200", $easing: "in-out") {
+  $dur:  tr.duration($duration);
+  $ease: tr.easing($easing);
+  $transitions: ();
+  @each $prop in $properties {
+    $transitions: list.append($transitions, #{$prop} #{$dur} #{$ease}, comma);
+  }
+  transition: $transitions;
+}

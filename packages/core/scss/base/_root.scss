@@ -2,4 +2,42 @@
 // :root CSS custom property declarations.
 // ─────────────────────────────────────────────────────────────
 
-// TODO: Emit CSS custom properties from token maps
+@use "../tokens/color"      as ct;
+@use "../tokens/spacing"    as sp;
+@use "../tokens/typography" as ty;
+@use "../tokens/shadows"    as sh;
+@use "../tokens/radii"      as ra;
+@use "../tokens/transitions" as tr;
+@use "../tokens/z-index"    as zi;
+@use "../tokens/opacity"    as op;
+@use "../generators/custom-property-generator" as gen;
+
+:root {
+  // Color tokens — nested emit (primary-50, primary-100 …)
+  @include gen.emit-nested-custom-properties(ct.$color-tokens, "mastors-color");
+
+  // Spacing
+  @include gen.emit-custom-properties(sp.$spacing-tokens, "mastors-spacing");
+
+  // Typography
+  @include gen.emit-custom-properties(ty.$font-size-tokens,       "mastors-font-size");
+  @include gen.emit-custom-properties(ty.$font-weight-tokens,     "mastors-font-weight");
+  @include gen.emit-custom-properties(ty.$line-height-tokens,     "mastors-leading");
+  @include gen.emit-custom-properties(ty.$letter-spacing-tokens,  "mastors-tracking");
+
+  // Radii
+  @include gen.emit-custom-properties(ra.$radius-tokens, "mastors-radius");
+
+  // Shadows
+  @include gen.emit-custom-properties(sh.$shadow-tokens, "mastors-shadow");
+
+  // Transitions
+  @include gen.emit-custom-properties(tr.$duration-tokens, "mastors-duration");
+  @include gen.emit-custom-properties(tr.$easing-tokens,   "mastors-easing");
+
+  // Z-index
+  @include gen.emit-custom-properties(zi.$z-index-tokens, "mastors-z");
+
+  // Opacity
+  @include gen.emit-custom-properties(op.$opacity-tokens, "mastors-opacity");
+}

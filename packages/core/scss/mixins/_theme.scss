@@ -2,4 +2,28 @@
 // Theme-switching mixins (light/dark/custom).
 // ─────────────────────────────────────────────────────────────
 
-// TODO: Add dark-mode(), light-mode(), theme() mixins
+@use "../config/settings" as cfg;
+
+/// Apply styles inside the dark-mode context (class or media strategy)
+@mixin dark-mode {
+  @if cfg.config("dark-mode") == "class" {
+    :global(.dark) & { @content; }
+  } @else {
+    @media (prefers-color-scheme: dark) { @content; }
+  }
+}
+
+/// Apply styles inside the light-mode context
+@mixin light-mode {
+  @if cfg.config("dark-mode") == "class" {
+    :global(.light) & { @content; }
+  } @else {
+    @media (prefers-color-scheme: light) { @content; }
+  }
+}
+
+/// Apply styles under a named theme class on :root/html
+/// Usage: @include theme("ocean") { color: ...; }
+@mixin theme($name) {
+  :global([data-theme="#{$name}"]) & { @content; }
+}

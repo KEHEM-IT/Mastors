@@ -2,4 +2,12 @@
 // Container width constraints per breakpoint.
 // ─────────────────────────────────────────────────────────────
 
-// TODO: Define $container-max-widths map
+$container-max-widths: (
+  "sm":  640px,
+  "md":  768px,
+  "lg":  1024px,
+  "xl":  1280px,
+  "2xl": 1400px,
+) !default;
+
+$container-padding-x: 1rem !default;
