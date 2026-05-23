@@ -22,20 +22,20 @@
 @use "mixins/index"     as *;
 
 // 6. Base & Reset (outputs CSS)
-@use "base/index";
+@use "base/index"       as base;
 
 // 7. Themes (outputs CSS custom properties)
-@use "themes/index";
+@use "themes/index"     as themes;
 
 // 8. Semantic layer (outputs CSS)
-@use "semantic/index";
+@use "semantic/index"   as semantic;
 
 // 9. Responsive engine (outputs CSS)
-@use "responsive/index";
+@use "responsive/index" as responsive;
 
 // 10. Helpers & Utilities
-@use "helpers/index";
-@use "utilities/index";
+@use "helpers/index"    as helpers;
+@use "utilities/index"  as utilities;
 
 // 11. Accessibility
-@use "accessibility/index";
+@use "accessibility/index" as accessibility;

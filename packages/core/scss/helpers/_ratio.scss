@@ -2,15 +2,17 @@
 // Aspect ratio helpers.
 // ─────────────────────────────────────────────────────────────
 
+@use "sass:math";
+
 // Aspect ratio helpers using the native aspect-ratio property
 
 $-ratios: (
   "auto":    auto,
-  "square":  1 / 1,
-  "video":   16 / 9,
-  "portrait": 3 / 4,
-  "wide":    21 / 9,
-  "golden":  1.618 / 1,
+  "square":  math.div(1, 1),
+  "video":   math.div(16, 9),
+  "portrait": math.div(3, 4),
+  "wide":    math.div(21, 9),
+  "golden":  math.div(1.618, 1),
 ) !default;
 
 @each $name, $ratio in $-ratios {

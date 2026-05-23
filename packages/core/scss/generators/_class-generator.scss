@@ -28,11 +28,17 @@
     $prop:       map.get($config, property);
     $values:     map.get($config, values);
     $prefix:     map.get($config, prefix);
-    $important:  if(cfg.config("important"), !important, null);
     $cls-prefix: cfg.config("prefix");
+    $important: null;
+    @if cfg.config("important") {
+      $important: !important;
+    }
 
     @each $suffix, $value in $values {
-      $class-name: if($prefix, "#{$cls-prefix}#{$prefix}-#{$suffix}", "#{$cls-prefix}#{$suffix}");
+      $class-name: "#{$cls-prefix}#{$suffix}";
+      @if $prefix {
+        $class-name: "#{$cls-prefix}#{$prefix}-#{$suffix}";
+      }
       .#{$class-name} {
         #{$prop}: $value $important;
       }

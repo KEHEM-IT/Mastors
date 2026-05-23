@@ -9,5 +9,5 @@
 @use "mixins/index"     as *;
 @use "generators/index" as *;
 
-@use "utilities/index";
-@use "responsive/index";
+@use "utilities/index"  as utilities;
+@use "responsive/index" as responsive;

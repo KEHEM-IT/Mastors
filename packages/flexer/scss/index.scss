@@ -12,7 +12,7 @@
 @use "generators/index" as *;
 
 // Utility output
-@use "utilities/index";
+@use "utilities/index"  as utilities;
 
 // Responsive variants
-@use "responsive/index";
+@use "responsive/index" as responsive;

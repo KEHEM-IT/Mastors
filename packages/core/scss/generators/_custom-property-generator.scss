@@ -3,6 +3,7 @@
 // ─────────────────────────────────────────────────────────────
 
 @use "sass:map";
+@use "sass:meta";
 @use "sass:string";
 
 /// Emit CSS custom properties from a token map onto a selector
@@ -19,7 +20,7 @@
 /// @param {String} $prefix   - base prefix (e.g. "mastors-color")
 @mixin emit-nested-custom-properties($map, $prefix) {
   @each $key, $value in $map {
-    @if type-of($value) == map {
+    @if meta.type-of($value) == map {
       @include emit-nested-custom-properties($value, "#{$prefix}-#{$key}");
     } @else {
       --#{$prefix}-#{$key}: #{$value};
