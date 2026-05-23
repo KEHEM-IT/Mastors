@@ -28,6 +28,7 @@
     "./dist/mastors-core.css": "./dist/mastors-core.css"
   },
   "files": [
+    "api",
     "dist",
     "scss",
     "src",

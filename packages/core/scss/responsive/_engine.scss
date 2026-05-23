@@ -15,6 +15,8 @@
 // Sub-packages pass their $utilities map here via @include engine.run()
 // so the engine iterates breakpoints and re-emits the classes.
 
+@use "sass:string";
+
 @mixin run($utilities) {
   @if flags.$enable-responsive {
     @each $bp-key, $bp-value in bpvars.$breakpoints {
@@ -28,9 +30,31 @@
               $prefix: map.get($config, prefix);
 
               @each $suffix, $value in $values {
-                $class: if($prefix, "#{$prefix}-#{$suffix}", "#{$suffix}");
-                // Escape the colon in the class name
-                .#{$bp-key}\:#{$class} {
+                $class: null;
+                @if $prefix {
+                  $class: "#{$prefix}-#{$suffix}";
+                } @else {
+                  $class: "#{$suffix}";
+                }
+
+                // CSS class names cannot start with a digit.
+                // When the breakpoint key begins with a number (e.g. "2xl"),
+                // escape it using the CSS identifier-escape syntax: \3X  (space after hex).
+                $first: string.slice("#{$bp-key}", 1, 1);
+                $rest:  string.slice("#{$bp-key}", 2);
+                $safe-bp: null;
+                @if $first == "0" or $first == "1" or $first == "2" or $first == "3" or
+                    $first == "4" or $first == "5" or $first == "6" or $first == "7" or
+                    $first == "8" or $first == "9" {
+                  // \3X  is the CSS escape for the digit (space terminates the escape)
+                  $safe-bp: "\\3#{$first} #{$rest}";
+                } @else {
+                  $safe-bp: "#{$bp-key}";
+                }
+
+                // Use #{} interpolation so Sass emits the selector verbatim
+                // without re-parsing the leading backslash as a Sass identifier.
+                @at-root .#{$safe-bp}\:#{$class} {
                   #{$prop}: $value;
                 }
               }

@@ -26,5 +26,9 @@
   $luminance: 0.2126 * color.channel($bg, "red", $space: rgb) / 255
             + 0.7152 * color.channel($bg, "green", $space: rgb) / 255
             + 0.0722 * color.channel($bg, "blue", $space: rgb) / 255;
-  @return if($luminance > 0.179, $dark, $light);
+  @if $luminance > 0.179 {
+    @return $dark;
+  } @else {
+    @return $light;
+  }
 }

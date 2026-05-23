@@ -1,0 +1,5 @@
+// api/_index.scss
+// Sass-resolution shim — forwards to the real public API.
+// Sass resolves @use "@mastors/core/api" → node_modules/@mastors/core/api/_index.scss
+// Node exports field is ignored by the Sass compiler.
+@forward "../scss/api/index";
