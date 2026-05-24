@@ -1,6 +1,6 @@
 {
   "name": "@mastors/flexer",
-  "version": "2.0.0",
+  "version": "1.0.0",
   "description": "Mastors Flexer — complete flexbox utility class system",
   "license": "MIT",
   "author": "Mastors Contributors",
@@ -43,7 +43,7 @@
     "sass": "^1.80.0"
   },
   "peerDependencies": {
-    "@mastors/core": ">=2.0.0",
+    "@mastors/core": ">=1.0.0",
     "sass": ">=1.80.0"
   },
   "sideEffects": [

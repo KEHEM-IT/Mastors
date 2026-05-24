@@ -23,7 +23,11 @@ compile(
   isProd
 )
 
-// 3. Compile TypeScript
+// 3. Regenerate src/tokens.ts from SCSS source (prevents drift)
+console.log('[core] Generating tokens...')
+execSync('node scripts/generate-tokens.js', { stdio: 'inherit', cwd: root })
+
+// 4. Compile TypeScript
 console.log('[core] Compiling TypeScript...')
 execSync('tsc -p tsconfig.build.json', { stdio: 'inherit', cwd: root })
 

@@ -1,26 +1,41 @@
 // helpers/_visually-hidden.scss
 // Visually hides content while keeping it accessible to screen readers.
 // ─────────────────────────────────────────────────────────────
+//
+// The canonical implementation lives in accessibility/_screen-reader.scss
+// (.sr-only / .not-sr-only — the modern standard class names).
+//
+// This file provides the legacy aliases (.visually-hidden, .vh,
+// .visually-hidden-focusable) that map onto the same rules, so existing
+// codebases using either naming convention continue to work without
+// duplicating any declarations.
 
-// Shared styles as a placeholder to avoid cross-module @extend issues
-%visually-hidden-base {
-  position: absolute !important;
-  width: 1px !important;
-  height: 1px !important;
-  padding: 0 !important;
-  margin: -1px !important;
-  overflow: hidden !important;
-  clip: rect(0, 0, 0, 0) !important;
-  white-space: nowrap !important;
-  border: 0 !important;
-}
+@use "../accessibility/screen-reader" as *;
 
+// Legacy aliases — extend the canonical sr-only rules
+// so no extra CSS is emitted; both class names share one rule block.
 .visually-hidden,
 .vh {
-  @extend %visually-hidden-base;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }
 
 // Undo visually-hidden when focused (e.g. skip links)
 .visually-hidden-focusable:not(:focus):not(:focus-within) {
-  @extend %visually-hidden-base;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }
