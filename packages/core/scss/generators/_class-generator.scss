@@ -4,15 +4,20 @@
 
 @use "sass:map";
 @use "sass:meta";
+@use "sass:string";
 @use "../config/settings" as cfg;
+@use "../config/flags";
+@use "../variables/breakpoints" as bpvars;
 
 /// Core utility class generator engine.
-/// 
+/// Emits base utility classes AND, for any entry with responsive: true,
+/// also emits breakpoint-prefixed variants via the built-in responsive pass.
+///
 /// @param {Map} $utilities - map of utility configs, each with:
-///   - property {String}   CSS property name
-///   - values   {Map}      class-suffix → value pairs
-///   - prefix   {String}   optional class prefix (e.g. "flex")
-///   - responsive {Boolean} emit responsive variants (default false)
+///   - property    {String}  CSS property name
+///   - values      {Map}     class-suffix → value pairs
+///   - prefix      {String}  optional class prefix (e.g. "flex")
+///   - responsive  {Boolean} emit responsive variants (default false)
 ///
 /// Usage:
 ///   @include generate-utilities((
@@ -24,15 +29,17 @@
 ///     ),
 ///   ));
 @mixin generate-utilities($utilities) {
+  $cls-prefix: cfg.config("prefix");
+  $important: null;
+  @if cfg.config("important") {
+    $important: !important;
+  }
+
+  // ── Pass 1: base (unprefixed) classes ──────────────────────
   @each $name, $config in $utilities {
-    $prop:       map.get($config, property);
-    $values:     map.get($config, values);
-    $prefix:     map.get($config, prefix);
-    $cls-prefix: cfg.config("prefix");
-    $important: null;
-    @if cfg.config("important") {
-      $important: !important;
-    }
+    $prop:   map.get($config, property);
+    $values: map.get($config, values);
+    $prefix: map.get($config, prefix);
 
     @each $suffix, $value in $values {
       $class-name: "#{$cls-prefix}#{$suffix}";
@@ -41,6 +48,46 @@
       }
       .#{$class-name} {
         #{$prop}: $value $important;
+      }
+    }
+  }
+
+  // ── Pass 2: responsive variants (.sm\:, .md\:, …) ─────────
+  // Only runs when $enable-responsive is true and at least one
+  // utility in the map declares responsive: true.
+  @if flags.$enable-responsive {
+    @each $bp-key, $bp-value in bpvars.$breakpoints {
+      // xs (0px) → no media query wrapper; base classes already cover it.
+      @if $bp-value != 0px {
+        @media (min-width: #{$bp-value}) {
+          @each $name, $config in $utilities {
+            @if map.get($config, responsive) == true {
+              $prop:   map.get($config, property);
+              $values: map.get($config, values);
+              $prefix: map.get($config, prefix);
+
+              @each $suffix, $value in $values {
+                $class: if($prefix, "#{$cls-prefix}#{$prefix}-#{$suffix}", "#{$cls-prefix}#{$suffix}");
+
+                // CSS identifiers cannot start with a digit.
+                // Escape numeric-leading breakpoint keys (e.g. "2xl" → "\32 xl").
+                $first:   string.slice("#{$bp-key}", 1, 1);
+                $rest:    string.slice("#{$bp-key}", 2);
+                $safe-bp: if(
+                  $first == "0" or $first == "1" or $first == "2" or $first == "3" or
+                  $first == "4" or $first == "5" or $first == "6" or $first == "7" or
+                  $first == "8" or $first == "9",
+                  "\\3#{$first} #{$rest}",
+                  "#{$bp-key}"
+                );
+
+                @at-root .#{$safe-bp}\:#{$class} {
+                  #{$prop}: $value $important;
+                }
+              }
+            }
+          }
+        }
       }
     }
   }

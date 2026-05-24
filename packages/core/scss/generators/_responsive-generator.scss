@@ -1,32 +1,32 @@
 // generators/_responsive-generator.scss
-// Wraps utility output in responsive breakpoint media queries.
+// Responsive variant delegation — forwards to the canonical engine.
 // ─────────────────────────────────────────────────────────────
 
-@use "sass:map";
-@use "../variables/breakpoints" as bpvars;
+// NOTE: Responsive class generation is now handled directly inside
+// generate-utilities() in _class-generator.scss (Pass 2).
+//
+// This file previously contained a generate-responsive() mixin that
+// accepted @content blocks but never emitted any CSS itself, making it
+// a silent no-op. That stub has been removed to prevent confusion.
+//
+// — If you need to run the responsive engine standalone (e.g. from a
+//   sub-package that builds its own $utilities map independently of
+//   generate-utilities), use the engine mixin directly:
+//
+//     @use "@mastors/core/scss/responsive/engine" as engine;
+//     @include engine.run($my-utilities);
+//
+// — For the standard case, simply pass your $utilities map to
+//   generate-utilities() and set responsive: true on any entry that
+//   needs breakpoint variants — the responsive pass runs automatically.
 
-/// Wrap a block of utility output in all responsive breakpoint prefixes
-/// Used internally by sub-packages that call generate-utilities with responsive: true
-///
-/// The generated classes use the pattern: .{bp}\:{class}
-/// e.g. .sm\:flex, .md\:hidden, .lg\:gap-8
+@use "../responsive/engine" as engine;
+@use "sass:map";
+
+/// Thin wrapper that delegates to engine.run().
+/// Prefer calling engine.run() directly for clarity.
+/// Kept here only for backward compatibility with sub-packages that
+/// previously @use'd this file.
 @mixin generate-responsive($utilities) {
-  @each $bp-key, $bp-value in bpvars.$breakpoints {
-    @if $bp-value == 0px {
-      // xs: no media query
-      @each $name, $config in $utilities {
-        @if map.get($config, responsive) {
-          @content($bp-key, $config);
-        }
-      }
-    } @else {
-      @media (min-width: #{$bp-value}) {
-        @each $name, $config in $utilities {
-          @if map.get($config, responsive) {
-            @content($bp-key, $config);
-          }
-        }
-      }
-    }
-  }
+  @include engine.run($utilities);
 }
