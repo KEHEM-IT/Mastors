@@ -1,0 +1,163 @@
+// utilities/_typography.scss
+// Typography utility classes — text-align, size, weight, leading, tracking,
+// decoration, transform, whitespace, overflow, font-family, font-style.
+// ─────────────────────────────────────────────────────────────
+
+@use "sass:map";
+@use "../tokens/typography" as ty;
+@use "../generators/class-generator" as gen;
+
+// ── Text align ───────────────────────────────────────────────────────────────
+
+@include gen.generate-utilities((
+  "text-align": (
+    property: text-align,
+    prefix: "text",
+    values: (
+      "left":    left,
+      "center":  center,
+      "right":   right,
+      "justify": justify,
+      "start":   start,
+      "end":     end,
+    ),
+    responsive: true,
+  ),
+));
+
+// ── Font size ────────────────────────────────────────────────────────────────
+
+@each $key, $val in ty.$font-size-tokens {
+  .text-#{$key} { font-size: $val; }
+}
+
+// ── Font weight ──────────────────────────────────────────────────────────────
+
+@each $key, $val in ty.$font-weight-tokens {
+  .font-#{$key} { font-weight: $val; }
+}
+
+// ── Font family ──────────────────────────────────────────────────────────────
+
+@each $key, $val in ty.$font-family-tokens {
+  .font-#{$key} { font-family: $val; }
+}
+
+// ── Font style ───────────────────────────────────────────────────────────────
+
+.italic     { font-style: italic; }
+.not-italic { font-style: normal; }
+
+// ── Line height (leading) ────────────────────────────────────────────────────
+
+@each $key, $val in ty.$line-height-tokens {
+  .leading-#{$key} { line-height: $val; }
+}
+
+// ── Letter spacing (tracking) ────────────────────────────────────────────────
+
+@each $key, $val in ty.$letter-spacing-tokens {
+  .tracking-#{$key} { letter-spacing: $val; }
+}
+
+// ── Text decoration ──────────────────────────────────────────────────────────
+
+.underline      { text-decoration-line: underline; }
+.overline       { text-decoration-line: overline; }
+.line-through   { text-decoration-line: line-through; }
+.no-underline   { text-decoration-line: none; }
+
+// Decoration style
+.decoration-solid  { text-decoration-style: solid; }
+.decoration-dashed { text-decoration-style: dashed; }
+.decoration-dotted { text-decoration-style: dotted; }
+.decoration-double { text-decoration-style: double; }
+.decoration-wavy   { text-decoration-style: wavy; }
+
+// Decoration thickness
+.decoration-auto  { text-decoration-thickness: auto; }
+.decoration-1     { text-decoration-thickness: 1px; }
+.decoration-2     { text-decoration-thickness: 2px; }
+.decoration-4     { text-decoration-thickness: 4px; }
+.decoration-8     { text-decoration-thickness: 8px; }
+
+// ── Text transform ───────────────────────────────────────────────────────────
+
+.uppercase    { text-transform: uppercase; }
+.lowercase    { text-transform: lowercase; }
+.capitalize   { text-transform: capitalize; }
+.normal-case  { text-transform: none; }
+
+// ── Text overflow ────────────────────────────────────────────────────────────
+
+.text-ellipsis { text-overflow: ellipsis; }
+.text-clip     { text-overflow: clip; }
+
+// ── Whitespace ───────────────────────────────────────────────────────────────
+
+@include gen.generate-utilities((
+  "whitespace": (
+    property: white-space,
+    prefix: "whitespace",
+    values: (
+      "normal":   normal,
+      "nowrap":   nowrap,
+      "pre":      pre,
+      "pre-line": pre-line,
+      "pre-wrap": pre-wrap,
+      "break-spaces": break-spaces,
+    ),
+  ),
+));
+
+// ── Word break ───────────────────────────────────────────────────────────────
+
+.break-normal { overflow-wrap: normal;     word-break: normal; }
+.break-words  { overflow-wrap: break-word; }
+.break-all    { word-break: break-all; }
+.break-keep   { word-break: keep-all; }
+
+// ── Text indent ──────────────────────────────────────────────────────────────
+
+.indent-0  { text-indent: 0px; }
+.indent-4  { text-indent: 1rem; }
+.indent-8  { text-indent: 2rem; }
+
+// ── Vertical align ───────────────────────────────────────────────────────────
+
+@include gen.generate-utilities((
+  "align": (
+    property: vertical-align,
+    prefix: "align",
+    values: (
+      "baseline":    baseline,
+      "top":         top,
+      "middle":      middle,
+      "bottom":      bottom,
+      "text-top":    text-top,
+      "text-bottom": text-bottom,
+      "sub":         sub,
+      "super":       super,
+    ),
+  ),
+));
+
+// ── List style ───────────────────────────────────────────────────────────────
+
+.list-none     { list-style-type: none; }
+.list-disc     { list-style-type: disc; }
+.list-decimal  { list-style-type: decimal; }
+.list-inside   { list-style-position: inside; }
+.list-outside  { list-style-position: outside; }
+
+// ── Smooth font rendering ────────────────────────────────────────────────────
+
+.antialiased {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.subpixel-antialiased {
+  -webkit-font-smoothing: auto;
+  -moz-osx-font-smoothing: auto;
+}

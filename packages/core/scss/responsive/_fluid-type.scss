@@ -17,7 +17,7 @@
 /// @param {Number} $max-size  - maximum font size (rem)
 /// @param {Number} $min-vw    - viewport at which min applies (px, default 320px)
 /// @param {Number} $max-vw    - viewport at which max applies (px, default 1280px)
-@mixin fluid-type($min-size, $max-size, $min-vw: 320px, $max-vw: 1280px) {
+@mixin apply-fluid-type($min-size, $max-size, $min-vw: 320px, $max-vw: 1280px) {
   font-size: mathfn.fluid($min-size, $max-size, $min-vw, $max-vw);
 }
 
@@ -31,11 +31,11 @@
 // Include with: @use "@mastors/core/scss/responsive/fluid-type" as ft;
 //               @include ft.fluid-scale();
 @mixin fluid-scale {
-  h1 { @include fluid-type(2rem,    3.75rem); }
-  h2 { @include fluid-type(1.5rem,  3rem); }
-  h3 { @include fluid-type(1.25rem, 2.25rem); }
-  h4 { @include fluid-type(1.125rem, 1.875rem); }
-  h5 { @include fluid-type(1rem,    1.5rem); }
-  h6 { @include fluid-type(0.875rem, 1.25rem); }
-  p  { @include fluid-type(0.875rem, 1.125rem); }
+  h1 { @include apply-fluid-type(2rem,    3.75rem); }
+  h2 { @include apply-fluid-type(1.5rem,  3rem); }
+  h3 { @include apply-fluid-type(1.25rem, 2.25rem); }
+  h4 { @include apply-fluid-type(1.125rem, 1.875rem); }
+  h5 { @include apply-fluid-type(1rem,    1.5rem); }
+  h6 { @include apply-fluid-type(0.875rem, 1.25rem); }
+  p  { @include apply-fluid-type(0.875rem, 1.125rem); }
 }

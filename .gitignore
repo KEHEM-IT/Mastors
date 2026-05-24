@@ -2,11 +2,11 @@ node_modules/
 dist/
 .turbo/
 coverage/
-*.css
-*.css.map
+dist/*.css
+dist/*.css.map
 .DS_Store
 Thumbs.db
 .env
 .env.local
 *.log
-pnpm-lock.yaml
+# pnpm-lock.yaml is intentionally committed for reproducible installs

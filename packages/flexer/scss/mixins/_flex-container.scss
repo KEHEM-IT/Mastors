@@ -1,2 +1,39 @@
 // mixins/_flex-container.scss
-// TODO: Add flex-container() mixin with direction/wrap/gap params
+// flex-container() mixin — configure a flex container in one call.
+// ─────────────────────────────────────────────────────────────
+
+@use "sass:math";
+@use "sass:meta";
+@use "@mastors/core/scss/tokens/spacing" as sp;
+
+/// Apply flex container properties declaratively in one include.
+///
+/// @param {String}  $direction  - flex-direction  (default: row)
+/// @param {String}  $wrap       - flex-wrap        (default: nowrap)
+/// @param {String}  $justify    - justify-content  (default: flex-start)
+/// @param {String}  $align      - align-items      (default: stretch)
+/// @param {*}       $gap        - raw CSS gap value (default: null)
+/// @param {Boolean} $inline     - use inline-flex  (default: false)
+///
+/// Usage:
+///   .card-row {
+///     @include flex-container($direction: row, $wrap: wrap, $gap: 1rem);
+///   }
+///   .toolbar {
+///     @include flex-container($justify: space-between, $align: center);
+///   }
+@mixin flex-container(
+  $direction: row,
+  $wrap:      nowrap,
+  $justify:   flex-start,
+  $align:     stretch,
+  $gap:       null,
+  $inline:    false
+) {
+  display: if($inline, inline-flex, flex);
+  flex-direction: $direction;
+  flex-wrap: $wrap;
+  justify-content: $justify;
+  align-items: $align;
+  @if $gap != null { gap: $gap; }
+}

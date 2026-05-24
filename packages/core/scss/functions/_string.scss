@@ -20,3 +20,38 @@
 @function to-string($value) {
   @return #{$value};
 }
+
+/// Reference any design token as a CSS custom property (var()).
+/// Builds the --mastors-{category}-{keys...} expression at zero runtime cost.
+///
+/// Usage:
+///   color:              vars(color, primary, 500);  → var(--mastors-color-primary-500)
+///   padding:            vars(spacing, 4);           → var(--mastors-spacing-4)
+///   border-radius:      vars(radius, lg);           → var(--mastors-radius-lg)
+///   transition-duration:vars(duration, 200);        → var(--mastors-duration-200)
+///   z-index:            vars(z, modal);             → var(--mastors-z-modal)
+///   box-shadow:         vars(shadow, md);           → var(--mastors-shadow-md)
+///
+/// @param {String} $category - Token category prefix (color, spacing, radius…)
+/// @param {ArgList} $keys    - One or more path segments
+/// @return {String}          - CSS var() expression
+@function vars($category, $keys...) {
+  $prop: "--mastors-#{$category}";
+  @each $key in $keys {
+    $prop: "#{$prop}-#{$key}";
+  }
+  @return var(#{$prop});
+}
+
+/// vars() with a fallback value.
+/// Usage: color: vars-or(color, #3b82f6, primary, 500);
+/// @param {String} $category - Token category prefix
+/// @param {*}     $fallback  - Fallback value if custom property is not set
+/// @param {ArgList} $keys    - Path segments
+@function vars-or($category, $fallback, $keys...) {
+  $prop: "--mastors-#{$category}";
+  @each $key in $keys {
+    $prop: "#{$prop}-#{$key}";
+  }
+  @return var(#{$prop}, #{$fallback});
+}

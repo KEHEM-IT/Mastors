@@ -1,0 +1,158 @@
+// utilities/_interaction.scss
+// Interaction and user-experience utilities:
+// user-select, resize, scroll-behavior, scroll-snap, touch-action,
+// and state-variant prefixes (hover:, focus:, active:, disabled:).
+// ─────────────────────────────────────────────────────────────
+
+@use "../generators/class-generator" as gen;
+
+// ── User select ───────────────────────────────────────────────────────────────
+
+@include gen.generate-utilities((
+  "select": (
+    property: user-select,
+    prefix: "select",
+    values: (
+      "none":  none,
+      "text":  text,
+      "all":   all,
+      "auto":  auto,
+    ),
+  ),
+));
+
+// ── Resize ────────────────────────────────────────────────────────────────────
+
+@include gen.generate-utilities((
+  "resize": (
+    property: resize,
+    prefix: "resize",
+    values: (
+      "none":  none,
+      "x":     horizontal,
+      "y":     vertical,
+      "":      both,        // .resize
+    ),
+  ),
+));
+
+// ── Scroll behavior ───────────────────────────────────────────────────────────
+
+.scroll-auto   { scroll-behavior: auto; }
+.scroll-smooth { scroll-behavior: smooth; }
+
+// ── Scroll snap ───────────────────────────────────────────────────────────────
+
+// Container
+@include gen.generate-utilities((
+  "snap-type": (
+    property: scroll-snap-type,
+    prefix: "snap",
+    values: (
+      "none":       none,
+      "x":          x var(--mastors-snap-strictness, mandatory),
+      "y":          y var(--mastors-snap-strictness, mandatory),
+      "both":       both var(--mastors-snap-strictness, mandatory),
+      "mandatory":  x mandatory,
+      "proximity":  x proximity,
+    ),
+  ),
+));
+
+// Item
+@include gen.generate-utilities((
+  "snap-align": (
+    property: scroll-snap-align,
+    prefix: "snap",
+    values: (
+      "start":  start,
+      "end":    end,
+      "center": center,
+      "align-none": none,
+    ),
+  ),
+));
+
+.snap-stop-always  { scroll-snap-stop: always; }
+.snap-stop-normal  { scroll-snap-stop: normal; }
+
+// ── Scroll margin/padding ─────────────────────────────────────────────────────
+
+$-scroll-values: ("0": 0px, "4": 1rem, "8": 2rem, "16": 4rem);
+
+@each $key, $val in $-scroll-values {
+  .scroll-m-#{$key}  { scroll-margin: $val; }
+  .scroll-mt-#{$key} { scroll-margin-top: $val; }
+  .scroll-mb-#{$key} { scroll-margin-bottom: $val; }
+  .scroll-p-#{$key}  { scroll-padding: $val; }
+  .scroll-pt-#{$key} { scroll-padding-top: $val; }
+  .scroll-pb-#{$key} { scroll-padding-bottom: $val; }
+}
+
+// ── Touch action ──────────────────────────────────────────────────────────────
+
+@include gen.generate-utilities((
+  "touch": (
+    property: touch-action,
+    prefix: "touch",
+    values: (
+      "auto":         auto,
+      "none":         none,
+      "pan-x":        pan-x,
+      "pan-y":        pan-y,
+      "pan-left":     pan-left,
+      "pan-right":    pan-right,
+      "pan-up":       pan-up,
+      "pan-down":     pan-down,
+      "pinch-zoom":   pinch-zoom,
+      "manipulation": manipulation,
+    ),
+  ),
+));
+
+// ── State-variant pseudo-class utilities ─────────────────────────────────────
+//
+// Hover, focus, active, disabled, and group-hover variants.
+// Pattern: .hover\:{utility}:hover { ... }
+//
+// These are the most commonly used interactive overrides. For full
+// state-variant coverage, use a PostCSS/Vite plugin or the responsive engine.
+
+// Hover: opacity
+@each $key, $val in ("0": 0, "50": 0.5, "75": 0.75, "100": 1) {
+  .hover\:opacity-#{$key}:hover { opacity: $val; }
+}
+
+// Hover: background accent
+.hover\:bg-accent:hover         { background-color: var(--mastors-accent-hover); }
+.hover\:text-accent:hover       { color: var(--mastors-accent-hover); }
+.hover\:underline:hover         { text-decoration-line: underline; }
+.hover\:no-underline:hover      { text-decoration-line: none; }
+.hover\:shadow-lg:hover         { box-shadow: var(--mastors-shadow-lg); }
+.hover\:scale-105:hover         { transform: scale(1.05); }
+.hover\:scale-110:hover         { transform: scale(1.1); }
+.hover\:-translate-y-1:hover    { transform: translateY(-0.25rem); }
+
+// Focus-visible: ring utilities
+.focus\:ring:focus-visible {
+  outline: 2px solid var(--mastors-accent);
+  outline-offset: 2px;
+}
+
+.focus\:ring-2:focus-visible {
+  outline: 2px solid var(--mastors-accent);
+  outline-offset: 2px;
+}
+
+.focus\:ring-offset-2:focus-visible {
+  outline-offset: 4px;
+}
+
+.focus\:ring-none:focus-visible {
+  outline: none;
+}
+
+// Disabled: dim + block interaction
+.disabled\:opacity-50:disabled { opacity: 0.5; }
+.disabled\:cursor-not-allowed:disabled { cursor: not-allowed; }
+.disabled\:pointer-events-none:disabled { pointer-events: none; }

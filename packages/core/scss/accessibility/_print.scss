@@ -1,0 +1,52 @@
+// accessibility/_print.scss
+// Print-specific utilities and media query helpers.
+// ─────────────────────────────────────────────────────────────
+
+// Hide from print
+.print\:hidden {
+  @media print { display: none !important; }
+}
+
+// Show only in print
+.screen\:hidden {
+  @media not print { display: none !important; }
+}
+
+@media print {
+  // Avoid page breaks inside these elements by default
+  .print\:break-inside-avoid {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  // Force page break before
+  .print\:break-before {
+    break-before: page;
+    page-break-before: always;
+  }
+
+  // Force page break after
+  .print\:break-after {
+    break-after: page;
+    page-break-after: always;
+  }
+
+  // Print-safe color override (ensure text is black on white)
+  .print\:text-black  { color: #000 !important; }
+  .print\:bg-white    { background: #fff !important; }
+  .print\:border-none { border: none !important; }
+  .print\:shadow-none { box-shadow: none !important; }
+
+  // Expand truncated links for print readers
+  a[href]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.75em;
+    color: #555;
+  }
+
+  // Don't expand hash or JS links
+  a[href^="#"]::after,
+  a[href^="javascript:"]::after {
+    content: "";
+  }
+}

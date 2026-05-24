@@ -1,0 +1,54 @@
+// functions/_vars.scss
+// vars() — reference any design token as a CSS custom property by name.
+// ─────────────────────────────────────────────────────────────
+//
+// All Mastors tokens are emitted as --mastors-{name} custom properties
+// by the token layer. This function wraps that convention so downstream
+// consumers never have to hard-code the --mastors- prefix themselves,
+// and so token references remain refactor-safe if the prefix ever changes.
+//
+// Usage:
+//   color:            vars(accent);            → var(--mastors-accent)
+//   background-color: vars(surface-raised);    → var(--mastors-surface-raised)
+//   box-shadow:       vars(shadow-lg);         → var(--mastors-shadow-lg)
+//
+// With a CSS fallback (passed through verbatim):
+//   color: vars(accent, #3b82f6);             → var(--mastors-accent, #3b82f6)
+//   gap:   vars(spacing-4, 1rem);             → var(--mastors-spacing-4, 1rem)
+//
+// Composing with other functions is fine — Sass evaluates eagerly:
+//   transition: opacity vars(duration-200) vars(ease-out);
+//
+// ─────────────────────────────────────────────────────────────
+
+@use "sass:meta";
+@use "sass:string";
+@use "../variables/global" as g;
+
+// Internal: the custom-property namespace prefix.
+// Mirrors the --mastors- prefix used by the token emitter.
+// Kept as a private variable so it only needs to change here.
+$-namespace: "mastors" !default;
+
+/// Return a CSS var() expression for a design token by name.
+///
+/// @param  {String} $token    - token name, without the --mastors- prefix
+/// @param  {*}      $fallback - optional CSS fallback value (default: null)
+/// @return {String} var(--mastors-{$token}) or var(--mastors-{$token}, {$fallback})
+///
+/// @example scss
+///   .btn { color: vars(accent); }
+///   // → .btn { color: var(--mastors-accent); }
+///
+/// @example scss
+///   .card { box-shadow: vars(shadow-md, 0 2px 8px rgb(0 0 0 / .1)); }
+///   // → .card { box-shadow: var(--mastors-shadow-md, 0 2px 8px rgb(0 0 0 / .1)); }
+@function vars($token, $fallback: null) {
+  $prop: "--#{$-namespace}-#{$token}";
+
+  @if $fallback == null {
+    @return var(#{$prop});
+  } @else {
+    @return var(#{$prop}, #{$fallback});
+  }
+}

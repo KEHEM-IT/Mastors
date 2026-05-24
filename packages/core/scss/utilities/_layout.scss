@@ -1,0 +1,177 @@
+// utilities/_layout.scss
+// Layout utilities — aspect-ratio, object-fit, object-position, float, clear,
+// isolation, mix-blend-mode, box-decoration, appearance.
+// ─────────────────────────────────────────────────────────────
+
+@use "../generators/class-generator" as gen;
+
+// ── Aspect ratio ──────────────────────────────────────────────────────────────
+//
+// Named shorthands for the most common ratios, plus a token-driven
+// @each for any custom ratios defined in $aspect-ratio-tokens.
+//
+// Generated classes:
+//   .aspect-auto          aspect-ratio: auto
+//   .aspect-square        aspect-ratio: 1 / 1
+//   .aspect-video         aspect-ratio: 16 / 9
+//   .aspect-4-3           aspect-ratio: 4 / 3
+//   .aspect-3-2           aspect-ratio: 3 / 2
+//   .aspect-21-9          aspect-ratio: 21 / 9
+//   .aspect-9-16          aspect-ratio: 9 / 16   (portrait video)
+//   .aspect-golden        aspect-ratio: 1.618 / 1
+
+// Static named ratios — covers the common design tokens without requiring
+// a separate token file just for aspect ratios.
+$-aspect-ratios: (
+  "auto":    auto,
+  "square":  1 / 1,
+  "video":   16 / 9,
+  "4-3":     4 / 3,
+  "3-2":     3 / 2,
+  "21-9":    21 / 9,
+  "9-16":    9 / 16,
+  "golden":  1.618,
+) !default;
+
+@each $key, $value in $-aspect-ratios {
+  .aspect-#{$key} { aspect-ratio: $value; }
+}
+
+// ── Object fit ───────────────────────────────────────────────────────────────
+
+@include gen.generate-utilities((
+  "object-fit": (
+    property: object-fit,
+    prefix: "object",
+    values: (
+      "contain":    contain,
+      "cover":      cover,
+      "fill":       fill,
+      "none":       none,
+      "scale-down": scale-down,
+    ),
+  ),
+));
+
+// ── Object position ──────────────────────────────────────────────────────────
+
+@include gen.generate-utilities((
+  "object-position": (
+    property: object-position,
+    prefix: "object",
+    values: (
+      "bottom":       bottom,
+      "center":       center,
+      "left":         left,
+      "left-bottom":  left bottom,
+      "left-top":     left top,
+      "right":        right,
+      "right-bottom": right bottom,
+      "right-top":    right top,
+      "top":          top,
+    ),
+  ),
+));
+
+// ── Float ─────────────────────────────────────────────────────────────────────
+
+@include gen.generate-utilities((
+  "float": (
+    property: float,
+    prefix: "float",
+    values: (
+      "right":  right,
+      "left":   left,
+      "none":   none,
+      "start":  inline-start,
+      "end":    inline-end,
+    ),
+    responsive: true,
+  ),
+));
+
+// ── Clear ─────────────────────────────────────────────────────────────────────
+
+@include gen.generate-utilities((
+  "clear": (
+    property: clear,
+    prefix: "clear",
+    values: (
+      "left":  left,
+      "right": right,
+      "both":  both,
+      "none":  none,
+      "start": inline-start,
+      "end":   inline-end,
+    ),
+  ),
+));
+
+// ── Isolation ─────────────────────────────────────────────────────────────────
+
+.isolate        { isolation: isolate; }
+.isolation-auto { isolation: auto; }
+
+// ── Mix blend mode ────────────────────────────────────────────────────────────
+
+@include gen.generate-utilities((
+  "mix-blend": (
+    property: mix-blend-mode,
+    prefix: "mix-blend",
+    values: (
+      "normal":       normal,
+      "multiply":     multiply,
+      "screen":       screen,
+      "overlay":      overlay,
+      "darken":       darken,
+      "lighten":      lighten,
+      "hard-light":   hard-light,
+      "soft-light":   soft-light,
+      "difference":   difference,
+      "exclusion":    exclusion,
+      "hue":          hue,
+      "saturation":   saturation,
+      "color":        color,
+      "luminosity":   luminosity,
+      "plus-lighter": plus-lighter,
+    ),
+  ),
+));
+
+// ── Background blend mode ─────────────────────────────────────────────────────
+
+@include gen.generate-utilities((
+  "bg-blend": (
+    property: background-blend-mode,
+    prefix: "bg-blend",
+    values: (
+      "normal":     normal,
+      "multiply":   multiply,
+      "screen":     screen,
+      "overlay":    overlay,
+      "darken":     darken,
+      "lighten":    lighten,
+      "difference": difference,
+      "exclusion":  exclusion,
+      "color":      color,
+      "luminosity": luminosity,
+    ),
+  ),
+));
+
+// ── Box decoration break ──────────────────────────────────────────────────────
+
+.box-decoration-clone { -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+.box-decoration-slice { -webkit-box-decoration-break: slice; box-decoration-break: slice; }
+
+// ── Appearance ───────────────────────────────────────────────────────────────
+
+.appearance-none { appearance: none; -webkit-appearance: none; }
+.appearance-auto { appearance: auto; }
+
+// ── Will-change ──────────────────────────────────────────────────────────────
+
+.will-change-auto      { will-change: auto; }
+.will-change-scroll    { will-change: scroll-position; }
+.will-change-contents  { will-change: contents; }
+.will-change-transform { will-change: transform; }

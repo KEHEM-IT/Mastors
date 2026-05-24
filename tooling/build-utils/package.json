@@ -8,8 +8,5 @@
   "main": "index.js",
   "exports": {
     ".": "./index.js"
-  },
-  "dependencies": {
-    "@mastors/sass-config": "workspace:*"
   }
 }

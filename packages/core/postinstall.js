@@ -26,11 +26,11 @@ ${BOLD}  Installed:${RESET}
   ${GREEN}✔${RESET} @mastors/core
 
 ${BOLD}  Optional packages:${RESET}
-  ${CYAN}→${RESET} ${DIM}npm install${RESET} @mastors/flexer
-  ${CYAN}→${RESET} ${DIM}npm install${RESET} @mastors/gridder
-  ${CYAN}→${RESET} ${DIM}npm install${RESET} @mastors/typography
-  ${CYAN}→${RESET} ${DIM}npm install${RESET} @mastors/themes
-  ${CYAN}→${RESET} ${DIM}npm install${RESET} @mastors/animator
+  ${GREEN}✔${RESET} @mastors/flexer      ${DIM}npm install @mastors/flexer${RESET}
+  ${GREEN}✔${RESET} @mastors/gridder     ${DIM}npm install @mastors/gridder${RESET}
+  ${CYAN}◌${RESET} @mastors/typography  ${GRAY}coming soon${RESET}
+  ${CYAN}◌${RESET} @mastors/themes      ${GRAY}coming soon${RESET}
+  ${CYAN}◌${RESET} @mastors/animator    ${GRAY}coming soon${RESET}
 
 ${BOLD}  Documentation:${RESET}
   ${YELLOW}https://mastorscdn.kehem.com${RESET}

@@ -1,0 +1,198 @@
+// mixins/_grid-container.scss
+// grid-container() mixin — configure a CSS Grid layout in one call.
+// ─────────────────────────────────────────────────────────────
+
+/// Apply CSS Grid container properties declaratively.
+///
+/// @param {Number|String} $cols      - grid-template-columns (default: null)
+/// @param {Number|String} $rows      - grid-template-rows    (default: null)
+/// @param {*}             $gap       - gap / grid-gap        (default: null)
+/// @param {*}             $col-gap   - column-gap only       (default: null)
+/// @param {*}             $row-gap   - row-gap only          (default: null)
+/// @param {String}        $flow      - grid-auto-flow        (default: row)
+/// @param {String}        $auto-cols - grid-auto-columns     (default: null)
+/// @param {String}        $auto-rows - grid-auto-rows        (default: null)
+/// @param {Boolean}       $inline    - use inline-grid       (default: false)
+///
+/// Usage (12-column layout with 1.5rem gap):
+///   .page {
+///     @include grid-container(
+///       $cols:     repeat(12, minmax(0, 1fr)),
+///       $gap:      1.5rem,
+///       $auto-rows: minmax(0, auto)
+///     );
+///   }
+///
+/// Usage (named areas):
+///   .layout {
+///     @include grid-container(
+///       $cols: "auto 1fr",
+///       $rows: "auto 1fr auto"
+///     );
+///   }
+@mixin grid-container(
+  $cols:      null,
+  $rows:      null,
+  $gap:       null,
+  $col-gap:   null,
+  $row-gap:   null,
+  $flow:      row,
+  $auto-cols: null,
+  $auto-rows: null,
+  $inline:    false
+) {
+  display: if($inline, inline-grid, grid);
+
+  @if $cols      != null { grid-template-columns: $cols; }
+  @if $rows      != null { grid-template-rows:    $rows; }
+  @if $gap       != null { gap: $gap; }
+  @if $col-gap   != null { column-gap: $col-gap; }
+  @if $row-gap   != null { row-gap: $row-gap; }
+  @if $flow      != row  { grid-auto-flow: $flow; }
+  @if $auto-cols != null { grid-auto-columns: $auto-cols; }
+  @if $auto-rows != null { grid-auto-rows: $auto-rows; }
+}
+
+/// Place a grid item by column/row span and optional start position.
+///
+/// @param {Number} $col-span   - columns to span      (default: null)
+/// @param {Number} $row-span   - rows to span          (default: null)
+/// @param {Number} $col-start  - explicit column start (default: null)
+/// @param {Number} $row-start  - explicit row start    (default: null)
+///
+/// Usage:
+///   .hero-banner {
+///     @include grid-item($col-span: 12);
+///   }
+///   .sidebar {
+///     @include grid-item($col-span: 3, $col-start: 1, $row-span: 2);
+///   }
+@mixin grid-item(
+  $col-span:  null,
+  $row-span:  null,
+  $col-start: null,
+  $row-start: null
+) {
+  @if $col-span  != null { grid-column: span #{$col-span} / span #{$col-span}; }
+  @if $row-span  != null { grid-row:    span #{$row-span} / span #{$row-span}; }
+  @if $col-start != null { grid-column-start: $col-start; }
+  @if $row-start != null { grid-row-start:    $row-start; }
+}
+
+// ── gridder() — named grid-area placement ────────────────────────────────────
+//
+// This is the signature mixin for the gridder package. It handles the
+// grid-template-areas workflow: a container declares named areas, and each
+// child uses gridder() to slot itself into one of those names.
+//
+// Two usage modes:
+//
+//   1. Named area placement — the child adopts a single grid-area name that
+//      matches a string in the parent's grid-template-areas declaration:
+//
+//        .layout {
+//          display: grid;
+//          grid-template-areas:
+//            "header  header"
+//            "sidebar main"
+//            "footer  footer";
+//        }
+//        .site-header  { @include gridder(header); }
+//        .site-sidebar { @include gridder(sidebar); }
+//        .site-main    { @include gridder(main); }
+//        .site-footer  { @include gridder(footer); }
+//
+//   2. Explicit four-value shorthand — row-start / col-start / row-end / col-end.
+//      Useful when you want to combine a named area with explicit line numbers,
+//      or skip template-areas entirely:
+//
+//        .hero {
+//          @include gridder($area: 1, $col-start: 1, $col-end: -1, $row-end: 3);
+//        }
+//
+// When only $area is supplied it emits `grid-area: $area` as a single
+// declaration. When any explicit line param is also present it falls back to
+// the four-value `grid-area: $row-start / $col-start / $row-end / $col-end`
+// longhand so all four slots are always filled (auto for omitted values).
+
+/// Place a grid item using named grid-area or explicit line placement.
+///
+/// @param {String|Number} $area       - grid-area name OR row-start line  (required)
+/// @param {Number|String} $col-start  - column start line (default: auto)
+/// @param {Number|String} $row-end    - row end line      (default: auto)
+/// @param {Number|String} $col-end    - column end line   (default: auto)
+/// @param {String}        $align      - align-self override (default: null)
+/// @param {String}        $justify    - justify-self override (default: null)
+///
+/// @example scss — named area (most common)
+///   .site-header { @include gridder(header); }
+///   // → grid-area: header;
+///
+/// @example scss — explicit shorthand
+///   .hero { @include gridder($area: 1, $col-start: 1, $col-end: -1); }
+///   // → grid-area: 1 / 1 / auto / -1;
+///
+/// @example scss — named area with self-alignment
+///   .sidebar { @include gridder(sidebar, $align: start, $justify: stretch); }
+///   // → grid-area: sidebar; align-self: start; justify-self: stretch;
+@mixin gridder(
+  $area,
+  $col-start: null,
+  $row-end:   null,
+  $col-end:   null,
+  $align:     null,
+  $justify:   null
+) {
+  // Determine whether any explicit line was supplied.
+  // If so, emit the four-value form so the browser never guesses.
+  $explicit: $col-start != null or $row-end != null or $col-end != null;
+
+  @if $explicit {
+    // Resolve each slot: supplied value or auto.
+    $rs: $area;
+    $cs: if($col-start != null, $col-start, auto);
+    $re: if($row-end   != null, $row-end,   auto);
+    $ce: if($col-end   != null, $col-end,   auto);
+    grid-area: #{$rs} / #{$cs} / #{$re} / #{$ce};
+  } @else {
+    // Pure named-area placement — the common case.
+    grid-area: $area;
+  }
+
+  @if $align   != null { align-self:   $align; }
+  @if $justify != null { justify-self: $justify; }
+}
+
+// ── gridder-areas() — declare template areas on a container ──────────────────
+//
+// Companion container mixin. Accepts a list of quoted row strings and emits
+// grid-template-areas, keeping the definition in SCSS and co-located with
+// the child gridder() calls.
+//
+// Usage:
+//   .layout {
+//     @include grid-container($cols: "200px 1fr", $rows: "auto 1fr auto", $gap: 1rem);
+//     @include gridder-areas(
+//       "header  header",
+//       "sidebar main",
+//       "footer  footer"
+//     );
+//   }
+//
+// → grid-template-areas: "header  header" "sidebar main" "footer  footer";
+
+/// Emit grid-template-areas from a variadic list of quoted row strings.
+///
+/// @param {String...} $rows - one quoted string per grid row
+///
+/// @example scss
+///   @include gridder-areas("nav nav", "side body", "foot foot");
+///   // → grid-template-areas: "nav nav" "side body" "foot foot";
+@mixin gridder-areas($rows...) {
+  $areas: "";
+  @each $row in $rows {
+    $areas: "#{$areas} #{$row}";
+  }
+  // grid-template-areas expects the strings space-separated, not in a Sass list.
+  grid-template-areas: #{$areas};
+}

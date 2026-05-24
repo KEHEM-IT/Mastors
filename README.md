@@ -52,9 +52,9 @@ The ecosystem is built on three pillars:
 
 | Package | Description | Version | Install |
 |---|---|---|---|
-| `@mastors/core` | Foundational tokens, mixins, functions, reset, responsive engine | `1.1.0` | `npm i @mastors/core` |
-| `@mastors/flexer` | Complete flexbox utility class system | `1.1.0` | `npm i @mastors/flexer @mastors/core` |
-| `@mastors/gridder` | Complete CSS Grid utility class system | `1.1.0` | `npm i @mastors/gridder @mastors/core` |
+| `@mastors/core` | Foundational tokens, mixins, functions, reset, responsive engine | `1.2.0` | `npm i @mastors/core` |
+| `@mastors/flexer` | Complete flexbox utility class system + authoring mixins | `1.2.0` | `npm i @mastors/flexer @mastors/core` |
+| `@mastors/gridder` | Complete CSS Grid utility class system + authoring mixins | `1.2.0` | `npm i @mastors/gridder @mastors/core` |
 | `@mastors/typography` | Type scale, font utilities, prose system | *coming soon* | — |
 | `@mastors/themes` | Theme definitions, dark mode, custom theme support | *coming soon* | — |
 | `@mastors/animator` | Animation and transition utility classes | *coming soon* | — |
@@ -118,13 +118,16 @@ npm install --save-dev sass
 ### 3. Use the public API in your own SCSS
 
 ```scss
-// Import tokens, mixins, and functions — zero CSS output
+// Import tokens, mixins, functions, and config — zero CSS output
 @use "@mastors/core/api" as m;
 
 .my-component {
-  padding: m.spacing(4);
-  color: m.color("primary", 600);
-  border-radius: m.radius("md");
+  padding:          m.spacing(4);
+  color:            m.color("primary", 600);
+  border-radius:    m.radius("md");
+  // Reference any token as a CSS custom property by name
+  box-shadow:       m.vars(shadow-md);
+  transition:       opacity m.vars(duration-200) m.vars(ease-out);
 
   @include m.bp("lg") {
     padding: m.spacing(8);
@@ -235,8 +238,9 @@ packages/core/scss/
 ├── index.scss             ← Master entry — imports all layers in order
 │
 ├── config/                ← Global settings (no CSS output)
-│   ├── _settings.scss     ← Master config map ($mastors-config)
-│   └── _flags.scss        ← Per-module enable/disable boolean flags
+│   ├── _settings.scss     ← Master config map ($mastors-config) + config() accessor
+│   ├── _flags.scss        ← Per-module enable/disable boolean flags ($enable-*)
+│   └── _index.scss        ← Barrel — forwards settings + flags; consumed by api/_index.scss
 │
 ├── abstracts/             ← Shared maps and silent placeholders (no CSS output)
 │   ├── _maps.scss         ← Reserved stub for cross-cutting shared maps
@@ -265,7 +269,8 @@ packages/core/scss/
 │   ├── _string.scss       ← str-replace(), to-string()
 │   ├── _map-helpers.scss  ← map-deep-get(), map-collect()
 │   ├── _rem.scss          ← rem() — px → rem conversion
-│   └── _em.scss           ← em() — px → em conversion
+│   ├── _em.scss           ← em() — px → em conversion
+│   └── _vars.scss         ← vars() — reference any token as var(--mastors-{name})
 │
 ├── mixins/                ← SCSS mixins (no CSS output)
 │   ├── _breakpoint.scss   ← bp(), respond-to(), breakpoint-up(), breakpoint-down()
@@ -314,7 +319,17 @@ packages/core/scss/
 │   ├── _cursor.scss
 │   ├── _pointer-events.scss
 │   ├── _z-index.scss
-│   └── _transform.scss
+│   ├── _transform.scss
+│   ├── _typography.scss   ← text-align, font-size/weight/family, leading, tracking,
+│   │                         decoration, transform, whitespace, word-break, overflow,
+│   │                         vertical-align, list-style, antialiasing
+│   ├── _animation.scss    ← transitions, durations, easings, keyframes (spin/ping/pulse/
+│   │                         bounce/fade/slide/scale), fill-mode, play-state, iteration
+│   ├── _interaction.scss  ← user-select, resize, scroll-behavior, scroll-snap,
+│   │                         touch-action, hover:/focus:/disabled: state variants
+│   └── _layout.scss       ← aspect-ratio (.aspect-square/video/4-3/…), object-fit,
+│                             object-position, float, clear, isolation, mix-blend-mode,
+│                             box-decoration-break, appearance, will-change
 │
 ├── helpers/               ← CSS output: layout and display helpers
 │   ├── _clearfix.scss
@@ -325,12 +340,16 @@ packages/core/scss/
 ├── accessibility/         ← CSS output: a11y utilities
 │   ├── _focus.scss        ← :focus-visible ring
 │   ├── _motion.scss       ← prefers-reduced-motion override
-│   └── _screen-reader.scss ← .sr-only, .not-sr-only — canonical source
+│   ├── _screen-reader.scss ← .sr-only, .not-sr-only — canonical source
+│   └── _print.scss        ← print:/screen: visibility, break-inside/before/after,
+│                             color resets, link href expansion for print readers
 │
 ├── vendors/               ← CSS output: third-party overrides (stub)
 │
 └── api/                   ← Public SCSS API surface (no CSS output)
     └── _index.scss        ← @use "@mastors/core/api" as m;
+                              Forwards: functions, mixins, tokens, variables,
+                              config (settings + flags), responsive/container-queries
 ```
 
 ### Layer import order
@@ -439,7 +458,7 @@ Consumers can import precisely what they need:
 
 ```scss
 @use "@mastors/core/scss";                        // Full stylesheet
-@use "@mastors/core/api" as m;                    // Public API only
+@use "@mastors/core/api" as m;                    // Public API (tokens, mixins, functions, config)
 @use "@mastors/core/scss/tokens/color" as colors; // Single partial
 ```
 
@@ -533,7 +552,17 @@ All design decisions live in `packages/core/scss/tokens/`. Tokens are defined as
 }
 ```
 
-**3. JavaScript mirror** — available in `src/tokens.ts` for design tooling and CSS-in-JS:
+**3. `vars()` function** — reference emitted custom properties by token name without hard-coding the `--mastors-` prefix:
+
+```scss
+.card {
+  box-shadow:  m.vars(shadow-md);
+  transition:  opacity m.vars(duration-200) m.vars(ease-out);
+  color:       m.vars(accent, #2563eb); // optional CSS fallback
+}
+```
+
+**4. JavaScript mirror** — available in `src/tokens.ts` for design tooling and CSS-in-JS:
 
 ```ts
 import { tokens } from '@mastors/core'
@@ -735,19 +764,20 @@ New utilities must:
 ### Completed ✅
 
 - Full token system — color, spacing, typography, radii, shadows, z-index, opacity, transitions, sizing
-- Complete functions layer — `rem`, `em`, `color`, `spacing`, `radius`, `shadow`, `z`, `opacity`, `duration`, `easing`, `tint`, `shade`, `alpha`, `contrast`, `fluid`, `clamp-value`, `map-deep-get`, `map-collect`, `str-replace`, `to-string`
+- Complete functions layer — `rem`, `em`, `color`, `spacing`, `radius`, `shadow`, `z`, `opacity`, `duration`, `easing`, `tint`, `shade`, `alpha`, `contrast`, `fluid`, `clamp-value`, `map-deep-get`, `map-collect`, `str-replace`, `to-string`, `vars`
 - Complete mixins layer — `bp`, `respond-to`, `breakpoint-up`, `breakpoint-down`, `dark-mode`, `light-mode`, `theme`, `elevation`, `transition`, `container`, `pseudo`
 - Generator engine — `generate-utilities` (two-pass: base + responsive), `emit-custom-properties`, `emit-nested-custom-properties`, `generate-responsive`
 - Responsive engine with numeric breakpoint key escaping (`2xl:`)
 - Container queries — `.cq-inline`, `.cq-size`, `.cq-normal`, `cq()` mixin
 - Fluid typography — `fluid-type()` mixin + function + `fluid-scale()` preset
 - `@mastors/core` base layer — modern CSS reset, `:root` custom properties, document defaults
-- `@mastors/core` utility classes — display, position, overflow, spacing, sizing, colors, borders (full directional radius scale), shadows, opacity, cursor, pointer-events, z-index, transforms
+- `@mastors/core` utility classes — display, position, overflow, spacing, sizing, colors, borders (full directional radius scale), shadows, opacity, cursor, pointer-events, z-index, transforms, typography (text-align/size/weight/leading/tracking/decoration/transform/whitespace/overflow), animation (transitions/durations/easings/keyframes/play-state), interaction (user-select/resize/scroll/snap/touch-action/hover:/focus:/disabled: variants), layout (aspect-ratio, object-fit/position, float, clear, blend modes, will-change)
 - `@mastors/core` helpers — `.truncate`, `.line-clamp-{n}`, `.break-words`, `.ratio-*`, `.clearfix`, `.visually-hidden`
-- `@mastors/core` accessibility — focus ring, reduced-motion, `.sr-only` / `.not-sr-only`
-- `@mastors/flexer` — full utility set (display, direction, wrap, flow, grow, shrink, basis, shorthand, justify, align, place, order, gap)
-- `@mastors/gridder` — full utility set (display, template columns/rows/areas, auto flow/cols/rows, col/row span/start/end, justify, align, place, layout presets)
+- `@mastors/core` accessibility — focus ring, reduced-motion, `.sr-only` / `.not-sr-only`, print layer (`print:hidden`, `screen:hidden`, break utilities, link href expansion)
+- `@mastors/flexer` — full utility set (display, direction, wrap, flow, grow, shrink, basis, shorthand, justify, align, place, order, gap) + authoring mixins (`flex-container`, `flex-item`, `flex-center`) + `generate-flex-utilities()` generator
+- `@mastors/gridder` — full utility set (display, template columns/rows/areas, auto flow/cols/rows, col/row span/start/end, justify, align, place, layout presets) + authoring mixins (`gridder`, `gridder-areas`)
 - **v1.1 — Release packaging** — version alignment, postinstall on correct package, `"src"` removed from published files, duplicate CSS consolidated, turbo.json migrated to Turbo v2, token codegen script
+- **v1.2 — Power additions** — `vars()` function, `_config.scss` shim in public API, expanded utility layers (typography, animation, interaction, layout/aspect-ratio, print accessibility), authoring mixins for flexer and gridder
 
 ### In Progress 🔄
 
@@ -766,6 +796,22 @@ New utilities must:
 ---
 
 ## Changelog
+
+### v1.2.0
+
+- **Added (`@mastors/core`):** `vars($token, $fallback?)` SCSS function — wraps the `--mastors-` namespace convention so downstream consumers reference tokens as `var(--mastors-{name})` without hard-coding the prefix. Forwarded through `functions/_index.scss` and exposed via `@use "@mastors/core/api"`.
+- **Added (`@mastors/core`):** `config/_index.scss` shim — forwards both `_settings.scss` (the `$mastors-config` map and `config()` accessor) and `_flags.scss` (all `$enable-*` booleans). `api/_index.scss` now includes `@forward "../config/index"` so downstream consumers can reach config flags without a direct partial import.
+- **Added (`@mastors/core`):** `utilities/_typography.scss` — full typography utility surface: text-align (responsive), font-size, font-weight, font-family, font-style, line-height (leading), letter-spacing (tracking), text-decoration (line/style/thickness), text-transform, text-overflow, white-space, word-break, text-indent, vertical-align, list-style, font-smoothing.
+- **Added (`@mastors/core`):** `utilities/_animation.scss` — transition-property presets (`.transition`, `.transition-colors`, etc.), token-driven durations and delays, token-driven easing functions, named animation presets (`.animate-spin/ping/pulse/bounce/fade-in/fade-out/slide-up/slide-down/scale-in`), full keyframe definitions under the `mastors-` namespace, fill-mode / play-state / iteration-count utilities.
+- **Added (`@mastors/core`):** `utilities/_interaction.scss` — user-select, resize, scroll-behavior, scroll-snap (type + align + stop + margin/padding), touch-action, and state-variant pseudo-class utilities: `hover:opacity-*`, `hover:bg-accent`, `hover:scale-*`, `hover:-translate-y-1`, `focus:ring`, `focus:ring-offset-2`, `disabled:opacity-50`, `disabled:cursor-not-allowed`, `disabled:pointer-events-none`.
+- **Added (`@mastors/core`):** `utilities/_layout.scss` — aspect-ratio block (`.aspect-auto`, `.aspect-square`, `.aspect-video`, `.aspect-4-3`, `.aspect-3-2`, `.aspect-21-9`, `.aspect-9-16`, `.aspect-golden`; scale is `!default`-overridable); object-fit, object-position (both already present, now documented alongside aspect-ratio).
+- **Added (`@mastors/core`):** `accessibility/_print.scss` — `print:hidden`, `screen:hidden`, `print:break-inside-avoid`, `print:break-before`, `print:break-after`, `print:text-black`, `print:bg-white`, `print:border-none`, `print:shadow-none`, automatic link href expansion (`a[href]::after`), suppression for hash/JS links.
+- **Added (`@mastors/flexer`):** `flex-container()` mixin — one-call flex container configuration (direction, wrap, justify, align, gap, inline).
+- **Added (`@mastors/flexer`):** `flex-item()` mixin — one-call flex item configuration (grow, shrink, basis, align-self, order).
+- **Added (`@mastors/flexer`):** `flex-center()` mixin — single-line centering shorthand; also ships `flex-center-x()` and `flex-center-y()` axis variants.
+- **Added (`@mastors/flexer`):** `generate-flex-utilities()` generator — emit a complete flex utility set from a config map; each axis (direction, wrap, justify, align, grow, shrink, order) can be opted in or out individually, with a single `responsive` flag controlling all responsive variants.
+- **Added (`@mastors/gridder`):** `gridder($area, ...)` mixin — named `grid-area` placement (pure named-area mode) or explicit four-value `grid-area` shorthand when line params are supplied; optional `align-self` / `justify-self` overrides in the same call.
+- **Added (`@mastors/gridder`):** `gridder-areas($rows...)` companion mixin — declare `grid-template-areas` from a variadic list of quoted row strings, co-located with the `gridder()` child calls.
 
 ### v1.1.0
 

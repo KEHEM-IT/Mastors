@@ -40,14 +40,12 @@
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.0",
+    "@mastors/core": "workspace:*",
     "@types/node": "^20.0.0",
     "prettier": "^3.2.0",
     "sass": "^1.80.0",
     "turbo": "^2.0.0",
     "typescript": "^5.3.0"
-  },
-  "dependencies": {
-    "@mastors/core": "workspace:*"
   },
   "peerDependencies": {
     "sass": ">=1.80.0"

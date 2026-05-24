@@ -1,2 +1,30 @@
 // mixins/_flex-item.scss
-// TODO: Add flex-item() mixin with grow/shrink/basis params
+// flex-item() mixin — configure a flex child in one call.
+// ─────────────────────────────────────────────────────────────
+
+/// Apply flex item properties declaratively in one include.
+///
+/// @param {Number|String} $grow    - flex-grow value   (default: 0)
+/// @param {Number|String} $shrink  - flex-shrink value (default: 1)
+/// @param {*}             $basis   - flex-basis value  (default: auto)
+/// @param {String}        $align   - align-self        (default: auto)
+/// @param {Number}        $order   - order             (default: null)
+///
+/// Usage:
+///   .main-content {
+///     @include flex-item($grow: 1, $basis: 0%);
+///   }
+///   .sidebar {
+///     @include flex-item($grow: 0, $shrink: 0, $basis: 280px);
+///   }
+@mixin flex-item(
+  $grow:   0,
+  $shrink: 1,
+  $basis:  auto,
+  $align:  auto,
+  $order:  null
+) {
+  flex: $grow $shrink $basis;
+  @if $align != auto { align-self: $align; }
+  @if $order != null { order: $order; }
+}

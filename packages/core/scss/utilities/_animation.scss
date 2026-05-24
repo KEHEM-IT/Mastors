@@ -1,0 +1,125 @@
+// utilities/_animation.scss
+// Transition and animation utility classes.
+// ─────────────────────────────────────────────────────────────
+
+@use "../tokens/transitions" as tr;
+@use "../generators/class-generator" as gen;
+
+// ── Transition property ───────────────────────────────────────────────────────
+
+.transition-none     { transition-property: none; }
+.transition-all      { transition-property: all; }
+.transition          { transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter; }
+.transition-colors   { transition-property: color, background-color, border-color, text-decoration-color, fill, stroke; }
+.transition-opacity  { transition-property: opacity; }
+.transition-shadow   { transition-property: box-shadow; }
+.transition-transform { transition-property: transform; }
+
+// ── Transition duration ───────────────────────────────────────────────────────
+
+@each $key, $val in tr.$duration-tokens {
+  .duration-#{$key} { transition-duration: $val; }
+}
+
+// ── Transition timing function ────────────────────────────────────────────────
+
+@each $key, $val in tr.$easing-tokens {
+  .ease-#{$key} { transition-timing-function: $val; }
+}
+
+// ── Transition delay ──────────────────────────────────────────────────────────
+
+@each $key, $val in tr.$duration-tokens {
+  .delay-#{$key} { transition-delay: $val; }
+}
+
+// ── Animation ────────────────────────────────────────────────────────────────
+
+.animate-none    { animation: none; }
+.animate-spin    { animation: mastors-spin    1s linear infinite; }
+.animate-ping    { animation: mastors-ping    1s cubic-bezier(0, 0, 0.2, 1) infinite; }
+.animate-pulse   { animation: mastors-pulse   2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.animate-bounce  { animation: mastors-bounce  1s infinite; }
+.animate-fade-in { animation: mastors-fade-in 0.3s ease-out both; }
+.animate-fade-out{ animation: mastors-fade-out 0.3s ease-in both; }
+.animate-slide-up   { animation: mastors-slide-up   0.3s ease-out both; }
+.animate-slide-down { animation: mastors-slide-down 0.3s ease-out both; }
+.animate-scale-in   { animation: mastors-scale-in   0.2s ease-out both; }
+
+// ── Keyframe definitions ─────────────────────────────────────────────────────
+
+@keyframes mastors-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes mastors-ping {
+  75%, 100% { transform: scale(2); opacity: 0; }
+}
+
+@keyframes mastors-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
+}
+
+@keyframes mastors-bounce {
+  0%, 100% { transform: translateY(-25%); animation-timing-function: cubic-bezier(0.8, 0, 1, 1); }
+  50%       { transform: translateY(0);   animation-timing-function: cubic-bezier(0, 0, 0.2, 1); }
+}
+
+@keyframes mastors-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes mastors-fade-out {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+@keyframes mastors-slide-up {
+  from { opacity: 0; transform: translateY(0.5rem); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes mastors-slide-down {
+  from { opacity: 0; transform: translateY(-0.5rem); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes mastors-scale-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+// ── Animation control utilities ───────────────────────────────────────────────
+
+@include gen.generate-utilities((
+  "animation-fill-mode": (
+    property: animation-fill-mode,
+    prefix: "fill",
+    values: (
+      "none":      none,
+      "forwards":  forwards,
+      "backwards": backwards,
+      "both":      both,
+    ),
+  ),
+  "animation-play-state": (
+    property: animation-play-state,
+    prefix: "animation",
+    values: (
+      "running": running,
+      "paused":  paused,
+    ),
+  ),
+  "animation-iteration": (
+    property: animation-iteration-count,
+    prefix: "animate-repeat",
+    values: (
+      "0":        0,
+      "1":        1,
+      "infinite": infinite,
+    ),
+  ),
+));

@@ -1,5 +1,2 @@
 // @mastors/gridder — scss/mixins/_index.scss
-// Forward all gridder mixin partials.
-// ─────────────────────────────────────────────────────────────
-// Currently no package-scoped mixins; grid layout is handled
-// entirely through utility classes and the core generator engine.
+@forward "grid-container";

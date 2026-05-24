@@ -9,7 +9,8 @@ const sassOptions = {
   style: 'expanded',       // 'expanded' for dev, 'compressed' for prod
   sourceMap: true,
   sourceMapIncludeSources: true,
-  // TODO: Add custom importers, load paths, or functions here
+  // Load paths and custom importers are handled in compile.js
+  // where ancestor node_modules are resolved automatically.
 }
 
 /** @type {import('sass').Options<'sync'>} */

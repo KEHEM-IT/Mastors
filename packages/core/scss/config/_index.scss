@@ -1,0 +1,12 @@
+// config/_index.scss
+// Public config surface — forward both partials so downstream
+// consumers can reach flags and settings via the public API.
+// ─────────────────────────────────────────────────────────────
+// Usage (downstream):
+//   @use "@mastors/core/api" as m;
+//   $dark: m.$enable-themes;          // from flags
+//   $pfx:  m.config("prefix");        // from settings
+// ─────────────────────────────────────────────────────────────
+
+@forward "settings";
+@forward "flags";

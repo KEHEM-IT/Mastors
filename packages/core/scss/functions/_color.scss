@@ -47,3 +47,34 @@
     @return $light;
   }
 }
+
+/// Quick palette accessor — shorthand for ct.color()
+/// Usage: color: palette(primary, 500);
+@function palette($name, $shade: null) {
+  @return ct.color($name, $shade);
+}
+
+/// Emit a color as rgb() with optional opacity — no Sass color overhead.
+/// Usage: background: rgb-color(primary, 500, 0.15);
+@function rgb-color($name, $shade, $opacity: 1) {
+  $c: ct.color($name, $shade);
+  @if $opacity == 1 { @return $c; }
+  $r: color.channel($c, "red",   $space: rgb);
+  $g: color.channel($c, "green", $space: rgb);
+  $b: color.channel($c, "blue",  $space: rgb);
+  @return rgb($r $g $b / $opacity);
+}
+
+/// Create a stepped tint/shade ramp on the fly.
+/// Returns a list of $steps colors from $base toward white ($dir: tint)
+/// or toward black ($dir: shade).
+/// Usage: $ramp: color-ramp(#3b82f6, 5, tint);
+@function color-ramp($base, $steps: 5, $dir: "tint") {
+  $result: ();
+  @for $i from 1 through $steps {
+    $pct: math.div($i * 100%, $steps + 1);
+    $step: if($dir == "tint", tint($base, $pct), shade($base, $pct));
+    $result: append($result, $step, comma);
+  }
+  @return $result;
+}

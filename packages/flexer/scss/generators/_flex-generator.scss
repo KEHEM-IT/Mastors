@@ -1,4 +1,92 @@
 // generators/_flex-generator.scss
-// TODO: Add generate-flex-utilities() mixin
-// Iterates flex config maps and emits utility classes
-// with optional responsive variants via core responsive engine
+// generate-flex-utilities() — emit a complete flex utility set from a config map.
+// ─────────────────────────────────────────────────────────────
+//
+// This wraps the core class-generator with flex-specific defaults and
+// a convenient shorthand for declaring the full flex utility surface in
+// one mixin call.
+//
+// Usage:
+//   @include generate-flex-utilities((
+//     direction: true,
+//     wrap:      true,
+//     justify:   true,
+//     align:     true,
+//     grow:      true,
+//     shrink:    true,
+//     order:     true,
+//     responsive: true,
+//   ));
+
+@use "@mastors/core/scss/generators/class-generator" as gen;
+
+@mixin generate-flex-utilities($config: ()) {
+  $direction:  if(map-get($config, direction)  != false, true, false);
+  $wrap:       if(map-get($config, wrap)       != false, true, false);
+  $justify:    if(map-get($config, justify)    != false, true, false);
+  $align:      if(map-get($config, align)      != false, true, false);
+  $grow:       if(map-get($config, grow)       != false, true, false);
+  $shrink:     if(map-get($config, shrink)     != false, true, false);
+  $order:      if(map-get($config, order)      != false, true, false);
+  $responsive: if(map-get($config, responsive) != false, true, false);
+
+  @if $direction {
+    @include gen.generate-utilities(("flex-direction": (
+      property: flex-direction, prefix: "flex",
+      values: ("row": row, "row-reverse": row-reverse, "col": column, "col-reverse": column-reverse),
+      responsive: $responsive,
+    )));
+  }
+
+  @if $wrap {
+    @include gen.generate-utilities(("flex-wrap": (
+      property: flex-wrap, prefix: "flex",
+      values: ("wrap": wrap, "wrap-reverse": wrap-reverse, "nowrap": nowrap),
+      responsive: $responsive,
+    )));
+  }
+
+  @if $justify {
+    @include gen.generate-utilities(("justify-content": (
+      property: justify-content, prefix: "justify",
+      values: (
+        "start": flex-start, "end": flex-end, "center": center,
+        "between": space-between, "around": space-around,
+        "evenly": space-evenly, "stretch": stretch,
+      ),
+      responsive: $responsive,
+    )));
+  }
+
+  @if $align {
+    @include gen.generate-utilities(("align-items": (
+      property: align-items, prefix: "items",
+      values: (
+        "start": flex-start, "end": flex-end,
+        "center": center, "stretch": stretch, "baseline": baseline,
+      ),
+      responsive: $responsive,
+    )));
+  }
+
+  @if $grow {
+    @include gen.generate-utilities(("flex-grow": (
+      property: flex-grow, prefix: "grow",
+      values: ("": 1, "0": 0),
+    )));
+  }
+
+  @if $shrink {
+    @include gen.generate-utilities(("flex-shrink": (
+      property: flex-shrink, prefix: "shrink",
+      values: ("": 1, "0": 0),
+    )));
+  }
+
+  @if $order {
+    @include gen.generate-utilities(("order": (
+      property: order, prefix: "order",
+      values: ("first": -9999, "last": 9999, "none": 0),
+    )));
+  }
+}

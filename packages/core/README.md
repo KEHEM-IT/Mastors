@@ -20,6 +20,7 @@
   - [Feature flags](#feature-flags)
   - [Dark mode strategy](#dark-mode-strategy)
   - [Class prefix](#class-prefix)
+  - [Config via public API](#config-via-public-api)
 - [Design Tokens](#design-tokens)
   - [Color](#color)
   - [Spacing](#spacing)
@@ -30,6 +31,7 @@
   - [Opacity](#opacity)
   - [Transitions](#transitions)
 - [Functions](#functions)
+  - [vars()](#vars)
 - [Mixins](#mixins)
   - [Breakpoints](#breakpoints)
   - [Theme](#theme)
@@ -59,7 +61,7 @@
 `@mastors/core` is the only required package in the Mastors ecosystem. It provides:
 
 - **Design tokens** — color, spacing, typography, radius, shadows, z-index, opacity, and transitions as SCSS maps
-- **Functions** — `rem()`, `em()`, `color()`, `spacing()`, `tint()`, `shade()`, `alpha()`, `contrast()`, `fluid()`, `map-deep-get()`, `map-collect()`, `str-replace()`
+- **Functions** — `rem()`, `em()`, `color()`, `spacing()`, `tint()`, `shade()`, `alpha()`, `contrast()`, `fluid()`, `map-deep-get()`, `map-collect()`, `str-replace()`, `vars()`
 - **Mixins** — `bp()`, `dark-mode()`, `light-mode()`, `theme()`, `elevation()`, `transition()`, `container()`, `pseudo()`
 - **Generator engine** — `generate-utilities()`, `emit-custom-properties()`, and responsive-generator mixins used by all utility packages
 - **Reset** — modern CSS reset and document defaults
@@ -67,7 +69,8 @@
 - **Responsive engine** — breakpoint-aware utility variant generation (`sm:`, `md:`, `lg:`, `xl:`, `2xl:`)
 - **Container queries** — `.cq-inline`, `.cq-size`, `cq()` mixin for `@container` rules
 - **Fluid typography** — `fluid-type()` mixin and function using `clamp()`
-- **Utility classes** — display, position, overflow, spacing, sizing, colors, borders (full directional radius scale), shadows, opacity, cursor, z-index, transforms
+- **Utility classes** — display, position, overflow, spacing, sizing, colors, borders (full directional radius scale), shadows, opacity, cursor, z-index, transforms, typography, animation, interaction, layout (aspect-ratio, object-fit/position, blend modes)
+- **Accessibility** — focus ring, reduced-motion, screen-reader utilities, print layer
 - **TypeScript types and runtime token mirror**
 
 All other `@mastors/*` packages consume `@mastors/core/api` for shared tokens, functions, and mixins.
@@ -98,7 +101,7 @@ Import the complete compiled stylesheet — reset, tokens, themes, utilities, he
 
 ### Public API (zero output)
 
-Import only the public API surface. No CSS is emitted — you get access to all tokens, functions, and mixins for use in your own components:
+Import only the public API surface. No CSS is emitted — you get access to all tokens, functions, mixins, and config:
 
 ```scss
 @use "@mastors/core/api" as m;
@@ -107,7 +110,8 @@ Import only the public API surface. No CSS is emitted — you get access to all 
   padding:          m.spacing(6);
   background-color: m.color("neutral", 50);
   border-radius:    m.radius("xl");
-  box-shadow:       m.shadow("md");
+  box-shadow:       m.vars(shadow-md);
+  transition:       box-shadow m.vars(duration-200) m.vars(ease-out);
 
   @include m.bp("lg") {
     padding: m.spacing(10);
@@ -203,6 +207,22 @@ Add a prefix to every generated utility class to prevent collisions:
 ```scss
 $mastors-config: ("prefix": "m-") !default;
 // .m-flex, .m-block, .m-grid-cols-3, ...
+```
+
+### Config via public API
+
+As of v1.2, both the `$mastors-config` map / `config()` accessor and all `$enable-*` flags are forwarded through the public API surface. Downstream consumers no longer need a direct partial import to read them:
+
+```scss
+@use "@mastors/core/api" as m;
+
+// Read a config value
+$prefix: m.config("prefix");
+
+// Read feature flags
+@if m.$enable-responsive {
+  // emit responsive variants
+}
 ```
 
 ---
@@ -358,8 +378,49 @@ m.easing("bounce")  // cubic-bezier(0.34, 1.56, 0.64, 1)
 | `map-deep-get($map, $keys...)` | Deep nested map access | `map-deep-get($tokens, "primary", "600")` |
 | `map-collect($maps...)` | Shallow-merge multiple maps | `map-collect($a, $b)` |
 | `str-replace($str, $search)` | Replace substring | `str-replace("a-b", "-", "_")` |
+| `vars($token, $fallback?)` | CSS custom property reference | `vars(shadow-md)` -> `var(--mastors-shadow-md)` |
 
 (1) `contrast()` uses a simplified linear luminance approximation without sRGB gamma expansion. The threshold is set to `0.35` (not the WCAG `0.179`) to compensate for the missing gamma step — this gives correct results across the neutral scale. Suitable for UI decisions; implement full sRGB linearisation for strict WCAG 2.1 contrast-ratio auditing.
+
+### vars()
+
+`vars()` lets you reference any emitted design token as a CSS custom property by name, without hard-coding the `--mastors-` prefix. If the token name ever changes or the prefix is reconfigured, only the function implementation needs to update — all call sites stay the same.
+
+```scss
+@use "@mastors/core/api" as m;
+
+.button {
+  // Basic token reference
+  color:       m.vars(accent);
+  box-shadow:  m.vars(shadow-sm);
+
+  // With CSS fallback (passed through verbatim)
+  background:  m.vars(surface-raised, #f9fafb);
+  transition:  opacity m.vars(duration-150) m.vars(ease-out);
+
+  &:hover {
+    box-shadow: m.vars(shadow-md);
+    transform:  translateY(-1px);
+  }
+}
+
+// Composes cleanly with other values in shorthand properties
+.chip {
+  border: 1px solid m.vars(border);
+  padding: m.rem(4px) m.rem(10px);
+}
+```
+
+Token names follow the same `--mastors-{name}` convention used in `:root`. Common examples:
+
+| Call | Emits |
+|---|---|
+| `m.vars(accent)` | `var(--mastors-accent)` |
+| `m.vars(surface)` | `var(--mastors-surface)` |
+| `m.vars(shadow-lg)` | `var(--mastors-shadow-lg)` |
+| `m.vars(duration-200)` | `var(--mastors-duration-200)` |
+| `m.vars(ease-in-out)` | `var(--mastors-ease-in-out)` |
+| `m.vars(border, #e5e7eb)` | `var(--mastors-border, #e5e7eb)` |
 
 ---
 
@@ -465,6 +526,7 @@ Generated class pattern: `.{breakpoint}\:{class}`
 ```
 
 Utilities with responsive support at v1.0: `display`, `position`.
+Additional responsive utilities added in v1.2: `text-align`, `float`, `flex-direction` (via flexer), `grid-template-columns` (via gridder).
 
 ---
 
@@ -577,6 +639,16 @@ Use semantic custom properties directly in your CSS for automatic theme switchin
 }
 ```
 
+Or use `vars()` in SCSS for the same result without the prefix noise:
+
+```scss
+.card {
+  background-color: m.vars(surface);
+  color:            m.vars(text);
+  border-color:     m.vars(border);
+}
+```
+
 Custom themes can be applied with any `data-theme` attribute:
 
 ```scss
@@ -631,8 +703,12 @@ When importing the full stylesheet, core emits these utility classes:
 | Pointer events | `.pointer-events-none` `.pointer-events-auto` |
 | Z-index | `.z-base` `.z-dropdown` `.z-modal` `.z-tooltip` etc. |
 | Transforms | `.translate-x-*` `.translate-y-*` `.rotate-*` `.scale-*` `.origin-*` `.transform-gpu` `.transform-none` |
+| Typography | `.text-{left\|center\|right\|justify\|start\|end}` (responsive) · `.text-{xs…9xl}` · `.font-{thin…black}` · `.font-{sans\|mono\|display}` · `.italic` `.not-italic` · `.leading-*` · `.tracking-*` · `.underline` `.overline` `.line-through` `.no-underline` · `.decoration-{solid\|dashed\|dotted\|double\|wavy}` · `.decoration-{1\|2\|4\|8}` · `.uppercase` `.lowercase` `.capitalize` `.normal-case` · `.text-ellipsis` `.text-clip` · `.whitespace-*` · `.break-normal` `.break-words` `.break-all` `.break-keep` · `.align-{baseline\|top\|middle\|bottom}` · `.list-none` `.list-disc` `.list-decimal` · `.antialiased` `.subpixel-antialiased` |
+| Animation | `.transition` `.transition-{colors\|opacity\|shadow\|transform\|none\|all}` · `.duration-*` · `.ease-*` · `.delay-*` · `.animate-{spin\|ping\|pulse\|bounce\|fade-in\|fade-out\|slide-up\|slide-down\|scale-in\|none}` · `.fill-{none\|forwards\|backwards\|both}` · `.animation-{running\|paused}` · `.animate-repeat-{0\|1\|infinite}` |
+| Interaction | `.select-{none\|text\|all\|auto}` · `.resize-{none\|x\|y}` `.resize` · `.scroll-{auto\|smooth}` · `.snap-{none\|x\|y\|both\|mandatory\|proximity}` · `.snap-{start\|end\|center}` · `.snap-stop-{always\|normal}` · `.scroll-m-*` `.scroll-p-*` · `.touch-{auto\|none\|pan-x\|pan-y\|manipulation}` · `hover:opacity-*` `hover:bg-accent` `hover:underline` `hover:shadow-lg` `hover:scale-{105\|110}` `hover:-translate-y-1` · `focus:ring` `focus:ring-2` `focus:ring-offset-2` `focus:ring-none` · `disabled:opacity-50` `disabled:cursor-not-allowed` `disabled:pointer-events-none` |
+| Layout | `.aspect-{auto\|square\|video\|4-3\|3-2\|21-9\|9-16\|golden}` · `.object-{contain\|cover\|fill\|none\|scale-down}` · `.object-{center\|top\|bottom\|left\|right\|…}` · `.float-{left\|right\|none\|start\|end}` (responsive) · `.clear-*` · `.isolate` `.isolation-auto` · `.mix-blend-*` · `.bg-blend-*` · `.box-decoration-{clone\|slice}` · `.appearance-{none\|auto}` · `.will-change-{auto\|scroll\|contents\|transform}` |
 
-Display and position utilities support responsive prefixes (`sm:`, `md:`, `lg:`, `xl:`, `2xl:`).
+Display and position utilities support responsive prefixes (`sm:`, `md:`, `lg:`, `xl:`, `2xl:`). Text-align and float also support responsive prefixes.
 
 ---
 
@@ -668,6 +744,16 @@ Display and position utilities support responsive prefixes (`sm:`, `md:`, `lg:`,
 | `:focus-visible` | 2px primary-500 ring, 2px offset — keyboard only |
 | `:focus:not(:focus-visible)` | Removes ring for mouse/pointer users |
 | `prefers-reduced-motion: reduce` | Collapses all animation/transition durations to 0.01ms |
+| `.print\:hidden` | `display: none` inside `@media print` |
+| `.screen\:hidden` | `display: none` outside `@media print` (print-only element) |
+| `.print\:break-inside-avoid` | Prevents page breaks inside the element when printing |
+| `.print\:break-before` | Forces a page break before the element |
+| `.print\:break-after` | Forces a page break after the element |
+| `.print\:text-black` | Forces `color: #000` for print output |
+| `.print\:bg-white` | Forces `background: #fff` for print output |
+| `.print\:border-none` | Removes borders for print output |
+| `.print\:shadow-none` | Removes box-shadow for print output |
+| `a[href]::after` *(print)* | Appends `(url)` after links so destinations are visible on paper |
 
 ---
 
@@ -784,14 +870,17 @@ These stubs are documented in each file's header comment.
 /* Full stylesheet — reset + tokens + themes + utilities */
 @use "@mastors/core/scss";
 
-/* Public API — zero CSS output, all tokens/mixins/functions */
+/* Public API — zero CSS output, all tokens/mixins/functions/config */
 @use "@mastors/core/api" as m;
 
 /* Individual partials */
 @use "@mastors/core/scss/tokens/color" as ct;
 @use "@mastors/core/scss/mixins/breakpoint" as bp;
 @use "@mastors/core/scss/functions/rem" as r;
+@use "@mastors/core/scss/functions/vars";       /* vars() standalone */
 @use "@mastors/core/scss/responsive/fluid-type" as ft;
+@use "@mastors/core/scss/config/settings";      /* $mastors-config, config() */
+@use "@mastors/core/scss/config/flags";         /* $enable-* flags */
 ```
 
 ```ts
@@ -813,6 +902,16 @@ import type { MastorsConfig, Breakpoint, ThemeMode, Tokens } from '@mastors/core
 ---
 
 ## Changelog
+
+### v1.2.0
+
+- **Added:** `vars($token, $fallback?)` function in `functions/_vars.scss` — wraps the `--mastors-` namespace so downstream consumers reference tokens as `var(--mastors-{name})` without hard-coding the prefix. Namespace stored in `$-namespace: "mastors" !default`. Forwarded through `functions/_index.scss` and exposed via `@use "@mastors/core/api"`.
+- **Added:** `config/_index.scss` shim — `@forward`s both `_settings.scss` and `_flags.scss`. `api/_index.scss` now includes `@forward "../config/index"`, exposing `config()` accessor and all `$enable-*` flags through the public API surface without a direct partial import.
+- **Added:** `utilities/_typography.scss` — full typography utility surface covering text-align (responsive), font-size (token-driven `@each`), font-weight (token-driven), font-family (token-driven), font-style (`.italic` / `.not-italic`), line-height / leading (token-driven), letter-spacing / tracking (token-driven), text-decoration (line + style + thickness), text-transform, text-overflow, white-space, word-break, text-indent, vertical-align, list-style, font-smoothing.
+- **Added:** `utilities/_animation.scss` — transition-property presets (`.transition`, `.transition-colors`, `.transition-opacity`, `.transition-shadow`, `.transition-transform`, `.transition-none`, `.transition-all`), token-driven `.duration-*` and `.delay-*`, token-driven `.ease-*`, named animation presets (`.animate-spin/ping/pulse/bounce/fade-in/fade-out/slide-up/slide-down/scale-in/none`), full `@keyframes` definitions prefixed `mastors-*`, animation fill-mode / play-state / iteration utilities.
+- **Added:** `utilities/_interaction.scss` — user-select, resize, scroll-behavior (`.scroll-auto` / `.scroll-smooth`), scroll-snap (type + align + stop + scroll-margin/padding), touch-action, and state-variant pseudo-class utilities: `hover:opacity-*`, `hover:bg-accent`, `hover:text-accent`, `hover:underline`, `hover:no-underline`, `hover:shadow-lg`, `hover:scale-105`, `hover:scale-110`, `hover:-translate-y-1`, `focus:ring`, `focus:ring-2`, `focus:ring-offset-2`, `focus:ring-none`, `disabled:opacity-50`, `disabled:cursor-not-allowed`, `disabled:pointer-events-none`.
+- **Added:** `utilities/_layout.scss` — aspect-ratio block (`.aspect-auto`, `.aspect-square`, `.aspect-video`, `.aspect-4-3`, `.aspect-3-2`, `.aspect-21-9`, `.aspect-9-16`, `.aspect-golden`; the `$-aspect-ratios` map is `!default`-overridable). Documented alongside object-fit and object-position which were already present.
+- **Added:** `accessibility/_print.scss` — `print:hidden`, `screen:hidden`, `print:break-inside-avoid`, `print:break-before`, `print:break-after`, `print:text-black`, `print:bg-white`, `print:border-none`, `print:shadow-none`, automatic `a[href]::after` link expansion, suppression for `#` and `javascript:` links.
 
 ### v1.0.0
 

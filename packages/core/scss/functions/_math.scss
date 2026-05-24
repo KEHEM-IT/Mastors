@@ -19,3 +19,22 @@
   $intercept: $min-val - $slope * $min-vw;
   @return clamp(#{$min-val}, #{$slope * 100vw} + #{$intercept}, #{$max-val});
 }
+
+/// Strip the unit from a number: strip-unit(16px) → 16
+@function strip-unit($number) {
+  @return math.div($number, ($number * 0 + 1));
+}
+
+/// Round to N decimal places: round-to(3.14159, 2) → 3.14
+@function round-to($number, $decimals: 2) {
+  $n: math.pow(10, $decimals);
+  @return math.div(math.round($number * $n), $n);
+}
+
+/// Linear interpolation between two values
+/// @param {Number} $a    - start value
+/// @param {Number} $b    - end value
+/// @param {Number} $t    - interpolation factor (0–1)
+@function lerp($a, $b, $t) {
+  @return $a + ($b - $a) * $t;
+}
