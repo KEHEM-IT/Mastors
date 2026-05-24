@@ -118,7 +118,7 @@ write('package.json', `
   "homepage": "https://mastorscdn.kehem.com/packages/${name}",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mastors/mastors.git",
+    "url": "https://github.com/KEHEM-IT/Mastors.git",
     "directory": "packages/${name}"
   },
   "keywords": ["mastors", "${name}", "scss", "utilities", "css-framework"],

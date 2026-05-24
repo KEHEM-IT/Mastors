@@ -359,7 +359,7 @@ m.easing("bounce")  // cubic-bezier(0.34, 1.56, 0.64, 1)
 | `map-collect($maps...)` | Shallow-merge multiple maps | `map-collect($a, $b)` |
 | `str-replace($str, $search)` | Replace substring | `str-replace("a-b", "-", "_")` |
 
-(1) `contrast()` uses a simplified linear luminance approximation, not the full WCAG 2.1 gamma-expanded formula. Suitable for UI decisions, not for strict accessibility audits.
+(1) `contrast()` uses a simplified linear luminance approximation without sRGB gamma expansion. The threshold is set to `0.35` (not the WCAG `0.179`) to compensate for the missing gamma step — this gives correct results across the neutral scale. Suitable for UI decisions; implement full sRGB linearisation for strict WCAG 2.1 contrast-ratio auditing.
 
 ---
 
@@ -447,7 +447,9 @@ Mobile-first, min-width media queries using the named breakpoint map.
 
 ## Responsive Engine
 
-The engine in `responsive/_engine.scss` wraps utility maps in breakpoint media queries. Sub-packages call `@include engine.run($utilities)` in their responsive layer.
+The engine in `responsive/_engine.scss` wraps utility maps in breakpoint media queries. Sub-packages can call `@include engine.run($utilities)` directly for standalone use.
+
+For the standard workflow, responsive variant generation is built into `generate-utilities()` — any utility entry that declares `responsive: true` automatically emits both base classes and breakpoint-prefixed variants in a single call. No separate invocation is required.
 
 Generated class pattern: `.{breakpoint}\:{class}`
 
@@ -463,8 +465,6 @@ Generated class pattern: `.{breakpoint}\:{class}`
 ```
 
 Utilities with responsive support at v1.0: `display`, `position`.
-
-> Spacing, sizing, and color utilities use direct `@each` loops in v1.0 and do not generate responsive variants by default. Responsive variants for those groups are planned for a future minor release.
 
 ---
 
@@ -679,6 +679,10 @@ The three generator mixins are the engine behind all utility class output in the
 
 Generates utility classes from a configuration map. Used by `@mastors/flexer`, `@mastors/gridder`, and all core utility partials.
 
+The mixin runs in two passes:
+- **Pass 1** — emits base (unprefixed) classes for every entry.
+- **Pass 2** — for every entry with `responsive: true`, iterates all breakpoints (skipping `xs`/0px) and emits breakpoint-prefixed variants inside `@media` blocks. Respects the `$enable-responsive` flag and the global prefix/`!important` config.
+
 ```scss
 @use "@mastors/core/scss/generators/class-generator" as gen;
 
@@ -694,6 +698,8 @@ Generates utility classes from a configuration map. Used by `@mastors/flexer`, `
     ),
   ),
 ));
+// Emits: .text-left, .text-center, .text-right
+// And:   .sm\:text-left, .md\:text-left, … for all breakpoints
 ```
 
 ### `emit-custom-properties($map, $prefix)`
@@ -814,11 +820,15 @@ import type { MastorsConfig, Breakpoint, ThemeMode, Tokens } from '@mastors/core
 - Full token system: color, spacing, typography, radii, shadows, z-index, opacity, transitions, sizing
 - Complete functions layer: `rem`, `em`, `color`, `spacing`, `radius`, `shadow`, `z`, `opacity`, `duration`, `easing`, `tint`, `shade`, `alpha`, `contrast`, `fluid`, `map-deep-get`, `map-collect`, `str-replace`
 - Complete mixins layer: `bp`, `respond-to`, `breakpoint-up`, `breakpoint-down`, `dark-mode`, `light-mode`, `theme`, `elevation`, `transition`, `container`, `pseudo`
-- Generator engine: `generate-utilities`, `emit-custom-properties`, `emit-nested-custom-properties`
+- **Fixed:** `generate-utilities()` now runs a two-pass emit — Pass 1 outputs base classes, Pass 2 automatically emits breakpoint-prefixed responsive variants for all entries with `responsive: true`. Previously responsive variants were silently not emitted.
+- **Fixed:** `generators/_responsive-generator.scss` replaced the `@content`-based no-op stub with a thin wrapper that correctly delegates to `engine.run()` for backward compatibility.
+- **Fixed:** `contrast()` luminance threshold corrected from `0.179` (WCAG linearised) to `0.35` (calibrated for the simplified non-gamma-expanded approximation in use). Prevents wrong light/dark decisions on mid-grey backgrounds.
+- **Added:** `stylelint` linting with `stylelint-config-standard-scss` — `pnpm lint` now runs real SCSS style checks. `postcss-scss`, `stylelint`, and `stylelint-config-standard-scss` added to `devDependencies`; `.stylelintrc.json` added to `packages/core`.
+- Generator engine: `generate-utilities` (with integrated responsive Pass 2), `emit-custom-properties`, `emit-nested-custom-properties`
 - Responsive engine with correct numeric breakpoint escaping (`2xl:` prefix)
 - Container queries: `.cq-inline`, `.cq-size`, `.cq-normal`, `[data-container]`, `cq()` mixin
 - Fluid typography: `fluid-type()` mixin + function + `fluid-scale()` preset
-- Full directional border-radius utility scale — all four sides x all token steps (fixed from partial `lg`-only coverage)
+- Full directional border-radius utility scale — all four sides x all token steps
 - Light and dark themes via CSS custom property semantic contract (15 semantic props)
 - Modern CSS reset — no duplicate `box-sizing` declarations
 - Accessibility layer: `:focus-visible` ring, `prefers-reduced-motion` override, `.sr-only`, `.visually-hidden`

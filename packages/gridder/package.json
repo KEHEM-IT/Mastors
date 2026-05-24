@@ -7,7 +7,7 @@
   "homepage": "https://mastorscdn.kehem.com/packages/gridder",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mastors/mastors.git",
+    "url": "https://github.com/KEHEM-IT/Mastors.git",
     "directory": "packages/gridder"
   },
   "keywords": [

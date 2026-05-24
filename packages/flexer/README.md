@@ -465,7 +465,7 @@ Utilities that support responsive variants: `flex` display, `flex-direction`, `f
 
 | Package | Version |
 |---|---|
-| `@mastors/core` | `workspace:*` |
+| `@mastors/core` | `>= 1.0.0` |
 | `sass` | `>= 1.80.0` |
 
 ---

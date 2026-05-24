@@ -9,10 +9,10 @@
   "homepage": "https://mastorscdn.kehem.com",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mastors/mastors.git"
+    "url": "https://github.com/KEHEM-IT/Mastors.git"
   },
   "bugs": {
-    "url": "https://github.com/mastors/mastors/issues"
+    "url": "https://github.com/KEHEM-IT/Mastors/issues"
   },
   "keywords": [
     "mastors",

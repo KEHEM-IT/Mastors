@@ -52,8 +52,8 @@ The ecosystem is built on three pillars:
 | Package | Description | Install |
 |---|---|---|
 | `@mastors/core` | Foundational tokens, mixins, functions, reset, responsive engine | `npm i @mastors/core` |
-| `@mastors/flexer` | Complete flexbox utility class system | `npm i @mastors/flexer` |
-| `@mastors/gridder` | Complete CSS Grid utility class system | `npm i @mastors/gridder` |
+| `@mastors/flexer` | Complete flexbox utility class system | `npm i @mastors/flexer @mastors/core` |
+| `@mastors/gridder` | Complete CSS Grid utility class system | `npm i @mastors/gridder @mastors/core` |
 | `@mastors/typography` | Type scale, font utilities, prose system | `npm i @mastors/typography` |
 | `@mastors/themes` | Theme definitions, dark mode, custom theme support | `npm i @mastors/themes` |
 | `@mastors/animator` | Animation and transition utility classes | `npm i @mastors/animator` |
@@ -300,9 +300,9 @@ packages/core/scss/
 │   └── _container.scss    ← container() responsive width mixin
 │
 ├── generators/            ← Class generation engines (no CSS output)
-│   ├── _class-generator.scss           ← generate-utilities() core engine
+│   ├── _class-generator.scss           ← generate-utilities() — base + responsive Pass 2
 │   ├── _custom-property-generator.scss ← emit-custom-properties()
-│   └── _responsive-generator.scss      ← Responsive prefix wrapper
+│   └── _responsive-generator.scss      ← generate-responsive() thin wrapper → engine.run()
 │
 ├── base/                  ← CSS output: reset and document defaults
 │   ├── _reset.scss
@@ -389,6 +389,8 @@ Turbo orchestrates builds across all packages with automatic caching and depende
 }
 ```
 
+The `lint` task in `@mastors/core` runs **stylelint** (`stylelint-config-standard-scss`) against all `scss/**/*.scss` files. After cloning, run `pnpm install` inside `packages/core` to pull in the linting dependencies before running `pnpm lint`.
+
 `^build` means a package will not build until all of its workspace dependencies have built first. This ensures `@mastors/core` always compiles before `@mastors/flexer`, etc.
 
 ### Build commands
@@ -454,7 +456,7 @@ import { tokens } from '@mastors/core'            // JS runtime
 
 The responsive engine lives in `@mastors/core` and is consumed by all sub-packages.
 
-Breakpoints are defined in `variables/_breakpoints.scss` as a named map. The generator in `generators/_responsive-generator.scss` iterates the map and wraps utility output in media queries.
+Breakpoints are defined in `variables/_breakpoints.scss` as a named map. The generator engine in `generators/_class-generator.scss` handles responsive output automatically. Any utility entry with `responsive: true` passed to `generate-utilities()` emits both base classes and breakpoint-prefixed variants (`.sm:`, `.md:`, etc.) in a single call. The `responsive/engine.scss` mixin is also available standalone for sub-packages that build their own utility maps outside `generate-utilities()`.
 
 Expected class naming convention:
 
@@ -548,7 +550,7 @@ The shared TypeScript config lives in `tooling/tsconfig/base.json` and is extend
 ### Setup
 
 ```bash
-git clone https://github.com/mastors/mastors.git
+git clone https://github.com/KEHEM-IT/Mastors.git
 cd mastors
 pnpm install
 ```
@@ -720,9 +722,9 @@ Please follow the existing SCSS architecture and naming conventions. All new uti
 ### Completed
 
 - [x] All SCSS token maps (`tokens/`) — color, spacing, typography, radii, shadows, z-index, opacity, transitions, sizing
-- [x] `functions/` layer — `rem()`, `em()`, `color()`, `spacing()`, `tint()`, `shade()`, `alpha()`, `contrast()`, `fluid()`, `str-replace()`, `map-deep-get()`, `map-collect()`
+- [x] `functions/` layer — `rem()`, `em()`, `color()`, `spacing()`, `tint()`, `shade()`, `alpha()`, `contrast()` (corrected luminance threshold), `fluid()`, `str-replace()`, `map-deep-get()`, `map-collect()`
 - [x] `mixins/` layer — `bp()`, `dark-mode()`, `light-mode()`, `theme()`, `elevation()`, `transition()`, `container()`, `pseudo()`
-- [x] Generator engine — `generate-utilities()`, `emit-custom-properties()`, `generate-responsive()`
+- [x] Generator engine — `generate-utilities()` (with integrated responsive Pass 2), `emit-custom-properties()`, `generate-responsive()` (thin wrapper delegating to `engine.run()`)
 - [x] Responsive engine — `engine.run()` with breakpoint-prefixed variant output
 - [x] Container queries — `.cq-inline`, `.cq-size`, `cq()` mixin
 - [x] Fluid typography — `fluid-type()` mixin, function, and `fluid-scale()` preset

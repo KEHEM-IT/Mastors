@@ -565,7 +565,7 @@ Utilities with responsive support: `grid` display, `grid-auto-flow`, `justify-it
 
 | Package | Version |
 |---|---|
-| `@mastors/core` | `workspace:*` |
+| `@mastors/core` | `>= 1.0.0` |
 | `sass` | `>= 1.80.0` |
 
 ---
