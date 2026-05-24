@@ -12,14 +12,11 @@
 /// Core utility class generator engine.
 @mixin generate-utilities($utilities) {
   $cls-prefix: cfg.config("prefix");
-  $important: null;
-  @if cfg.config("important") {
-    $important: !important;
-  }
+  $use-important: cfg.config("important");
 
   // ── Pass 1: base (unprefixed) classes ──────────────────────
   @each $name, $config in $utilities {
-    $prop:   map.get($config, property);
+    $prop: map.get($config, property);
     $values: map.get($config, values);
     $prefix: map.get($config, prefix);
 
@@ -29,7 +26,11 @@
         $class-name: "#{$cls-prefix}#{$prefix}-#{$suffix}";
       }
       .#{$class-name} {
-        #{$prop}: $value $important;
+        @if $use-important {
+          #{$prop}: $value !important;
+        } @else {
+          #{$prop}: $value;
+        }
       }
     }
   }
@@ -37,16 +38,15 @@
   // ── Pass 2: responsive variants (.sm\:, .md\:, …) ─────────
   @if flags.$enable-responsive {
     @each $bp-key, $bp-value in bpvars.$breakpoints {
-      @if $bp-value != 0px {
+      @if $bp-value != 0 {
         @media (min-width: #{$bp-value}) {
           @each $name, $config in $utilities {
             @if map.get($config, responsive) == true {
-              $prop:   map.get($config, property);
+              $prop: map.get($config, property);
               $values: map.get($config, values);
               $prefix: map.get($config, prefix);
 
               @each $suffix, $value in $values {
-                // Replace deprecated if() with @if/@else
                 $class: null;
                 @if $prefix {
                   $class: "#{$cls-prefix}#{$prefix}-#{$suffix}";
@@ -55,8 +55,8 @@
                 }
 
                 // Escape numeric-leading breakpoint keys (e.g. "2xl" → "\32 xl")
-                $first:   string.slice("#{$bp-key}", 1, 1);
-                $rest:    string.slice("#{$bp-key}", 2);
+                $first: string.slice("#{$bp-key}", 1, 1);
+                $rest: string.slice("#{$bp-key}", 2);
                 $safe-bp: null;
                 @if $first == "0" or $first == "1" or $first == "2" or $first == "3" or
                     $first == "4" or $first == "5" or $first == "6" or $first == "7" or
@@ -67,7 +67,11 @@
                 }
 
                 @at-root .#{$safe-bp}\:#{$class} {
-                  #{$prop}: $value $important;
+                  @if $use-important {
+                    #{$prop}: $value !important;
+                  } @else {
+                    #{$prop}: $value;
+                  }
                 }
               }
             }

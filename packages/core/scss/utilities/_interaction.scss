@@ -111,10 +111,8 @@ $-scroll-values: ("0": 0px, "4": 1rem, "8": 2rem, "16": 4rem);
 ));
 
 // ── State-variant pseudo-class utilities ─────────────────────────────────────
-//
 // Hover, focus, active, disabled, and group-hover variants.
 // Pattern: .hover\:{utility}:hover { ... }
-//
 // These are the most commonly used interactive overrides. For full
 // state-variant coverage, use a PostCSS/Vite plugin or the responsive engine.
 
@@ -153,6 +151,6 @@ $-scroll-values: ("0": 0px, "4": 1rem, "8": 2rem, "16": 4rem);
 }
 
 // Disabled: dim + block interaction
-.disabled\:opacity-50:disabled { opacity: 0.5; }
+.disabled\:opacity-50:disabled { opacity: 50%; }
 .disabled\:cursor-not-allowed:disabled { cursor: not-allowed; }
 .disabled\:pointer-events-none:disabled { pointer-events: none; }

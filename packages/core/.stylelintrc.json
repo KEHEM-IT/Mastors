@@ -3,15 +3,28 @@
   "customSyntax": "postcss-scss",
   "rules": {
     "scss/at-rule-no-unknown": true,
-    "scss/dollar-variable-pattern": "^[a-z][a-z0-9-]*(-[a-z0-9]+)*$",
+    "scss/dollar-variable-pattern": "^-?[a-z][a-z0-9-]*(-[a-z0-9]+)*$",
     "scss/percent-placeholder-pattern": "^[a-z][a-z0-9-]*(-[a-z0-9]+)*$",
-    "scss/no-duplicate-dollar-variables": true,
+    "scss/no-duplicate-dollar-variables": [true, { "ignoreInsideAtRules": ["if", "else", "each", "for"] }],
     "selector-class-pattern": null,
     "custom-property-pattern": null,
     "no-descending-specificity": null,
     "declaration-empty-line-before": null,
     "comment-empty-line-before": null,
-    "scss/double-slash-comment-empty-line-before": null
+    "scss/double-slash-comment-empty-line-before": null,
+    "property-no-vendor-prefix": [true, { "ignoreProperties": ["-webkit-text-size-adjust", "-webkit-font-smoothing", "-moz-osx-font-smoothing", "-webkit-box-orient", "-webkit-line-clamp", "-webkit-appearance", "-webkit-box-decoration-break"] }],
+    "value-keyword-case": ["lower", { "camelCaseSvgKeywords": true, "ignoreKeywords": ["BlinkMacSystemFont", "Roboto", "Georgia", "Cambria", "Times", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "currentColor"] }],
+    "declaration-block-single-line-max-declarations": 2,
+    "custom-property-empty-line-before": null,
+    "at-rule-empty-line-before": null,
+    "scss/dollar-variable-empty-line-before": null,
+    "scss/operator-no-newline-before": null,
+    "length-zero-no-unit": [true, { "ignore": ["custom-properties"] }],
+    "scss/at-if-no-null": true,
+    "color-hex-length": "short",
+    "alpha-value-notation": "percentage",
+    "number-max-precision": 4,
+    "selector-not-notation": "simple"
   },
   "ignoreFiles": ["dist/**", "node_modules/**"]
 }

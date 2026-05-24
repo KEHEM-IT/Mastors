@@ -10,7 +10,7 @@
 /// @param {String} $duration  - duration token key (default: "200")
 /// @param {String} $easing    - easing token key (default: "in-out")
 @mixin transition($properties: (all), $duration: "200", $easing: "in-out") {
-  $dur:  tr.duration($duration);
+  $dur: tr.duration($duration);
   $ease: tr.easing($easing);
   $transitions: ();
   @each $prop in $properties {

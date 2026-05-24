@@ -6,8 +6,8 @@
 
 // Semantic spacing aliases — layout-level naming on top of raw scale tokens.
 
-$space-inline:     sp.spacing(1)   !default; // 0.25rem — tight inline gap
-$space-element:    sp.spacing(2)   !default; // 0.5rem  — within a component
-$space-component:  sp.spacing(4)   !default; // 1rem    — between component parts
-$space-section:    sp.spacing(16)  !default; // 4rem    — between page sections
-$space-page:       sp.spacing(24)  !default; // 6rem    — page-level breathing room
+$space-inline: sp.spacing(1) !default; // 0.25rem — tight inline gap
+$space-element: sp.spacing(2) !default; // 0.5rem  — within a component
+$space-component: sp.spacing(4) !default; // 1rem    — between component parts
+$space-section: sp.spacing(16) !default; // 4rem    — between page sections
+$space-page: sp.spacing(24) !default; // 6rem    — page-level breathing room

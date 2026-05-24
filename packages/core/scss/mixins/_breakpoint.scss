@@ -9,10 +9,10 @@
 /// @param {String} $bp - breakpoint key (sm, md, lg, xl, 2xl)
 @mixin bp($bp) {
   $value: map.get(bpvars.$breakpoints, $bp);
-  @if $value == null {
+  @if not $value {
     @error "bp(): unknown breakpoint '#{$bp}'. Available: #{map.keys(bpvars.$breakpoints)}";
   }
-  @if $value == 0px {
+  @if $value == 0 {
     @content;
   } @else {
     @media (min-width: #{$value}) { @content; }
@@ -26,7 +26,7 @@
 /// Emit styles below a named breakpoint
 @mixin breakpoint-down($bp) {
   $value: map.get(bpvars.$breakpoints, $bp);
-  @if $value == null {
+  @if not $value {
     @error "breakpoint-down(): unknown breakpoint '#{$bp}'";
   }
   @media (max-width: #{$value - 0.02px}) { @content; }

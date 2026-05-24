@@ -4,18 +4,14 @@
 
 // NOTE: Responsive class generation is now handled directly inside
 // generate-utilities() in _class-generator.scss (Pass 2).
-//
 // This file previously contained a generate-responsive() mixin that
 // accepted @content blocks but never emitted any CSS itself, making it
 // a silent no-op. That stub has been removed to prevent confusion.
-//
 // — If you need to run the responsive engine standalone (e.g. from a
 //   sub-package that builds its own $utilities map independently of
 //   generate-utilities), use the engine mixin directly:
-//
 //     @use "@mastors/core/scss/responsive/engine" as engine;
 //     @include engine.run($my-utilities);
-//
 // — For the standard case, simply pass your $utilities map to
 //   generate-utilities() and set responsive: true on any entry that
 //   needs breakpoint variants — the responsive pass runs automatically.

@@ -11,13 +11,6 @@ const { execSync, spawn } = require('child_process')
 const { sassOptions, sassOptionsProd } = require('./index')
 
 // ─── Load-path resolver ───────────────────────────────────────────────────────
-//
-// Sass needs every node_modules directory in the ancestor chain so that
-// @use "@mastors/core/api" resolves correctly in sub-packages.
-//
-// Strategy: walk up from the entry file until we hit the filesystem root,
-// collecting every node_modules directory found along the way.
-// This works correctly under both npm flat trees and pnpm virtual stores.
 
 /**
  * Collect all ancestor node_modules directories from a starting path.
@@ -40,6 +33,42 @@ function collectNodeModulesPaths(startDir) {
   return paths
 }
 
+// ─── Sass CLI binary resolver ─────────────────────────────────────────────────
+//
+// sass 1.80+ removed './sass.js' from its package exports map, so
+// require.resolve('sass/sass.js') throws ERR_PACKAGE_PATH_NOT_EXPORTED.
+//
+// Instead: resolve the package.json of the 'sass' package, read its "bin"
+// field, and derive the absolute path to the CLI entry point from there.
+// This is forward-compatible regardless of where sass puts its binary.
+
+/**
+ * Resolve the absolute path to the sass CLI script.
+ * Falls back to the string 'sass' (globally installed) if resolution fails.
+ * @returns {string}
+ */
+function resolveSassBin() {
+  try {
+    // require.resolve('sass') gives us the main entry (e.g. sass.node.js).
+    // Walk up to the package root by finding the directory that contains package.json.
+    let dir = path.dirname(require.resolve('sass'))
+    while (!fs.existsSync(path.join(dir, 'package.json'))) {
+      const parent = path.dirname(dir)
+      if (parent === dir) throw new Error('sass package.json not found')
+      dir = parent
+    }
+    const pkg = JSON.parse(fs.readFileSync(path.join(dir, 'package.json'), 'utf-8'))
+    // pkg.bin is either a string or { sass: './sass.js' }
+    const binRelative = typeof pkg.bin === 'string' ? pkg.bin : pkg.bin['sass']
+    return path.join(dir, binRelative)
+  } catch {
+    return 'sass' // fall back to globally installed sass
+  }
+}
+
+// Resolve once at module load — same binary for every compile/watch call.
+const SASS_BIN = resolveSassBin()
+
 // ─── compile() ───────────────────────────────────────────────────────────────
 
 /**
@@ -53,10 +82,6 @@ function collectNodeModulesPaths(startDir) {
 function compile(entry, outFile, prod = false, extraPaths = []) {
   const opts = prod ? sassOptionsProd : sassOptions
 
-  // Build the full set of load paths:
-  //   1. Directory containing the entry file  (resolves relative @use)
-  //   2. All ancestor node_modules dirs        (resolves @mastors/* scope)
-  //   3. Any caller-supplied extras
   const autoNodeModules = collectNodeModulesPaths(path.dirname(entry))
 
   const result = sass.compile(entry, {
@@ -83,8 +108,8 @@ function compile(entry, outFile, prod = false, extraPaths = []) {
 /**
  * Watch an SCSS entry file and recompile on change.
  *
- * Uses the Sass CLI `--watch` flag under the hood, which handles
- * dependency tracking correctly (partials, forwarded files, etc.).
+ * Spawns the Sass CLI with --watch, which handles dependency tracking
+ * correctly (partials, forwarded files, etc.).
  *
  * @param {string}   entry           - Absolute path to the SCSS entry file
  * @param {string}   outFile         - Absolute path to the output CSS file
@@ -109,24 +134,16 @@ function watch(entry, outFile, extraPaths = []) {
 
   console.log(`[mastors] Watching: ${path.basename(entry)} → ${path.basename(outFile)}`)
 
-  // Resolve sass CLI binary from the local node_modules
-  const sassBin = (() => {
-    try {
-      return require.resolve('sass/sass.js').replace('sass.js', '') + '../bin/sass'
-    } catch {
-      return 'sass' // fall back to globally installed sass
-    }
-  })()
+  // If SASS_BIN is an absolute path to a .js file, run it with node.
+  // If it fell back to the string 'sass', spawn it as a shell command.
+  const isJsFile = SASS_BIN !== 'sass' && SASS_BIN.endsWith('.js')
 
-  const proc = spawn('node', [require.resolve('sass/sass.js'), ...args], {
-    stdio: 'inherit',
-    shell: false,
-  })
+  const proc = isJsFile
+    ? spawn('node', [SASS_BIN, ...args], { stdio: 'inherit', shell: false })
+    : spawn('sass',              args,   { stdio: 'inherit', shell: true  })
 
   proc.on('error', err => {
-    // If resolving sass.js failed, fall back to spawning 'sass' directly
-    console.warn('[mastors] sass.js spawn failed, falling back to sass CLI:', err.message)
-    spawn('sass', args, { stdio: 'inherit', shell: true })
+    console.error('[mastors] Failed to start sass watcher:', err.message)
   })
 
   return proc

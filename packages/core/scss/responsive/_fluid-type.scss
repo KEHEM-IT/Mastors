@@ -7,7 +7,6 @@
 
 // Fluid type scale — font sizes that scale smoothly between two viewport widths.
 // Uses clamp() so no media queries are needed.
-//
 // Usage in component SCSS:
 //   @use "@mastors/core/api" as m;
 //   font-size: m.fluid-type(1rem, 1.5rem);

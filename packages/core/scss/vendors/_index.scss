@@ -4,13 +4,11 @@
 
 // INTENTIONAL STUB — reserved for third-party CSS overrides.
 // It is deliberately empty at v1.0.
-//
 // How to add a vendor override:
 //   1. Create a partial: vendors/_<vendor-name>-overrides.scss
 //   2. Forward it here: @forward "<vendor-name>-overrides";
 //   3. Keep overrides scoped and minimal — prefer custom properties over
 //      re-declarations wherever the vendor library supports them.
-//
 // Example future entries:
 //   @forward "normalize-overrides";
 //   @forward "floating-ui-overrides";

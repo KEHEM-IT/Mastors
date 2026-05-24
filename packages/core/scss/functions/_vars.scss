@@ -1,24 +1,19 @@
 // functions/_vars.scss
 // vars() — reference any design token as a CSS custom property by name.
 // ─────────────────────────────────────────────────────────────
-//
 // All Mastors tokens are emitted as --mastors-{name} custom properties
 // by the token layer. This function wraps that convention so downstream
 // consumers never have to hard-code the --mastors- prefix themselves,
 // and so token references remain refactor-safe if the prefix ever changes.
-//
 // Usage:
 //   color:            vars(accent);            → var(--mastors-accent)
 //   background-color: vars(surface-raised);    → var(--mastors-surface-raised)
 //   box-shadow:       vars(shadow-lg);         → var(--mastors-shadow-lg)
-//
 // With a CSS fallback (passed through verbatim):
 //   color: vars(accent, #3b82f6);             → var(--mastors-accent, #3b82f6)
 //   gap:   vars(spacing-4, 1rem);             → var(--mastors-spacing-4, 1rem)
-//
 // Composing with other functions is fine — Sass evaluates eagerly:
 //   transition: opacity vars(duration-200) vars(ease-out);
-//
 // ─────────────────────────────────────────────────────────────
 
 @use "sass:meta";
@@ -46,7 +41,7 @@ $-namespace: "mastors" !default;
 @function vars($token, $fallback: null) {
   $prop: "--#{$-namespace}-#{$token}";
 
-  @if $fallback == null {
+  @if not $fallback {
     @return var(#{$prop});
   } @else {
     @return var(#{$prop}, #{$fallback});

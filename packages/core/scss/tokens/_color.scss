@@ -83,14 +83,18 @@ $color-tokens: (
     "900": #164e63,
     "950": #083344,
   ),
-  "white": #ffffff,
-  "black": #000000,
+  "white": #fff,
+  "black": #000,
   "transparent": transparent,
 ) !default;
 
 // Accessor: color("primary", 600)
 @function color($palette, $shade: null) {
   $p: map.get($color-tokens, $palette);
-  @if $shade == null { @return $p; }
-  @return map.get($p, "#{$shade}");
+
+  @if $shade {
+    @return map.get($p, "#{$shade}");
+  }
+
+  @return $p;
 }

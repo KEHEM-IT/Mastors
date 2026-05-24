@@ -5,26 +5,21 @@
 // The light and dark themes (_light.scss, _dark.scss) are the actual emitters.
 // This file documents the full semantic custom property contract
 // that all themes must implement, without producing any CSS output.
-//
 // Semantic custom properties contract:
-//
 //   Surfaces
 //   --mastors-bg              ← page background
 //   --mastors-bg-subtle       ← subdued page background
 //   --mastors-surface         ← card / panel surface
 //   --mastors-surface-raised  ← elevated surface (dropdowns, tooltips)
 //   --mastors-surface-overlay ← modal/overlay surface
-//
 //   Text
 //   --mastors-text            ← primary text
 //   --mastors-text-muted      ← secondary / supporting text
 //   --mastors-text-subtle     ← tertiary / placeholder text
 //   --mastors-text-inverse    ← text on dark/accent surfaces
-//
 //   Borders
 //   --mastors-border          ← default border
 //   --mastors-border-strong   ← emphasis border
-//
 //   Brand / Accent
 //   --mastors-accent          ← primary brand color
 //   --mastors-accent-hover    ← accent hover state

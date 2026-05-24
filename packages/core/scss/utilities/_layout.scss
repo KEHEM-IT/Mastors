@@ -146,12 +146,12 @@ $-aspect-ratios: (
 
 // ── Box decoration break ──────────────────────────────────────────────────────
 
-.box-decoration-clone { -webkit-box-decoration-break: clone; box-decoration-break: clone; }
-.box-decoration-slice { -webkit-box-decoration-break: slice; box-decoration-break: slice; }
+.box-decoration-clone { box-decoration-break: clone; }
+.box-decoration-slice { box-decoration-break: slice; }
 
 // ── Appearance ───────────────────────────────────────────────────────────────
 
-.appearance-none { appearance: none; -webkit-appearance: none; }
+.appearance-none { appearance: none; }
 .appearance-auto { appearance: auto; }
 
 // ── Will-change ──────────────────────────────────────────────────────────────

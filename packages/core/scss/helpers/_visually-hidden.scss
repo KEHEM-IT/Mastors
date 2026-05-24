@@ -1,10 +1,8 @@
 // helpers/_visually-hidden.scss
 // Visually hides content while keeping it accessible to screen readers.
 // ─────────────────────────────────────────────────────────────
-//
 // The canonical implementation lives in accessibility/_screen-reader.scss
 // (.sr-only / .not-sr-only — the modern standard class names).
-//
 // This file provides the legacy aliases (.visually-hidden, .vh,
 // .visually-hidden-focusable) that map onto the same rules, so existing
 // codebases using either naming convention continue to work without

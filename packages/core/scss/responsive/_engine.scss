@@ -8,10 +8,8 @@
 
 // Responsive engine — generates breakpoint-prefixed variants
 // of any utility that declares responsive: true.
-//
 // Class pattern:  .{bp}\:{utility}
 // Example output: .sm\:hidden, .md\:flex, .lg\:gap-8
-//
 // Sub-packages pass their $utilities map here via @include engine.run()
 // so the engine iterates breakpoints and re-emits the classes.
 
@@ -21,11 +19,11 @@
   @if flags.$enable-responsive {
     @each $bp-key, $bp-value in bpvars.$breakpoints {
       // Skip xs — no prefix, already emitted as base classes
-      @if $bp-value != 0px {
+      @if $bp-value != 0 {
         @media (min-width: #{$bp-value}) {
           @each $name, $config in $utilities {
             @if map.get($config, responsive) == true {
-              $prop:   map.get($config, property);
+              $prop: map.get($config, property);
               $values: map.get($config, values);
               $prefix: map.get($config, prefix);
 
@@ -41,7 +39,7 @@
                 // When the breakpoint key begins with a number (e.g. "2xl"),
                 // escape it using the CSS identifier-escape syntax: \3X  (space after hex).
                 $first: string.slice("#{$bp-key}", 1, 1);
-                $rest:  string.slice("#{$bp-key}", 2);
+                $rest: string.slice("#{$bp-key}", 2);
                 $safe-bp: null;
                 @if $first == "0" or $first == "1" or $first == "2" or $first == "3" or
                     $first == "4" or $first == "5" or $first == "6" or $first == "7" or
