@@ -4,6 +4,7 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
+      "inputs": ["scss/**", "build.js", "package.json"],
       "outputs": ["dist/**", "*.css", "*.css.map"],
       "cache": true
     },
