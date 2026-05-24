@@ -1,6 +1,6 @@
 {
   "name": "@mastors/core",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Mastors Core — foundational tokens, mixins, functions, and SCSS architecture",
   "license": "MIT",
   "author": "Mastors Contributors",

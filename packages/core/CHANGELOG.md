@@ -1,11 +1,14 @@
 # @mastors/core
 
-## 2.0.0
+## 1.1.0
 
 ### Minor Changes
 
-- Let start v1.0
+- Fix deprecated Sass `if()` syntax in `_em.scss` and `_class-generator.scss` — replaced with `@if/@else` blocks for compatibility with modern Sass
+- Add `inputs` field to `turbo.json` build task so SCSS changes correctly invalidate the Turbo cache
 
-### Patch Changes
+## 1.0.0
 
-- 608c4f1: sad
+### Major Changes
+
+- Initial release of `@mastors/core`
