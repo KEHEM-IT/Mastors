@@ -29,13 +29,29 @@
 .border-default     { border-color: var(--mastors-border); }
 .border-strong      { border-color: var(--mastors-border-strong); }
 
-// Border radius
+// Border radius — all scale steps from token map
 @each $key, $val in ra.$radius-tokens {
   .rounded-#{$key} { border-radius: $val; }
 }
 // Shorthand: .rounded = base radius
 .rounded { border-radius: ra.radius("base"); }
 
-// Directional radius
-.rounded-t-#{"lg"}  { border-top-left-radius: ra.radius("lg"); border-top-right-radius: ra.radius("lg"); }
-.rounded-b-#{"lg"}  { border-bottom-left-radius: ra.radius("lg"); border-bottom-right-radius: ra.radius("lg"); }
+// Directional border radius — all sides, full token scale
+// Generates: .rounded-t-{key}, .rounded-b-{key}, .rounded-l-{key}, .rounded-r-{key}
+// (no border-radius shorthand here — directional rules must not have corner rounding
+//  on the unaffected corners, so border-radius is applied per-corner only)
+$-radius-sides: (
+  "t": ("border-top-left-radius",    "border-top-right-radius"),
+  "b": ("border-bottom-left-radius", "border-bottom-right-radius"),
+  "l": ("border-top-left-radius",    "border-bottom-left-radius"),
+  "r": ("border-top-right-radius",   "border-bottom-right-radius"),
+);
+
+@each $side, $props in $-radius-sides {
+  @each $key, $val in ra.$radius-tokens {
+    .rounded-#{$side}-#{$key} {
+      #{nth($props, 1)}: $val;
+      #{nth($props, 2)}: $val;
+    }
+  }
+}

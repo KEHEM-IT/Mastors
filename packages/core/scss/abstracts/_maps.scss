@@ -2,11 +2,17 @@
 // Shared SCSS maps used across the Mastors ecosystem.
 // ─────────────────────────────────────────────────────────────
 
-// Reserved for shared utility maps that don't belong in tokens or variables.
-// Example use cases:
+// INTENTIONAL STUB — this file is reserved for shared utility maps that
+// do not belong in tokens/ or variables/. It is deliberately empty at v1.0.
+//
+// Add maps here when they are:
+//   - Consumed by 3+ unrelated files across packages
+//   - Not a design token (those live in tokens/)
+//   - Not a layout variable (those live in variables/)
+//
+// Example future use cases:
 //   - Display value maps for generator consumption
 //   - Shared prefix/suffix lookup tables
 //   - Cross-package utility config maps
-//
-// Currently empty — token maps live in tokens/, breakpoints in variables/.
+
 

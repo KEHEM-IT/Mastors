@@ -3,6 +3,11 @@
 // ─────────────────────────────────────────────────────────────
 
 // Focus ring — respects browser defaults, enhances with custom ring.
+// Custom property --mastors-color-primary-500 is emitted by base/_root.scss
+// via the nested emit-nested-custom-properties() generator, which produces
+// --mastors-color-primary-{shade} for every shade in $color-tokens.
+// The hardcoded fallback #3b82f6 (primary-500) fires only in environments
+// where @mastors/core's :root block has not been loaded (e.g. partial imports).
 
 :focus-visible {
   outline: 2px solid var(--mastors-color-primary-500, #3b82f6);

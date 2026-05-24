@@ -22,6 +22,10 @@
 }
 
 /// Return black or white for maximum contrast against $bg
+/// NOTE: This uses a simplified linear luminance approximation.
+/// It does not apply gamma expansion (sRGB linearisation) as required
+/// by WCAG 2.1 relative luminance. Results are close enough for UI use
+/// but should not be used for strict WCAG 2.1 contrast-ratio assertions.
 @function contrast($bg, $light: white, $dark: black) {
   $luminance: 0.2126 * color.channel($bg, "red", $space: rgb) / 255
             + 0.7152 * color.channel($bg, "green", $space: rgb) / 255

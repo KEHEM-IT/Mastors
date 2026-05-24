@@ -1,7 +1,6 @@
 // base/_box-sizing.scss
-// Global box-sizing strategy.
+// INTENTIONALLY EMPTY — box-sizing: border-box is declared in _reset.scss.
+// This file is retained as a named slot so downstream packages and build
+// tooling that reference the path continue to resolve without error.
+// Do not add declarations here.
 // ─────────────────────────────────────────────────────────────
-
-*, *::before, *::after {
-  box-sizing: border-box;
-}

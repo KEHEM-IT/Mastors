@@ -38,13 +38,19 @@
   - [Container](#container)
   - [Pseudo](#pseudo)
 - [Responsive Engine](#responsive-engine)
+- [Container Queries](#container-queries)
+- [Fluid Typography](#fluid-typography)
 - [Theme System](#theme-system)
 - [Base Layer](#base-layer)
 - [Utility Classes](#utility-classes)
 - [Helpers](#helpers)
 - [Accessibility](#accessibility)
+- [Generator Engine](#generator-engine)
+- [Semantic Layer](#semantic-layer)
+- [Known Stubs](#known-stubs)
 - [Package Exports](#package-exports)
 - [Peer Dependencies](#peer-dependencies)
+- [Changelog](#changelog)
 
 ---
 
@@ -53,13 +59,15 @@
 `@mastors/core` is the only required package in the Mastors ecosystem. It provides:
 
 - **Design tokens** — color, spacing, typography, radius, shadows, z-index, opacity, and transitions as SCSS maps
-- **Functions** — `rem()`, `em()`, `color()`, `spacing()`, `tint()`, `shade()`, `alpha()`, `contrast()`
-- **Mixins** — `bp()`, `dark-mode()`, `elevation()`, `transition()`, `container()`, `pseudo()`
-- **Generator engine** — the `generate-utilities()` mixin that all utility packages use
+- **Functions** — `rem()`, `em()`, `color()`, `spacing()`, `tint()`, `shade()`, `alpha()`, `contrast()`, `fluid()`, `map-deep-get()`, `map-collect()`, `str-replace()`
+- **Mixins** — `bp()`, `dark-mode()`, `light-mode()`, `theme()`, `elevation()`, `transition()`, `container()`, `pseudo()`
+- **Generator engine** — `generate-utilities()`, `emit-custom-properties()`, and responsive-generator mixins used by all utility packages
 - **Reset** — modern CSS reset and document defaults
-- **Theme system** — CSS custom property–based light/dark theming
-- **Responsive engine** — breakpoint-aware utility variant generation
-- **Utility classes** — display, position, overflow, spacing, sizing, colors, borders, shadows, opacity, cursor, z-index, transforms, and more
+- **Theme system** — CSS custom property-based light/dark theming with a full semantic contract
+- **Responsive engine** — breakpoint-aware utility variant generation (`sm:`, `md:`, `lg:`, `xl:`, `2xl:`)
+- **Container queries** — `.cq-inline`, `.cq-size`, `cq()` mixin for `@container` rules
+- **Fluid typography** — `fluid-type()` mixin and function using `clamp()`
+- **Utility classes** — display, position, overflow, spacing, sizing, colors, borders (full directional radius scale), shadows, opacity, cursor, z-index, transforms
 - **TypeScript types and runtime token mirror**
 
 All other `@mastors/*` packages consume `@mastors/core/api` for shared tokens, functions, and mixins.
@@ -150,7 +158,7 @@ Override the global config map before importing core to customise behaviour. The
 // styles/_config.scss — set BEFORE @use "@mastors/core"
 @use "@mastors/core/scss/config/settings" with (
   $mastors-config: (
-    "prefix":    "",        // optional class prefix, e.g. "m-" → .m-flex
+    "prefix":    "",        // optional class prefix, e.g. "m-" -> .m-flex
     "important": false,     // append !important to all utility declarations
     "dark-mode": "class",   // "class" | "media"
     "rtl":       false,     // enable RTL logical property variants
@@ -205,7 +213,7 @@ All tokens are available via the public API after `@use "@mastors/core/api" as m
 
 ### Color
 
-Six semantic palettes, each with 11 shades (50–950), plus `white`, `black`, and `transparent`.
+Six semantic palettes, each with 11 shades (50-950), plus `white`, `black`, and `transparent`.
 
 ```scss
 m.color("primary", 600)    // #2563eb
@@ -218,7 +226,7 @@ m.color("white")           // #ffffff
 m.color("black")           // #000000
 ```
 
-Palettes: `primary` · `neutral` · `success` · `warning` · `error` · `info`
+Palettes: `primary` - `neutral` - `success` - `warning` - `error` - `info`
 
 ### Spacing
 
@@ -233,10 +241,17 @@ m.spacing(16)   // 4rem
 m.spacing(96)   // 24rem
 ```
 
+Half-step keys (`0.5`, `1.5`, `2.5`, `3.5`) are also available:
+
+```scss
+m.spacing("0.5")  // 0.125rem
+m.spacing("1.5")  // 0.375rem
+```
+
 ### Typography
 
 ```scss
-// Font sizes (xs → 9xl)
+// Font sizes (xs -> 9xl)
 m.font-size("sm")      // 0.875rem
 m.font-size("base")    // 1rem
 m.font-size("2xl")     // 1.5rem
@@ -267,6 +282,7 @@ m.radius("md")     // 0.375rem
 m.radius("lg")     // 0.5rem
 m.radius("xl")     // 0.75rem
 m.radius("2xl")    // 1rem
+m.radius("3xl")    // 1.5rem
 m.radius("full")   // 9999px
 ```
 
@@ -324,21 +340,26 @@ m.easing("bounce")  // cubic-bezier(0.34, 1.56, 0.64, 1)
 
 | Function | Description | Example |
 |---|---|---|
-| `rem($px)` | Convert px to rem | `rem(16px)` → `1rem` |
-| `em($px)` | Convert px to em | `em(16px)` → `1em` |
+| `rem($px)` | Convert px to rem | `rem(16px)` -> `1rem` |
+| `em($px)` | Convert px to em | `em(16px)` -> `1em` |
 | `color($palette, $shade)` | Get a color token | `color("primary", 600)` |
-| `spacing($key)` | Get a spacing token | `spacing(4)` → `1rem` |
-| `radius($key)` | Get a radius token | `radius("xl")` → `0.75rem` |
+| `spacing($key)` | Get a spacing token | `spacing(4)` -> `1rem` |
+| `radius($key)` | Get a radius token | `radius("xl")` -> `0.75rem` |
 | `shadow($key)` | Get a shadow token | `shadow("md")` |
-| `z($key)` | Get a z-index token | `z("modal")` → `400` |
-| `opacity($key)` | Get an opacity token | `opacity("50")` → `0.5` |
-| `duration($key)` | Get a duration token | `duration("200")` → `200ms` |
+| `z($key)` | Get a z-index token | `z("modal")` -> `400` |
+| `opacity($key)` | Get an opacity token | `opacity("50")` -> `0.5` |
+| `duration($key)` | Get a duration token | `duration("200")` -> `200ms` |
 | `easing($key)` | Get an easing token | `easing("in-out")` |
 | `tint($c, $pct)` | Mix color with white | `tint(blue, 20%)` |
 | `shade($c, $pct)` | Mix color with black | `shade(blue, 20%)` |
 | `alpha($c, $a)` | Adjust alpha channel | `alpha(blue, 0.5)` |
-| `contrast($bg)` | Black or white for contrast | `contrast(#1e40af)` → white |
+| `contrast($bg)` | Black or white for contrast (1) | `contrast(#1e40af)` -> white |
 | `fluid($min, $max)` | Clamp-based fluid value | `fluid(1rem, 2rem)` |
+| `map-deep-get($map, $keys...)` | Deep nested map access | `map-deep-get($tokens, "primary", "600")` |
+| `map-collect($maps...)` | Shallow-merge multiple maps | `map-collect($a, $b)` |
+| `str-replace($str, $search)` | Replace substring | `str-replace("a-b", "-", "_")` |
+
+(1) `contrast()` uses a simplified linear luminance approximation, not the full WCAG 2.1 gamma-expanded formula. Suitable for UI decisions, not for strict accessibility audits.
 
 ---
 
@@ -349,7 +370,7 @@ m.easing("bounce")  // cubic-bezier(0.34, 1.56, 0.64, 1)
 Mobile-first, min-width media queries using the named breakpoint map.
 
 ```scss
-// Breakpoints: xs (0px) · sm (640px) · md (768px) · lg (1024px) · xl (1280px) · 2xl (1536px)
+// Breakpoints: xs (0px) - sm (640px) - md (768px) - lg (1024px) - xl (1280px) - 2xl (1536px)
 
 @include m.bp("md") {
   // Applies at 768px and above
@@ -434,53 +455,109 @@ Generated class pattern: `.{breakpoint}\:{class}`
 <!-- Responsive display -->
 <div class="hidden md:block lg:flex">...</div>
 
-<!-- Responsive spacing (from @mastors/core utilities) -->
-<div class="p-4 md:p-8 lg:p-12">...</div>
+<!-- Responsive position -->
+<div class="relative md:absolute lg:sticky">...</div>
 
 <!-- Responsive layout (from @mastors/flexer or @mastors/gridder) -->
 <div class="flex flex-col md:flex-row lg:gap-8">...</div>
 ```
 
-Container queries are supported via `responsive/_container-queries.scss`:
+Utilities with responsive support at v1.0: `display`, `position`.
+
+> Spacing, sizing, and color utilities use direct `@each` loops in v1.0 and do not generate responsive variants by default. Responsive variants for those groups are planned for a future minor release.
+
+---
+
+## Container Queries
+
+Container queries are supported via `responsive/_container-queries.scss`.
+
+**Setup classes:**
+
+| Class | Effect |
+|---|---|
+| `.cq-inline` | `container-type: inline-size` |
+| `.cq-size` | `container-type: size` |
+| `.cq-normal` | `container-type: normal` |
+| `[data-container]` | `container-type: inline-size` (attribute-based) |
+
+**Usage:**
 
 ```html
 <div class="cq-inline">
-  <div class="child">Responds to container width</div>
+  <div class="child">Responds to container width, not viewport</div>
 </div>
 ```
 
 ```scss
-@include m.cq(40rem) {
-  .child { font-size: 1.25rem; }
+@use "@mastors/core/api" as m;
+
+.child {
+  font-size: 1rem;
+
+  @include m.cq(40rem) {
+    font-size: 1.25rem;
+  }
+
+  // Named container query
+  @include m.cq(30rem, "card") {
+    padding: m.spacing(6);
+  }
 }
 ```
 
-Fluid typography scales smoothly between two viewports using `clamp()`:
+---
+
+## Fluid Typography
+
+`responsive/_fluid-type.scss` provides clamp()-based fluid font sizes that scale between two viewport widths without media queries.
 
 ```scss
+@use "@mastors/core/api" as m;
+
+// As a mixin (applies font-size property)
 h1 { @include m.fluid-type(2rem, 3.75rem); }
-// or
+
+// As a function (use in any property value)
 h1 { font-size: m.fluid-type(2rem, 3.75rem); }
+
+// Custom viewport range
+h2 { @include m.fluid-type(1.5rem, 3rem, 480px, 1440px); }
+```
+
+Opt-in preset scale for all heading levels:
+
+```scss
+@use "@mastors/core/scss/responsive/fluid-type" as ft;
+@include ft.fluid-scale();
+// Applies fluid-type() to h1-h6 and p
 ```
 
 ---
 
 ## Theme System
 
-Core emits all design tokens as `--mastors-*` CSS custom properties on `:root`. Theme layers override them.
+Core emits all design tokens as `--mastors-*` CSS custom properties on `:root`. Theme layers override a semantic subset.
 
 **Default (light) theme properties:**
 
 ```css
 :root {
-  --mastors-bg:           #ffffff;
-  --mastors-bg-subtle:    #f9fafb;
-  --mastors-surface:      #ffffff;
-  --mastors-text:         #111827;
-  --mastors-text-muted:   #6b7280;
-  --mastors-border:       #e5e7eb;
-  --mastors-accent:       #2563eb;
-  --mastors-accent-hover: #1d4ed8;
+  --mastors-bg:              #ffffff;
+  --mastors-bg-subtle:       #f9fafb;
+  --mastors-surface:         #ffffff;
+  --mastors-surface-raised:  #f9fafb;
+  --mastors-surface-overlay: #f3f4f6;
+  --mastors-text:            #111827;
+  --mastors-text-muted:      #6b7280;
+  --mastors-text-subtle:     #9ca3af;
+  --mastors-text-inverse:    #ffffff;
+  --mastors-border:          #e5e7eb;
+  --mastors-border-strong:   #9ca3af;
+  --mastors-accent:          #2563eb;
+  --mastors-accent-hover:    #1d4ed8;
+  --mastors-accent-subtle:   #eff6ff;
+  --mastors-accent-text:     #ffffff;
 }
 ```
 
@@ -500,18 +577,38 @@ Use semantic custom properties directly in your CSS for automatic theme switchin
 }
 ```
 
+Custom themes can be applied with any `data-theme` attribute:
+
+```scss
+@use "@mastors/core/api" as m;
+
+@include m.theme("ocean") {
+  --mastors-accent: #0891b2;
+  --mastors-accent-hover: #0e7490;
+}
+```
+
+```html
+<div data-theme="ocean">
+  <!-- accent color is teal inside here -->
+</div>
+```
+
 ---
 
 ## Base Layer
 
 The base layer emits a modern CSS reset and document defaults when you import the full stylesheet:
 
-- `box-sizing: border-box` on all elements
+- `box-sizing: border-box` on all elements (declared once in `_reset.scss`)
 - Zero margin and padding on all elements
 - `img`, `video`, `canvas`, `svg` set to `display: block; max-width: 100%`
 - `input`, `button`, `textarea`, `select` inherit font
 - Smooth scroll behaviour on `html`
 - `-webkit-font-smoothing: antialiased` on `body`
+- Base `color` and `background-color` on `html` driven by semantic custom properties
+- Heading sizes (h1-h6) driven by the typography token scale
+- Code/pre elements default to the mono font family
 
 ---
 
@@ -521,21 +618,21 @@ When importing the full stylesheet, core emits these utility classes:
 
 | Group | Classes |
 |---|---|
-| Display | `.block` `.inline-block` `.inline` `.flex` `.inline-flex` `.grid` `.inline-grid` `.hidden` `.contents` |
-| Position | `.static` `.relative` `.absolute` `.fixed` `.sticky` · `.inset-*` `.top-*` `.right-*` `.bottom-*` `.left-*` |
-| Overflow | `.overflow-auto/hidden/scroll/visible` · `.overflow-x-*` `.overflow-y-*` |
-| Spacing | `.m-*` `.mx-*` `.my-*` `.mt/r/b/l/s/e-*` · `.p-*` `.px-*` `.py-*` `.pt/r/b/l/s/e-*` · `.gap-*` `.gap-x-*` `.gap-y-*` |
-| Sizing | `.w-*` `.h-*` · `.min-w-*` `.max-w-*` `.min-h-*` `.max-h-*` |
-| Colors | `.text-*` `.bg-*` (all palettes × all shades + semantic) |
-| Borders | `.border` `.border-*` `.rounded-*` |
+| Display | `.block` `.inline-block` `.inline` `.flex` `.inline-flex` `.grid` `.inline-grid` `.hidden` `.contents` `.table` `.table-cell` `.table-row` |
+| Position | `.static` `.relative` `.absolute` `.fixed` `.sticky` - `.inset-*` `.top-*` `.right-*` `.bottom-*` `.left-*` |
+| Overflow | `.overflow-auto/hidden/scroll/visible/clip` - `.overflow-x-*` `.overflow-y-*` |
+| Spacing | `.m-*` `.mx-*` `.my-*` `.mt/r/b/l/s/e-*` - `.p-*` `.px-*` `.py-*` `.pt/r/b/l/s/e-*` - `.gap-*` `.gap-x-*` `.gap-y-*` |
+| Sizing | `.w-*` `.h-*` - `.min-w-*` `.max-w-*` `.min-h-*` `.max-h-*` |
+| Colors | `.text-*` `.bg-*` (all palettes x all shades + semantic) |
+| Borders | `.border` `.border-*` `.rounded-*` `.rounded-{t\|b\|l\|r}-*` (full scale, all token steps) |
 | Shadows | `.shadow-*` |
 | Opacity | `.opacity-*` |
 | Cursor | `.cursor-pointer` `.cursor-not-allowed` `.cursor-grab` etc. |
 | Pointer events | `.pointer-events-none` `.pointer-events-auto` |
 | Z-index | `.z-base` `.z-dropdown` `.z-modal` `.z-tooltip` etc. |
-| Transforms | `.translate-x-*` `.translate-y-*` `.rotate-*` `.scale-*` `.origin-*` |
+| Transforms | `.translate-x-*` `.translate-y-*` `.rotate-*` `.scale-*` `.origin-*` `.transform-gpu` `.transform-none` |
 
-All display, position, and spacing utilities support responsive prefixes (`sm:`, `md:`, `lg:`, `xl:`, `2xl:`).
+Display and position utilities support responsive prefixes (`sm:`, `md:`, `lg:`, `xl:`, `2xl:`).
 
 ---
 
@@ -549,24 +646,129 @@ All display, position, and spacing utilities support responsive prefixes (`sm:`,
 | `.line-clamp-{1-6}` | Multi-line text clamp |
 | `.break-words` | `overflow-wrap: break-word` |
 | `.break-all` | `word-break: break-all` |
+| `.break-keep` | `word-break: keep-all` |
+| `.ratio-auto` | `aspect-ratio: auto` |
 | `.ratio-square` | `aspect-ratio: 1 / 1` |
 | `.ratio-video` | `aspect-ratio: 16 / 9` |
 | `.ratio-portrait` | `aspect-ratio: 3 / 4` |
 | `.ratio-wide` | `aspect-ratio: 21 / 9` |
 | `.ratio-golden` | `aspect-ratio: 1.618 / 1` |
+| `.clearfix` | Float clearfix via `::after` |
 
 ---
 
 ## Accessibility
 
-| Class | Effect |
+| Class / Rule | Effect |
 |---|---|
 | `.sr-only` | Visually hidden, announced by screen readers |
 | `.not-sr-only` | Undoes `.sr-only` |
-| `.focus-ring` | Visible focus ring using `:focus-visible` |
-| `.focus-visible` | Explicit focus-visible state |
-| `.motion-safe:*` | Apply only when `prefers-reduced-motion: no-preference` |
-| `.motion-reduce:*` | Apply when `prefers-reduced-motion: reduce` |
+| `.visually-hidden`, `.vh` | Equivalent to `.sr-only` with `!important` guards |
+| `.visually-hidden-focusable` | Hidden until focused (skip-link pattern) |
+| `:focus-visible` | 2px primary-500 ring, 2px offset — keyboard only |
+| `:focus:not(:focus-visible)` | Removes ring for mouse/pointer users |
+| `prefers-reduced-motion: reduce` | Collapses all animation/transition durations to 0.01ms |
+
+---
+
+## Generator Engine
+
+The three generator mixins are the engine behind all utility class output in the Mastors ecosystem.
+
+### `generate-utilities($utilities)`
+
+Generates utility classes from a configuration map. Used by `@mastors/flexer`, `@mastors/gridder`, and all core utility partials.
+
+```scss
+@use "@mastors/core/scss/generators/class-generator" as gen;
+
+@include gen.generate-utilities((
+  "text-align": (
+    property:   text-align,
+    prefix:     "text",
+    responsive: true,
+    values: (
+      "left":   left,
+      "center": center,
+      "right":  right,
+    ),
+  ),
+));
+```
+
+### `emit-custom-properties($map, $prefix)`
+
+Emits flat CSS custom properties from a token map onto the current selector.
+
+```scss
+:root {
+  @include gen.emit-custom-properties($spacing-tokens, "mastors-spacing");
+  // -> --mastors-spacing-4: 1rem; etc.
+}
+```
+
+### `emit-nested-custom-properties($map, $prefix)`
+
+Recursively emits custom properties from a nested map (e.g. color palettes).
+
+```scss
+:root {
+  @include gen.emit-nested-custom-properties($color-tokens, "mastors-color");
+  // -> --mastors-color-primary-500: #3b82f6; etc.
+}
+```
+
+---
+
+## Semantic Layer
+
+The semantic layer in `semantic/` provides role-based SCSS variable aliases on top of the raw token maps. Use these in component SCSS instead of raw token references to get automatic theme compatibility.
+
+**Colors:**
+
+```scss
+@use "@mastors/core/scss/semantic/colors" as sem;
+
+.my-card {
+  background: sem.$color-surface;          // var(--mastors-surface)
+  color:      sem.$color-text;             // var(--mastors-text)
+  border:     1px solid sem.$color-border; // var(--mastors-border)
+}
+```
+
+**Spacing:**
+
+```scss
+@use "@mastors/core/scss/semantic/spacing" as sem;
+
+.section {
+  padding: sem.$space-section;    // spacing(16) = 4rem
+  gap:     sem.$space-component;  // spacing(4)  = 1rem
+}
+```
+
+**Typography:**
+
+```scss
+@use "@mastors/core/scss/semantic/typography" as sem;
+
+body { font-family: sem.$font-body; }   // system-ui stack
+code { font-family: sem.$font-mono; }   // monospace stack
+```
+
+---
+
+## Known Stubs
+
+Two files are intentionally empty at v1.0 and act as reserved extension points:
+
+| File | Purpose |
+|---|---|
+| `abstracts/_maps.scss` | Shared utility maps consumed by 3+ unrelated files. Empty until such maps exist. |
+| `vendors/_index.scss` | Third-party CSS overrides. Add a partial and `@forward` it here when needed. |
+| `base/_box-sizing.scss` | Retained as a named path slot; box-sizing is declared in `_reset.scss`. |
+
+These stubs are documented in each file's header comment.
 
 ---
 
@@ -583,6 +785,7 @@ All display, position, and spacing utilities support responsive prefixes (`sm:`,
 @use "@mastors/core/scss/tokens/color" as ct;
 @use "@mastors/core/scss/mixins/breakpoint" as bp;
 @use "@mastors/core/scss/functions/rem" as r;
+@use "@mastors/core/scss/responsive/fluid-type" as ft;
 ```
 
 ```ts
@@ -603,6 +806,26 @@ import type { MastorsConfig, Breakpoint, ThemeMode, Tokens } from '@mastors/core
 
 ---
 
+## Changelog
+
+### v1.0.0
+
+- Initial public release
+- Full token system: color, spacing, typography, radii, shadows, z-index, opacity, transitions, sizing
+- Complete functions layer: `rem`, `em`, `color`, `spacing`, `radius`, `shadow`, `z`, `opacity`, `duration`, `easing`, `tint`, `shade`, `alpha`, `contrast`, `fluid`, `map-deep-get`, `map-collect`, `str-replace`
+- Complete mixins layer: `bp`, `respond-to`, `breakpoint-up`, `breakpoint-down`, `dark-mode`, `light-mode`, `theme`, `elevation`, `transition`, `container`, `pseudo`
+- Generator engine: `generate-utilities`, `emit-custom-properties`, `emit-nested-custom-properties`
+- Responsive engine with correct numeric breakpoint escaping (`2xl:` prefix)
+- Container queries: `.cq-inline`, `.cq-size`, `.cq-normal`, `[data-container]`, `cq()` mixin
+- Fluid typography: `fluid-type()` mixin + function + `fluid-scale()` preset
+- Full directional border-radius utility scale — all four sides x all token steps (fixed from partial `lg`-only coverage)
+- Light and dark themes via CSS custom property semantic contract (15 semantic props)
+- Modern CSS reset — no duplicate `box-sizing` declarations
+- Accessibility layer: `:focus-visible` ring, `prefers-reduced-motion` override, `.sr-only`, `.visually-hidden`
+- Dual dark-mode strategy: class-based and media-query, configurable via `$mastors-config`
+
+---
+
 ## License
 
-MIT © Mastors Contributors
+MIT (c) Mastors Contributors
