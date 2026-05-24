@@ -5,24 +5,32 @@
 /// Center children both axes using flexbox.
 ///
 /// @param {Boolean} $inline  - use inline-flex (default: false)
-///
-/// Usage:
-///   .icon-wrapper { @include flex-center; }
-///   .badge        { @include flex-center($inline: true); }
 @mixin flex-center($inline: false) {
-  display: if($inline, inline-flex, flex);
+  @if $inline {
+    display: inline-flex;
+  } @else {
+    display: flex;
+  }
   align-items: center;
   justify-content: center;
 }
 
 /// Center children on the main axis only (horizontal for row direction).
 @mixin flex-center-x($inline: false) {
-  display: if($inline, inline-flex, flex);
+  @if $inline {
+    display: inline-flex;
+  } @else {
+    display: flex;
+  }
   justify-content: center;
 }
 
 /// Center children on the cross axis only (vertical for row direction).
 @mixin flex-center-y($inline: false) {
-  display: if($inline, inline-flex, flex);
+  @if $inline {
+    display: inline-flex;
+  } @else {
+    display: flex;
+  }
   align-items: center;
 }

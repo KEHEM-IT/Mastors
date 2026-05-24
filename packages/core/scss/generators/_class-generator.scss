@@ -10,24 +10,6 @@
 @use "../variables/breakpoints" as bpvars;
 
 /// Core utility class generator engine.
-/// Emits base utility classes AND, for any entry with responsive: true,
-/// also emits breakpoint-prefixed variants via the built-in responsive pass.
-///
-/// @param {Map} $utilities - map of utility configs, each with:
-///   - property    {String}  CSS property name
-///   - values      {Map}     class-suffix → value pairs
-///   - prefix      {String}  optional class prefix (e.g. "flex")
-///   - responsive  {Boolean} emit responsive variants (default false)
-///
-/// Usage:
-///   @include generate-utilities((
-///     "flex-direction": (
-///       property:    flex-direction,
-///       prefix:      "flex",
-///       values: ("row": row, "col": column, "row-reverse": row-reverse),
-///       responsive:  true,
-///     ),
-///   ));
 @mixin generate-utilities($utilities) {
   $cls-prefix: cfg.config("prefix");
   $important: null;
@@ -53,11 +35,8 @@
   }
 
   // ── Pass 2: responsive variants (.sm\:, .md\:, …) ─────────
-  // Only runs when $enable-responsive is true and at least one
-  // utility in the map declares responsive: true.
   @if flags.$enable-responsive {
     @each $bp-key, $bp-value in bpvars.$breakpoints {
-      // xs (0px) → no media query wrapper; base classes already cover it.
       @if $bp-value != 0px {
         @media (min-width: #{$bp-value}) {
           @each $name, $config in $utilities {
@@ -67,19 +46,25 @@
               $prefix: map.get($config, prefix);
 
               @each $suffix, $value in $values {
-                $class: if($prefix, "#{$cls-prefix}#{$prefix}-#{$suffix}", "#{$cls-prefix}#{$suffix}");
+                // Replace deprecated if() with @if/@else
+                $class: null;
+                @if $prefix {
+                  $class: "#{$cls-prefix}#{$prefix}-#{$suffix}";
+                } @else {
+                  $class: "#{$cls-prefix}#{$suffix}";
+                }
 
-                // CSS identifiers cannot start with a digit.
-                // Escape numeric-leading breakpoint keys (e.g. "2xl" → "\32 xl").
+                // Escape numeric-leading breakpoint keys (e.g. "2xl" → "\32 xl")
                 $first:   string.slice("#{$bp-key}", 1, 1);
                 $rest:    string.slice("#{$bp-key}", 2);
-                $safe-bp: if(
-                  $first == "0" or $first == "1" or $first == "2" or $first == "3" or
-                  $first == "4" or $first == "5" or $first == "6" or $first == "7" or
-                  $first == "8" or $first == "9",
-                  "\\3#{$first} #{$rest}",
-                  "#{$bp-key}"
-                );
+                $safe-bp: null;
+                @if $first == "0" or $first == "1" or $first == "2" or $first == "3" or
+                    $first == "4" or $first == "5" or $first == "6" or $first == "7" or
+                    $first == "8" or $first == "9" {
+                  $safe-bp: "\\3#{$first} #{$rest}";
+                } @else {
+                  $safe-bp: "#{$bp-key}";
+                }
 
                 @at-root .#{$safe-bp}\:#{$class} {
                   #{$prop}: $value $important;

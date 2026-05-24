@@ -1,34 +1,29 @@
 // generators/_flex-generator.scss
 // generate-flex-utilities() — emit a complete flex utility set from a config map.
 // ─────────────────────────────────────────────────────────────
-//
-// This wraps the core class-generator with flex-specific defaults and
-// a convenient shorthand for declaring the full flex utility surface in
-// one mixin call.
-//
-// Usage:
-//   @include generate-flex-utilities((
-//     direction: true,
-//     wrap:      true,
-//     justify:   true,
-//     align:     true,
-//     grow:      true,
-//     shrink:    true,
-//     order:     true,
-//     responsive: true,
-//   ));
 
+@use "sass:map";
 @use "@mastors/core/scss/generators/class-generator" as gen;
 
 @mixin generate-flex-utilities($config: ()) {
-  $direction:  if(map-get($config, direction)  != false, true, false);
-  $wrap:       if(map-get($config, wrap)       != false, true, false);
-  $justify:    if(map-get($config, justify)    != false, true, false);
-  $align:      if(map-get($config, align)      != false, true, false);
-  $grow:       if(map-get($config, grow)       != false, true, false);
-  $shrink:     if(map-get($config, shrink)     != false, true, false);
-  $order:      if(map-get($config, order)      != false, true, false);
-  $responsive: if(map-get($config, responsive) != false, true, false);
+  // Replace deprecated if(map-get(...) != false, true, false) with @if/@else
+  $direction:  false;
+  $wrap:       false;
+  $justify:    false;
+  $align:      false;
+  $grow:       false;
+  $shrink:     false;
+  $order:      false;
+  $responsive: false;
+
+  @if map.get($config, direction)  != false { $direction:  true; }
+  @if map.get($config, wrap)       != false { $wrap:       true; }
+  @if map.get($config, justify)    != false { $justify:    true; }
+  @if map.get($config, align)      != false { $align:      true; }
+  @if map.get($config, grow)       != false { $grow:       true; }
+  @if map.get($config, shrink)     != false { $shrink:     true; }
+  @if map.get($config, order)      != false { $order:      true; }
+  @if map.get($config, responsive) != false { $responsive: true; }
 
   @if $direction {
     @include gen.generate-utilities(("flex-direction": (

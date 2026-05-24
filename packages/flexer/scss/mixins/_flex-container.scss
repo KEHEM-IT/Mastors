@@ -14,14 +14,6 @@
 /// @param {String}  $align      - align-items      (default: stretch)
 /// @param {*}       $gap        - raw CSS gap value (default: null)
 /// @param {Boolean} $inline     - use inline-flex  (default: false)
-///
-/// Usage:
-///   .card-row {
-///     @include flex-container($direction: row, $wrap: wrap, $gap: 1rem);
-///   }
-///   .toolbar {
-///     @include flex-container($justify: space-between, $align: center);
-///   }
 @mixin flex-container(
   $direction: row,
   $wrap:      nowrap,
@@ -30,7 +22,11 @@
   $gap:       null,
   $inline:    false
 ) {
-  display: if($inline, inline-flex, flex);
+  @if $inline {
+    display: inline-flex;
+  } @else {
+    display: flex;
+  }
   flex-direction: $direction;
   flex-wrap: $wrap;
   justify-content: $justify;

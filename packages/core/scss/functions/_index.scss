@@ -1,5 +1,11 @@
 // functions/_index.scss
 // ─────────────────────────────────────────────────────────────
+// NOTE: _vars.scss is intentionally NOT forwarded here.
+// _string.scss already defines vars() and vars-or().
+// _vars.scss defines a single-token vars($token, $fallback) variant
+// under a different signature — forwarding both causes a "two modules
+// define vars" conflict. Consumers who need the _vars.scss variant
+// should @use it directly.
 
 @forward "color";
 @forward "math";
@@ -7,4 +13,3 @@
 @forward "map-helpers";
 @forward "rem";
 @forward "em";
-@forward "vars";
