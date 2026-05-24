@@ -6,30 +6,15 @@
 @use "../generators/class-generator" as gen;
 
 // ── Aspect ratio ──────────────────────────────────────────────────────────────
-//
-// Named shorthands for the most common ratios, plus a token-driven
-// @each for any custom ratios defined in $aspect-ratio-tokens.
-//
-// Generated classes:
-//   .aspect-auto          aspect-ratio: auto
-//   .aspect-square        aspect-ratio: 1 / 1
-//   .aspect-video         aspect-ratio: 16 / 9
-//   .aspect-4-3           aspect-ratio: 4 / 3
-//   .aspect-3-2           aspect-ratio: 3 / 2
-//   .aspect-21-9          aspect-ratio: 21 / 9
-//   .aspect-9-16          aspect-ratio: 9 / 16   (portrait video)
-//   .aspect-golden        aspect-ratio: 1.618 / 1
-
-// Static named ratios — covers the common design tokens without requiring
-// a separate token file just for aspect ratios.
+// Use calc() for ratio values — bare slash division is deprecated in Sass 2+.
 $-aspect-ratios: (
   "auto":    auto,
-  "square":  1 / 1,
-  "video":   16 / 9,
-  "4-3":     4 / 3,
-  "3-2":     3 / 2,
-  "21-9":    21 / 9,
-  "9-16":    9 / 16,
+  "square":  calc(1 / 1),
+  "video":   calc(16 / 9),
+  "4-3":     calc(4 / 3),
+  "3-2":     calc(3 / 2),
+  "21-9":    calc(21 / 9),
+  "9-16":    calc(9 / 16),
   "golden":  1.618,
 ) !default;
 

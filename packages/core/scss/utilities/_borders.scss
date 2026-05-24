@@ -2,6 +2,7 @@
 // Border width, style, and radius utility classes.
 // ─────────────────────────────────────────────────────────────
 
+@use "sass:list";
 @use "../tokens/color"  as ct;
 @use "../tokens/radii"  as ra;
 
@@ -36,10 +37,7 @@
 // Shorthand: .rounded = base radius
 .rounded { border-radius: ra.radius("base"); }
 
-// Directional border radius — all sides, full token scale
-// Generates: .rounded-t-{key}, .rounded-b-{key}, .rounded-l-{key}, .rounded-r-{key}
-// (no border-radius shorthand here — directional rules must not have corner rounding
-//  on the unaffected corners, so border-radius is applied per-corner only)
+// Directional border radius
 $-radius-sides: (
   "t": ("border-top-left-radius",    "border-top-right-radius"),
   "b": ("border-bottom-left-radius", "border-bottom-right-radius"),
@@ -50,8 +48,8 @@ $-radius-sides: (
 @each $side, $props in $-radius-sides {
   @each $key, $val in ra.$radius-tokens {
     .rounded-#{$side}-#{$key} {
-      #{nth($props, 1)}: $val;
-      #{nth($props, 2)}: $val;
+      #{list.nth($props, 1)}: $val;
+      #{list.nth($props, 2)}: $val;
     }
   }
 }
