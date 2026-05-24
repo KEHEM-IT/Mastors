@@ -9,7 +9,19 @@
 /// @param {Number} $px - pixel value (unitless or px)
 /// @return {Number} rem value
 @function rem($px) {
-  $base: if(math.compatible($px, 1px), math.div($px, 1px), $px);
-  $root: if(math.compatible(vars.$base-font-size, 1px), math.div(vars.$base-font-size, 1px), vars.$base-font-size);
+  $base: 0;
+  @if math.compatible($px, 1px) {
+    $base: math.div($px, 1px);
+  } @else {
+    $base: $px;
+  }
+
+  $root: 0;
+  @if math.compatible(vars.$base-font-size, 1px) {
+    $root: math.div(vars.$base-font-size, 1px);
+  } @else {
+    $root: vars.$base-font-size;
+  }
+
   @return math.div($base, $root) * 1rem;
 }

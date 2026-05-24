@@ -87,8 +87,8 @@ const colorTokens = {
     '900': '#164e63',
     '950': '#083344',
   },
-  white: '#ffffff',
-  black: '#000000',
+  white: '#fff',
+  black: '#000',
   transparent: 'transparent',
 } as const
 
@@ -151,9 +151,9 @@ const fontSizeTokens = {
 } as const
 
 const fontFamilyTokens = {
-  sans: '(system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif)',
-  serif: '(Georgia, Cambria, "Times New Roman", Times, serif)',
-  mono: '(ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace)',
+  sans: '(system-ui, -apple-system, "BlinkMacSystemFont", "Segoe UI", "Roboto", sans-serif)',
+  serif: '("Georgia", "Cambria", "Times New Roman", "Times", serif)',
+  mono: '(ui-monospace, "SFMono-Regular", "Menlo", "Monaco", "Consolas", monospace)',
 } as const
 
 const fontWeightTokens = {
@@ -180,7 +180,7 @@ const lineHeightTokens = {
 const letterSpacingTokens = {
   tighter: '-0.05em',
   tight: '-0.025em',
-  normal: '0em',
+  normal: '0',
   wide: '0.025em',
   wider: '0.05em',
   widest: '0.1em',
@@ -203,13 +203,13 @@ const radiusTokens = {
 // ─── Shadows ─────────────────────────────────────────────────────────────────
 
 const shadowTokens = {
-  xs: '(0 1px 2px 0 rgb(0 0 0 / 0.05))',
-  sm: '(0 1px 3px 0 rgb(0 0 0 / 0.10), 0 1px 2px -1px rgb(0 0 0 / 0.10))',
-  md: '(0 4px 6px -1px rgb(0 0 0 / 0.10), 0 2px 4px -2px rgb(0 0 0 / 0.10))',
-  lg: '(0 10px 15px -3px rgb(0 0 0 / 0.10), 0 4px 6px -4px rgb(0 0 0 / 0.10))',
-  xl: '(0 20px 25px -5px rgb(0 0 0 / 0.10), 0 8px 10px -6px rgb(0 0 0 / 0.10))',
-  '2xl': '(0 25px 50px -12px rgb(0 0 0 / 0.25))',
-  inner: '(inset 0 2px 4px 0 rgb(0 0 0 / 0.05))',
+  xs: '(0 1px 2px 0 rgb(0 0 0 / 5%))',
+  sm: '(0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%))',
+  md: '(0 4px 6px -1px rgb(0 0 0 / 10%), 0 2px 4px -2px rgb(0 0 0 / 10%))',
+  lg: '(0 10px 15px -3px rgb(0 0 0 / 10%), 0 4px 6px -4px rgb(0 0 0 / 10%))',
+  xl: '(0 20px 25px -5px rgb(0 0 0 / 10%), 0 8px 10px -6px rgb(0 0 0 / 10%))',
+  '2xl': '(0 25px 50px -12px rgb(0 0 0 / 25%))',
+  inner: '(inset 0 2px 4px 0 rgb(0 0 0 / 5%))',
   none: 'none',
 } as const
 
@@ -272,7 +272,7 @@ const opacityTokens = {
 // ─── Sizing ──────────────────────────────────────────────────────────────────
 
 const sizingTokens = {
-  '0': '0px',
+  '0': '0',
   '1': '0.25rem',
   '2': '0.5rem',
   '4': '1rem',
@@ -291,8 +291,8 @@ const sizingTokens = {
   '96': '24rem',
   px: '1px',
   '1/2': '50%',
-  '1/3': '33.333333%',
-  '2/3': '66.666667%',
+  '1/3': '33.3333%',
+  '2/3': '66.6667%',
   '1/4': '25%',
   '3/4': '75%',
   '1/5': '20%',

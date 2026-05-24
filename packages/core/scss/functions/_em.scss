@@ -10,7 +10,19 @@
 /// @param {Number} $context - context font size in px (default: base)
 /// @return {Number} em value
 @function em($px, $context: vars.$base-font-size) {
-  $base: if(math.compatible($px, 1px), math.div($px, 1px), $px);
-  $ctx: if(math.compatible($context, 1px), math.div($context, 1px), $context);
+  $base: null;
+  @if math.compatible($px, 1px) {
+    $base: math.div($px, 1px);
+  } @else {
+    $base: $px;
+  }
+
+  $ctx: null;
+  @if math.compatible($context, 1px) {
+    $ctx: math.div($context, 1px);
+  } @else {
+    $ctx: $context;
+  }
+
   @return math.div($base, $ctx) * 1em;
 }
