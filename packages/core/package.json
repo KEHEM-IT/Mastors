@@ -1,6 +1,6 @@
 {
   "name": "@mastors/core",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Mastors Core — foundational tokens, mixins, functions, and SCSS architecture",
   "license": "MIT",
   "author": "Mastors Contributors",
@@ -10,7 +10,14 @@
     "url": "https://github.com/mastors/mastors.git",
     "directory": "packages/core"
   },
-  "keywords": ["mastors", "core", "scss", "tokens", "design-system", "css-framework"],
+  "keywords": [
+    "mastors",
+    "core",
+    "scss",
+    "tokens",
+    "design-system",
+    "css-framework"
+  ],
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -54,5 +61,8 @@
   "peerDependencies": {
     "sass": ">=1.80.0"
   },
-  "sideEffects": ["dist/*.css", "scss/**/*.scss"]
+  "sideEffects": [
+    "dist/*.css",
+    "scss/**/*.scss"
+  ]
 }

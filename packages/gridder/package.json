@@ -1,6 +1,6 @@
 {
   "name": "@mastors/gridder",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Mastors Gridder — complete CSS Grid utility class system",
   "license": "MIT",
   "author": "Mastors Contributors",
@@ -10,7 +10,15 @@
     "url": "https://github.com/mastors/mastors.git",
     "directory": "packages/gridder"
   },
-  "keywords": ["mastors", "gridder", "grid", "css-grid", "scss", "utilities", "css-framework"],
+  "keywords": [
+    "mastors",
+    "gridder",
+    "grid",
+    "css-grid",
+    "scss",
+    "utilities",
+    "css-framework"
+  ],
   "sass": "./scss/index.scss",
   "style": "./dist/mastors-gridder.css",
   "exports": {
@@ -18,7 +26,11 @@
     "./scss": "./scss/index.scss",
     "./scss/*": "./scss/*"
   },
-  "files": ["dist", "scss", "README.md"],
+  "files": [
+    "dist",
+    "scss",
+    "README.md"
+  ],
   "scripts": {
     "build": "node build.js",
     "build:prod": "node build.js --prod",
@@ -32,8 +44,11 @@
     "sass": "^1.80.0"
   },
   "peerDependencies": {
-    "@mastors/core": ">=1.0.0",
+    "@mastors/core": ">=2.0.0",
     "sass": ">=1.80.0"
   },
-  "sideEffects": ["dist/*.css", "scss/**/*.scss"]
+  "sideEffects": [
+    "dist/*.css",
+    "scss/**/*.scss"
+  ]
 }

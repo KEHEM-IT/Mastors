@@ -1,6 +1,6 @@
 {
   "name": "@mastors/sass-config",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Shared Sass/SCSS build configuration for the Mastors monorepo",
   "private": true,
   "license": "MIT",
