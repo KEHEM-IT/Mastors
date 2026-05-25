@@ -1,0 +1,8 @@
+// @mastors/gridder — _index.scss
+// ─────────────────────────────────────────────────────────────
+// Root-level Sass entry point.
+// Allows consumers to @use "@mastors/gridder" directly without
+// any bundler alias or custom importer — works via loadPaths.
+// ─────────────────────────────────────────────────────────────
+
+@forward "scss/index";

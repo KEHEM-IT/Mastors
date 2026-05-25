@@ -1,6 +1,6 @@
 {
   "name": "@mastors/gridder",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "Mastors Gridder — complete CSS Grid utility class system",
   "license": "MIT",
   "author": "Mastors Contributors",
@@ -22,11 +22,15 @@
   "sass": "./scss/index.scss",
   "style": "./dist/mastors-gridder.css",
   "exports": {
-    ".": "./dist/mastors-gridder.css",
+    ".": {
+      "sass": "./scss/index.scss",
+      "style": "./dist/mastors-gridder.css"
+    },
     "./scss": "./scss/index.scss",
     "./scss/*": "./scss/*"
   },
   "files": [
+    "_index.scss",
     "dist",
     "scss",
     "README.md"

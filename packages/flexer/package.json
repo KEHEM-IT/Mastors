@@ -1,6 +1,6 @@
 {
   "name": "@mastors/flexer",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "Mastors Flexer — complete flexbox utility class system",
   "license": "MIT",
   "author": "Mastors Contributors",
@@ -21,11 +21,15 @@
   "sass": "./scss/index.scss",
   "style": "./dist/mastors-flexer.css",
   "exports": {
-    ".": "./dist/mastors-flexer.css",
+    ".": {
+      "sass": "./scss/index.scss",
+      "style": "./dist/mastors-flexer.css"
+    },
     "./scss": "./scss/index.scss",
     "./scss/*": "./scss/*"
   },
   "files": [
+    "_index.scss",
     "dist",
     "scss",
     "README.md"

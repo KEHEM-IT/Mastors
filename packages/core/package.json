@@ -1,6 +1,6 @@
 {
   "name": "@mastors/core",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "Mastors Core — foundational tokens, mixins, functions, and SCSS architecture",
   "license": "MIT",
   "author": "Mastors Contributors",
@@ -25,6 +25,7 @@
   "style": "./dist/mastors-core.css",
   "exports": {
     ".": {
+      "sass": "./scss/index.scss",
       "import": "./dist/index.mjs",
       "require": "./dist/index.js",
       "types": "./dist/index.d.ts"
@@ -35,6 +36,7 @@
     "./dist/mastors-core.css": "./dist/mastors-core.css"
   },
   "files": [
+    "_index.scss",
     "api",
     "dist",
     "postinstall.js",
