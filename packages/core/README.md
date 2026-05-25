@@ -97,7 +97,12 @@ const space4  = tokens.spacing['4']          // '1rem'
 
 ```json
 {
-  ".":                       { "import": "./dist/index.mjs", "require": "./dist/index.js", "types": "./dist/index.d.ts" },
+  ".": {
+    "sass":    "./scss/index.scss",
+    "import":  "./dist/index.mjs",
+    "require": "./dist/index.js",
+    "types":   "./dist/index.d.ts"
+  },
   "./scss":                  "./scss/index.scss",
   "./scss/*":                "./scss/*",
   "./api":                   "./scss/api/_index.scss",
@@ -264,7 +269,34 @@ node scripts/generate-tokens.js
 
 ## Changelog
 
-See the [root CHANGELOG](../../README.md#changelog).
+### 1.2.4
+
+- Added `"sass"` export condition to `exports["."]` — bundlers (Vite, Webpack, etc.) now resolve the correct SCSS entry point automatically
+- Added root-level `_index.scss` forwarding `scss/index` — enables `@use "@mastors/core"` via Sass `loadPaths: ['node_modules']` with no custom importer required
+- Added `_index.scss` to `"files"` so the entry point is included in published packages
+
+### 1.2.3
+
+- Patch release — dependency and tooling updates
+
+### 1.2.0
+
+- Added `vars($token, $fallback?)` SCSS function in `functions/_vars.scss`
+- Added `config/_index.scss` shim — forwards `_settings.scss` and `_flags.scss` through the public API
+- Added `utilities/_typography.scss` — text-align, font-size/weight/family, font-style, leading, tracking, text-decoration, text-transform, text-overflow, white-space, word-break, vertical-align, list-style, font-smoothing
+- Added `utilities/_animation.scss` — transition presets, token-driven durations/delays/easings, named animation presets, `@keyframes`, fill-mode, play-state, iteration utilities
+- Added `utilities/_interaction.scss` — user-select, resize, scroll-behavior, scroll-snap, touch-action, and state variant utilities
+- Added `utilities/_layout.scss` — aspect-ratio block
+- Added `accessibility/_print.scss` — `print:hidden`, `screen:hidden`, break utilities, color/shadow resets, automatic link expansion
+
+### 1.1.0
+
+- Fixed deprecated Sass `if()` syntax in `_em.scss` and `_class-generator.scss`
+- Added `inputs` field to `turbo.json` build task so SCSS changes correctly invalidate the Turbo cache
+
+### 1.0.0
+
+- Initial release
 
 ## License
 

@@ -72,7 +72,10 @@ Or import only the SCSS source to compile yourself:
 
 ```json
 {
-  ".":        "./dist/mastors-gridder.css",
+  ".": {
+    "sass":  "./scss/index.scss",
+    "style": "./dist/mastors-gridder.css"
+  },
   "./scss":   "./scss/index.scss",
   "./scss/*": "./scss/*"
 }
@@ -208,7 +211,29 @@ Breakpoints: `sm:` `md:` `lg:` `xl:` `2xl:`
 
 ## Changelog
 
-See the [root CHANGELOG](../../README.md#changelog).
+### 1.2.4
+
+- Added `"sass"` export condition to `exports["."]` — bundlers now resolve the SCSS entry point automatically
+- Added root-level `_index.scss` forwarding `scss/index` — enables `@use "@mastors/gridder"` via Sass `loadPaths: ['node_modules']` with no custom importer required
+- Added `_index.scss` to `"files"` so the entry point is included in published packages
+
+### 1.2.3
+
+- Patch release — dependency and tooling updates
+
+### 1.2.0
+
+- Added `gridder($area, ...)` mixin — named `grid-area` placement with optional `align-self` / `justify-self` overrides
+- Added `gridder-areas($rows...)` mixin — declare `grid-template-areas` from a variadic list of quoted row strings
+- Updated dependency: `@mastors/core@1.2.0`
+
+### 1.1.0
+
+- Updated dependencies: `@mastors/core@1.1.0`
+
+### 1.0.0
+
+- Initial release
 
 ## License
 

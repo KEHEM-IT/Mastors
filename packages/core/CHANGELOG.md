@@ -1,5 +1,13 @@
 # @mastors/core
 
+## 1.2.4
+
+### Patch Changes
+
+- Added `"sass"` export condition to `exports["."]` — bundlers (Vite, Webpack, etc.) now resolve the correct SCSS entry point automatically
+- Added root-level `_index.scss` forwarding `scss/index` — enables `@use "@mastors/core"` via Sass `loadPaths: ['node_modules']` with no custom importer required
+- Added `_index.scss` to `"files"` so the entry point is included in published packages
+
 ## 1.2.0
 
 ### Minor Changes

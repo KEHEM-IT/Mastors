@@ -86,7 +86,10 @@ Or import only the SCSS source to compile yourself:
 
 ```json
 {
-  ".":        "./dist/mastors-flexer.css",
+  ".": {
+    "sass":  "./scss/index.scss",
+    "style": "./dist/mastors-flexer.css"
+  },
   "./scss":   "./scss/index.scss",
   "./scss/*": "./scss/*"
 }
@@ -219,7 +222,31 @@ Breakpoints: `sm:` `md:` `lg:` `xl:` `2xl:`
 
 ## Changelog
 
-See the [root CHANGELOG](../../README.md#changelog).
+### 1.2.4
+
+- Added `"sass"` export condition to `exports["."]` — bundlers now resolve the SCSS entry point automatically
+- Added root-level `_index.scss` forwarding `scss/index` — enables `@use "@mastors/flexer"` via Sass `loadPaths: ['node_modules']` with no custom importer required
+- Added `_index.scss` to `"files"` so the entry point is included in published packages
+
+### 1.2.3
+
+- Patch release — dependency and tooling updates
+
+### 1.2.0
+
+- Added `flex-container()` mixin — one-call flex container configuration (direction, wrap, justify, align, gap, inline)
+- Added `flex-item()` mixin — one-call flex item configuration (grow, shrink, basis, align-self, order)
+- Added `flex-center()` mixin — single-line centering shorthand; also ships `flex-center-x()` and `flex-center-y()` axis variants
+- Added `generate-flex-utilities()` generator — emit a complete flex utility set from a config map with per-axis opt-in and a single `responsive` flag
+- Updated dependency: `@mastors/core@1.2.0`
+
+### 1.1.0
+
+- Updated dependencies: `@mastors/core@1.1.0`
+
+### 1.0.0
+
+- Initial release
 
 ## License
 
