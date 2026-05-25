@@ -25,14 +25,42 @@ const PACKAGES = [
   { name: '@mastors/flexer',  desc: 'Mastors Flexbox utility',                       selected: false, required: false },
 ]
 
+/**
+ * Detect the package manager the user's project is actually using.
+ *
+ * Priority:
+ *  1. --pm flag passed explicitly: npx mastors --pm yarn
+ *  2. "packageManager" field in the project's package.json  (e.g. "yarn@4.x")
+ *  3. Lockfile present in cwd — but ONLY yarn.lock or bun.lockb.
+ *     pnpm-lock.yaml is intentionally excluded: Mastors itself uses pnpm
+ *     internally, so running npx mastors from inside the repo (or any project
+ *     that happened to pick up a stray pnpm-lock.yaml) would wrongly select
+ *     pnpm for end-user projects.
+ *  4. npm — the universal fallback that every Node.js install includes.
+ */
 function detectPM() {
-  // Detect by lockfile present in the user's project (cwd), not by what's installed globally
+  // 1. Explicit --pm flag
+  const pmFlag = process.argv.find(a => a.startsWith('--pm='))
+  if (pmFlag) {
+    const val = pmFlag.split('=')[1].trim().toLowerCase()
+    if (['npm', 'yarn', 'pnpm', 'bun'].includes(val)) return val
+  }
+
+  // 2. "packageManager" field in the project's package.json
+  try {
+    const pkg = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf8'))
+    if (pkg.packageManager) {
+      const pm = pkg.packageManager.split('@')[0].trim().toLowerCase()
+      if (['npm', 'yarn', 'pnpm', 'bun'].includes(pm)) return pm
+    }
+  } catch (_) {}
+
+  // 3. Lockfiles — yarn and bun only (pnpm excluded deliberately; see JSDoc above)
   const cwd = process.cwd()
-  if (fs.existsSync(path.join(cwd, 'pnpm-lock.yaml')))  return 'pnpm'
-  if (fs.existsSync(path.join(cwd, 'yarn.lock')))        return 'yarn'
-  if (fs.existsSync(path.join(cwd, 'package-lock.json'))) return 'npm'
-  if (fs.existsSync(path.join(cwd, 'bun.lockb')))        return 'bun'
-  // Fall back to npm — safest universal default
+  if (fs.existsSync(path.join(cwd, 'yarn.lock'))) return 'yarn'
+  if (fs.existsSync(path.join(cwd, 'bun.lockb'))) return 'bun'
+
+  // 4. Safe universal default
   return 'npm'
 }
 
