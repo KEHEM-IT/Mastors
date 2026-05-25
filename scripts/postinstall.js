@@ -1,41 +1,44 @@
 #!/usr/bin/env node
-// postinstall.js — Mastors ecosystem welcome script
-// Runs automatically after: npm install @mastors
-
+// scripts/postinstall.js — Mastors install welcome
+// Runs automatically after: npm install mastors
 'use strict'
 
-const RESET  = '\x1b[0m'
-const BOLD   = '\x1b[1m'
-const DIM    = '\x1b[2m'
-const GREEN  = '\x1b[32m'
-const CYAN   = '\x1b[36m'
-const YELLOW = '\x1b[33m'
-const WHITE  = '\x1b[37m'
-const GRAY   = '\x1b[90m'
-
-function line(char = '─', len = 52) {
-  return GRAY + char.repeat(len) + RESET
+const C = {
+  reset:  '\x1b[0m',
+  bold:   '\x1b[1m',
+  dim:    '\x1b[2m',
+  green:  '\x1b[32m',
+  cyan:   '\x1b[36m',
+  yellow: '\x1b[33m',
+  white:  '\x1b[37m',
+  gray:   '\x1b[90m',
 }
 
-const message = `
-${line()}
-${BOLD}${WHITE}  ✦  Thanks for installing Mastors!${RESET}
-${line()}
+const W = 60
+const ln = (char = '─') => C.gray + char.repeat(W) + C.reset
 
-${BOLD}  Installed:${RESET}
-  ${GREEN}✔${RESET} @mastors/core
+const msg = [
+  '',
+  ln('═'),
+  `${C.bold}${C.white}  ✦  Thanks for installing Mastors!${C.reset}`,
+  ln('═'),
+  '',
+  `  ${C.green}[✔]${C.reset} ${C.bold}@mastors/core${C.reset}   ${C.gray}(installed by default)${C.reset}`,
+  '',
+  `  ${C.gray}[○]${C.reset} ${C.bold}@mastors/gridder${C.reset}  ${C.gray}— CSS Grid utility classes${C.reset}`,
+  `  ${C.gray}[○]${C.reset} ${C.bold}@mastors/flexer${C.reset}   ${C.gray}— Flexbox utility classes${C.reset}`,
+  '',
+  ln(),
+  `  ${C.yellow}Pick & install packages interactively:${C.reset}`,
+  `  ${C.cyan}${C.bold}npx mastors${C.reset}`,
+  '',
+  `  Or install manually:`,
+  `  ${C.dim}npm install @mastors/gridder${C.reset}`,
+  `  ${C.dim}npm install @mastors/flexer${C.reset}`,
+  '',
+  `  ${C.yellow}Docs:${C.reset}  ${C.dim}https://mastorscdn.kehem.com${C.reset}`,
+  ln(),
+  '',
+].join('\n')
 
-${BOLD}  Optional packages:${RESET}
-  ${CYAN}→${RESET} ${DIM}npm install${RESET} @mastors/flexer
-  ${CYAN}→${RESET} ${DIM}npm install${RESET} @mastors/gridder
-  ${CYAN}→${RESET} ${DIM}npm install${RESET} @mastors/typography
-  ${CYAN}→${RESET} ${DIM}npm install${RESET} @mastors/themes
-  ${CYAN}→${RESET} ${DIM}npm install${RESET} @mastors/animator
-
-${BOLD}  Documentation:${RESET}
-  ${YELLOW}https://mastorscdn.kehem.com${RESET}
-
-${line()}
-`
-
-process.stdout.write(message)
+process.stdout.write(msg)
