@@ -3,6 +3,8 @@
 
 const { execSync } = require('child_process')
 const readline     = require('readline')
+const fs           = require('fs')
+const path         = require('path')
 
 const C = {
   reset:  '\x1b[0m',
@@ -24,8 +26,13 @@ const PACKAGES = [
 ]
 
 function detectPM() {
-  try { execSync('pnpm --version', { stdio: 'ignore' }); return 'pnpm' } catch (_) {}
-  try { execSync('yarn --version', { stdio: 'ignore' }); return 'yarn' } catch (_) {}
+  // Detect by lockfile present in the user's project (cwd), not by what's installed globally
+  const cwd = process.cwd()
+  if (fs.existsSync(path.join(cwd, 'pnpm-lock.yaml')))   return 'pnpm'
+  if (fs.existsSync(path.join(cwd, 'yarn.lock')))         return 'yarn'
+  if (fs.existsSync(path.join(cwd, 'package-lock.json'))) return 'npm'
+  if (fs.existsSync(path.join(cwd, 'bun.lockb')))         return 'bun'
+  // Fall back to npm — safest universal default
   return 'npm'
 }
 
