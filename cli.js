@@ -9,18 +9,21 @@ const C = {
   bold:   '\x1b[1m',
   green:  '\x1b[32m',
   cyan:   '\x1b[36m',
-  yellow: '\x1b[33m',
-  white:  '\x1b[37m',
   gray:   '\x1b[90m',
+  white:  '\x1b[37m',
 }
 
-const W = 60
-const ln = (char = '─') => C.gray + char.repeat(W) + C.reset
+const W        = 60
+const ln       = (char = '─') => C.gray + char.repeat(W) + C.reset
+const LINES    = 5 + PACKAGES_COUNT() // lines printed by render()
+let   firstRender = true
 
 const PACKAGES = [
   { name: '@mastors/gridder', desc: 'Mastors Grid utility',    selected: false },
   { name: '@mastors/flexer',  desc: 'Mastors Flexbox utility', selected: false },
 ]
+
+function PACKAGES_COUNT() { return 2 }
 
 function detectPM() {
   try { execSync('pnpm --version', { stdio: 'ignore' }); return 'pnpm' } catch (_) {}
@@ -28,19 +31,29 @@ function detectPM() {
   return 'npm'
 }
 
+const TOTAL_LINES = 5 + PACKAGES.length // header(4) + controls(1) + packages
+
 function render(cursor) {
-  process.stdout.write('\x1b[2J\x1b[H')
-  console.log(ln('═'))
-  console.log(`${C.bold}${C.white}✦  Mastors  —  Package Manager${C.reset}`)
-  console.log(`${C.gray}Included @mastors/core [Tokens, mixins, functions & SCSS architecture]${C.reset}`)
-  console.log(ln('═'))
-  console.log(`${C.gray}· Space to Select | Enter to Install${C.reset}`)
-  PACKAGES.forEach((pkg, i) => {
-    const active = i === cursor
-    const toggle = pkg.selected ? `${C.green}●${C.reset}` : `${C.gray}○${C.reset}`
-    const arrow  = active ? `${C.cyan}>${C.reset}` : ' '
-    console.log(`${arrow} ${toggle} ${pkg.name} ${C.gray}[${pkg.desc}]${C.reset}`)
-  })
+  if (!firstRender) {
+    // Move cursor up TOTAL_LINES lines, then clear to end of screen
+    process.stdout.write(`\x1b[${TOTAL_LINES}A\x1b[J`)
+  }
+  firstRender = false
+
+  const rows = [
+    ln('═'),
+    `${C.bold}${C.white}✦  Mastors  —  Package Manager${C.reset}`,
+    `${C.gray}Included @mastors/core [Tokens, mixins, functions & SCSS architecture]${C.reset}`,
+    ln('═'),
+    `${C.gray}· Space to Select | Enter to Install${C.reset}`,
+    ...PACKAGES.map((pkg, i) => {
+      const arrow  = i === cursor ? `${C.cyan}>${C.reset}` : ' '
+      const toggle = pkg.selected  ? `${C.green}●${C.reset}` : `${C.gray}○${C.reset}`
+      return `${arrow} ${toggle} ${pkg.name} ${C.gray}[${pkg.desc}]${C.reset}`
+    }),
+  ]
+
+  process.stdout.write(rows.join('\n') + '\n')
 }
 
 function runInteractive() {
@@ -65,11 +78,8 @@ function runInteractive() {
       if (toInstall.length > 0) {
         const pm  = detectPM()
         const cmd = `${pm} install ${toInstall.join(' ')}`
-        console.log(`${C.gray}$ ${cmd}${C.reset}`)
-        console.log()
-        try {
-          execSync(cmd, { stdio: 'inherit' })
-        } catch (_) {}
+        console.log(`${C.gray}$ ${cmd}${C.reset}\n`)
+        try { execSync(cmd, { stdio: 'inherit' }) } catch (_) {}
       }
       console.log(ln('═'))
       console.log(`${C.green}${C.bold}✦  Thank you for using Mastors!${C.reset}`)

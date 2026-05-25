@@ -570,6 +570,24 @@ Utilities with responsive support: `grid` display, `grid-auto-flow`, `justify-it
 
 ---
 
+## Changelog
+
+### v1.2.0
+
+- **Added:** `gridder($area, ...)` mixin — named `grid-area` placement with optional `align-self` / `justify-self` overrides in the same call
+- **Added:** `gridder-areas($rows...)` mixin — declare `grid-template-areas` from a variadic list of quoted row strings, co-located with `gridder()` child calls
+- **Updated dependency:** `@mastors/core@1.2.0`
+
+### v1.1.0
+
+- Updated dependency: `@mastors/core@1.1.0`
+
+### v1.0.0
+
+- Initial public release — full CSS Grid utility set, layout presets, `generate-utilities()` engine, full responsive breakpoint support
+
+---
+
 ## License
 
 MIT © Mastors Contributors

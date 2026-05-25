@@ -470,6 +470,26 @@ Utilities that support responsive variants: `flex` display, `flex-direction`, `f
 
 ---
 
+## Changelog
+
+### v1.2.0
+
+- **Added:** `flex-container()` mixin — one-call flex container configuration (direction, wrap, justify, align, gap, inline)
+- **Added:** `flex-item()` mixin — one-call flex item configuration (grow, shrink, basis, align-self, order)
+- **Added:** `flex-center()` mixin — single-line centering shorthand; also ships `flex-center-x()` and `flex-center-y()` axis variants
+- **Added:** `generate-flex-utilities()` generator — emit a complete flex utility set from a config map with per-axis opt-in and a single `responsive` flag
+- **Updated dependency:** `@mastors/core@1.2.0`
+
+### v1.1.0
+
+- Updated dependency: `@mastors/core@1.1.0`
+
+### v1.0.0
+
+- Initial public release — full Flexbox utility set, `generate-utilities()` engine, full responsive breakpoint support
+
+---
+
 ## License
 
 MIT © Mastors Contributors

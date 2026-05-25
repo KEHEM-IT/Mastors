@@ -777,7 +777,7 @@ New utilities must:
 - `@mastors/flexer` — full utility set (display, direction, wrap, flow, grow, shrink, basis, shorthand, justify, align, place, order, gap) + authoring mixins (`flex-container`, `flex-item`, `flex-center`) + `generate-flex-utilities()` generator
 - `@mastors/gridder` — full utility set (display, template columns/rows/areas, auto flow/cols/rows, col/row span/start/end, justify, align, place, layout presets) + authoring mixins (`gridder`, `gridder-areas`)
 - **v1.1 — Release packaging** — version alignment, postinstall on correct package, `"src"` removed from published files, duplicate CSS consolidated, turbo.json migrated to Turbo v2, token codegen script
-- **v1.2 — Power additions** — `vars()` function, `_config.scss` shim in public API, expanded utility layers (typography, animation, interaction, layout/aspect-ratio, print accessibility), authoring mixins for flexer and gridder
+- **v1.2 — Power additions** — `vars()` function, `_config.scss` shim in public API, expanded utility layers (typography, animation, interaction, layout/aspect-ratio, print accessibility), authoring mixins for flexer and gridder, interactive CLI (`npx mastors`)
 
 ### In Progress 🔄
 
@@ -788,7 +788,6 @@ New utilities must:
 
 ### Planned 📋
 
-- CLI tool (`mastors init`, `mastors add`)
 - VSCode IntelliSense extension
 - Documentation site at [mastorscdn.kehem.com](https://mastorscdn.kehem.com)
 - Plugin API stabilisation
@@ -812,6 +811,7 @@ New utilities must:
 - **Added (`@mastors/flexer`):** `generate-flex-utilities()` generator — emit a complete flex utility set from a config map; each axis (direction, wrap, justify, align, grow, shrink, order) can be opted in or out individually, with a single `responsive` flag controlling all responsive variants.
 - **Added (`@mastors/gridder`):** `gridder($area, ...)` mixin — named `grid-area` placement (pure named-area mode) or explicit four-value `grid-area` shorthand when line params are supplied; optional `align-self` / `justify-self` overrides in the same call.
 - **Added (`@mastors/gridder`):** `gridder-areas($rows...)` companion mixin — declare `grid-template-areas` from a variadic list of quoted row strings, co-located with the `gridder()` child calls.
+- **Added (`mastors` CLI):** Interactive package picker via `npx mastors` — arrow-key navigation, Space to toggle, Enter to install. Shows all packages with install status, auto-detects npm/pnpm/yarn, thank-you message on completion. Fires a static listing banner on `npm install mastors` via `postinstall`.
 
 ### v1.1.0
 
