@@ -57,8 +57,7 @@ function render(cursor) {
 }
 
 function runInteractive() {
-  // Start cursor on first selectable (index 1 = gridder)
-  let cursor = 1
+  let cursor = 1 // start on first selectable (gridder)
   readline.emitKeypressEvents(process.stdin)
   process.stdin.setRawMode(true)
   render(cursor)
@@ -87,7 +86,8 @@ function runInteractive() {
     if (key.name === 'return') {
       process.stdin.setRawMode(false)
       process.stdin.pause()
-      const toInstall = PACKAGES.filter(p => !p.required && p.selected).map(p => p.name)
+      // Always include required packages + any user-selected optional ones
+      const toInstall = PACKAGES.filter(p => p.required || p.selected).map(p => p.name)
       console.log()
       if (toInstall.length > 0) {
         const pm  = detectPM()

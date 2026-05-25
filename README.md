@@ -52,9 +52,9 @@ The ecosystem is built on three pillars:
 
 | Package | Description | Version | Install |
 |---|---|---|---|
-| `@mastors/core` | Foundational tokens, mixins, functions, reset, responsive engine | `1.2.0` | `npm i @mastors/core` |
-| `@mastors/flexer` | Complete flexbox utility class system + authoring mixins | `1.2.0` | `npm i @mastors/flexer @mastors/core` |
-| `@mastors/gridder` | Complete CSS Grid utility class system + authoring mixins | `1.2.0` | `npm i @mastors/gridder @mastors/core` |
+| `@mastors/core` | Foundational tokens, mixins, functions, reset, responsive engine | `1.2.1` | `npm i @mastors/core` |
+| `@mastors/flexer` | Complete flexbox utility class system + authoring mixins | `1.2.1` | `npm i @mastors/flexer @mastors/core` |
+| `@mastors/gridder` | Complete CSS Grid utility class system + authoring mixins | `1.2.1` | `npm i @mastors/gridder @mastors/core` |
 | `@mastors/typography` | Type scale, font utilities, prose system | *coming soon* | — |
 | `@mastors/themes` | Theme definitions, dark mode, custom theme support | *coming soon* | — |
 | `@mastors/animator` | Animation and transition utility classes | *coming soon* | — |
@@ -86,6 +86,14 @@ npm install @mastors/core
 # Add layout packages
 npm install @mastors/flexer
 npm install @mastors/gridder
+```
+
+### Interactive installer
+
+Run the interactive CLI to pick and install packages with arrow keys:
+
+```bash
+npx mastors
 ```
 
 ### Peer dependency
@@ -159,7 +167,8 @@ mastors/                          ← Monorepo root (private)
 ├── packages/                     ← Publishable @mastors/* packages
 │   ├── core/
 │   ├── flexer/
-│   └── gridder/
+│   ├── gridder/
+│   └── mastors/
 ├── tooling/                      ← Private shared build tooling
 │   ├── sass-config/              ← Shared Sass compiler options + compile helper
 │   ├── build-utils/              ← Shared build helpers (cleanDir, ensureDir)
@@ -778,6 +787,7 @@ New utilities must:
 - `@mastors/gridder` — full utility set (display, template columns/rows/areas, auto flow/cols/rows, col/row span/start/end, justify, align, place, layout presets) + authoring mixins (`gridder`, `gridder-areas`)
 - **v1.1 — Release packaging** — version alignment, postinstall on correct package, `"src"` removed from published files, duplicate CSS consolidated, turbo.json migrated to Turbo v2, token codegen script
 - **v1.2 — Power additions** — `vars()` function, `_config.scss` shim in public API, expanded utility layers (typography, animation, interaction, layout/aspect-ratio, print accessibility), authoring mixins for flexer and gridder, interactive CLI (`npx mastors`)
+- **v1.2.1 — Bug fix** — CLI now correctly installs `@mastors/core` on Enter (was silently skipped due to the `required` flag filter logic)
 
 ### In Progress 🔄
 
@@ -796,6 +806,10 @@ New utilities must:
 
 ## Changelog
 
+### v1.2.1
+
+- **Fix (`mastors` CLI):** `@mastors/core` is now always installed when pressing Enter in the interactive picker. Previously the `required` flag caused it to be excluded from the install list entirely — the filter `!p.required && p.selected` was changed to `p.required || p.selected`. Affects both `packages/mastors/cli.js` (the published binary) and the root `cli.js`.
+
 ### v1.2.0
 
 - **Added (`@mastors/core`):** `vars($token, $fallback?)` SCSS function — wraps the `--mastors-` namespace convention so downstream consumers reference tokens as `var(--mastors-{name})` without hard-coding the prefix. Forwarded through `functions/_index.scss` and exposed via `@use "@mastors/core/api"`.
@@ -805,27 +819,21 @@ New utilities must:
 - **Added (`@mastors/core`):** `utilities/_interaction.scss` — user-select, resize, scroll-behavior, scroll-snap (type + align + stop + margin/padding), touch-action, and state-variant pseudo-class utilities: `hover:opacity-*`, `hover:bg-accent`, `hover:scale-*`, `hover:-translate-y-1`, `focus:ring`, `focus:ring-offset-2`, `disabled:opacity-50`, `disabled:cursor-not-allowed`, `disabled:pointer-events-none`.
 - **Added (`@mastors/core`):** `utilities/_layout.scss` — aspect-ratio block (`.aspect-auto`, `.aspect-square`, `.aspect-video`, `.aspect-4-3`, `.aspect-3-2`, `.aspect-21-9`, `.aspect-9-16`, `.aspect-golden`; scale is `!default`-overridable); object-fit, object-position (both already present, now documented alongside aspect-ratio).
 - **Added (`@mastors/core`):** `accessibility/_print.scss` — `print:hidden`, `screen:hidden`, `print:break-inside-avoid`, `print:break-before`, `print:break-after`, `print:text-black`, `print:bg-white`, `print:border-none`, `print:shadow-none`, automatic link href expansion (`a[href]::after`), suppression for hash/JS links.
-- **Added (`@mastors/flexer`):** `flex-container()` mixin — one-call flex container configuration (direction, wrap, justify, align, gap, inline).
-- **Added (`@mastors/flexer`):** `flex-item()` mixin — one-call flex item configuration (grow, shrink, basis, align-self, order).
-- **Added (`@mastors/flexer`):** `flex-center()` mixin — single-line centering shorthand; also ships `flex-center-x()` and `flex-center-y()` axis variants.
-- **Added (`@mastors/flexer`):** `generate-flex-utilities()` generator — emit a complete flex utility set from a config map; each axis (direction, wrap, justify, align, grow, shrink, order) can be opted in or out individually, with a single `responsive` flag controlling all responsive variants.
-- **Added (`@mastors/gridder`):** `gridder($area, ...)` mixin — named `grid-area` placement (pure named-area mode) or explicit four-value `grid-area` shorthand when line params are supplied; optional `align-self` / `justify-self` overrides in the same call.
-- **Added (`@mastors/gridder`):** `gridder-areas($rows...)` companion mixin — declare `grid-template-areas` from a variadic list of quoted row strings, co-located with the `gridder()` child calls.
-- **Added (`mastors` CLI):** Interactive package picker via `npx mastors` — arrow-key navigation, Space to toggle, Enter to install. Shows all packages with install status, auto-detects npm/pnpm/yarn, thank-you message on completion. Fires a static listing banner on `npm install mastors` via `postinstall`.
+- **Added (`@mastors/flexer`):** `flex-container()` mixin, `flex-item()` mixin, `flex-center()` / `flex-center-x()` / `flex-center-y()` mixins, `generate-flex-utilities()` generator.
+- **Added (`@mastors/gridder`):** `gridder()` mixin, `gridder-areas()` mixin.
+- **Added (`mastors` CLI):** Interactive package picker via `npx mastors` — arrow-key navigation, Space to toggle, Enter to install. Shows all packages with install status, auto-detects npm/pnpm/yarn, thank-you message on completion.
 
 ### v1.1.0
 
 - **Fix:** Version alignment — root, core, flexer, gridder all set to `1.0.0` → `1.1.0`
-- **Fix:** Root `package.json` — removed phantom `main`/`module`/`exports` fields that pointed to a path that never builds
-- **Fix:** `postinstall` script moved from the private root to `@mastors/core` where it actually fires on `npm install`
-- **Fix:** `"src"` removed from `@mastors/core` `files[]` — raw TypeScript source no longer ships in the published tarball
-- **Fix:** `turbo.json` migrated from deprecated `"pipeline"` to `"tasks"` (Turbo v2); devDependency bumped to `^2.0.0`
-- **Fix:** Duplicate visually-hidden CSS consolidated — `helpers/_visually-hidden.scss` now references the canonical rules in `accessibility/_screen-reader.scss` instead of duplicating them
+- **Fix:** Root `package.json` — removed phantom `main`/`module`/`exports` fields
+- **Fix:** `postinstall` script moved from the private root to `@mastors/core`
+- **Fix:** `"src"` removed from `@mastors/core` `files[]`
+- **Fix:** `turbo.json` migrated from deprecated `"pipeline"` to `"tasks"` (Turbo v2)
+- **Fix:** Duplicate visually-hidden CSS consolidated
 - **Fix:** `@mastors/build-utils` version corrected from `2.0.0` to `1.0.0`
-- **Added:** `packages/core/scripts/generate-tokens.js` — build-time codegen that reads all SCSS token maps and auto-generates `src/tokens.ts`, eliminating manual sync drift
-- **Added:** `generate-tokens.js` wired into `packages/core/build.js` — runs automatically as step 3 before `tsc`
-- **Added:** `sizingTokens` export added to `src/tokens.ts` (was missing in v1.0)
-- **Added:** `SizingKey` TypeScript type exported from `src/tokens.ts`
+- **Added:** `packages/core/scripts/generate-tokens.js` — build-time token codegen
+- **Added:** `sizingTokens` export and `SizingKey` type added to `src/tokens.ts`
 
 ### v1.0.0
 

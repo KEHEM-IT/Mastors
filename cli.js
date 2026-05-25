@@ -86,7 +86,8 @@ function runInteractive() {
     if (key.name === 'return') {
       process.stdin.setRawMode(false)
       process.stdin.pause()
-      const toInstall = PACKAGES.filter(p => !p.required && p.selected).map(p => p.name)
+      // Always include required packages + any user-selected optional ones
+      const toInstall = PACKAGES.filter(p => p.required || p.selected).map(p => p.name)
       console.log()
       if (toInstall.length > 0) {
         const pm  = detectPM()
