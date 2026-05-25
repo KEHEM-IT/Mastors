@@ -1,0 +1,45 @@
+{
+  "name": "mastors",
+  "version": "1.2.0",
+  "description": "Mastors – A professional-grade, scalable frontend SCSS utility ecosystem",
+  "license": "MIT",
+  "author": "Mastors Contributors",
+  "homepage": "https://mastorscdn.kehem.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KEHEM-IT/Mastors.git",
+    "directory": "packages/mastors"
+  },
+  "bugs": {
+    "url": "https://github.com/KEHEM-IT/Mastors/issues"
+  },
+  "keywords": [
+    "mastors",
+    "css",
+    "scss",
+    "utility",
+    "framework",
+    "frontend",
+    "design-system"
+  ],
+  "bin": {
+    "mastors": "./cli.js"
+  },
+  "files": [
+    "cli.js",
+    "postinstall.js",
+    "README.md"
+  ],
+  "scripts": {
+    "postinstall": "node postinstall.js"
+  },
+  "dependencies": {
+    "@mastors/core": ">=1.2.0"
+  },
+  "peerDependencies": {
+    "sass": ">=1.80.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

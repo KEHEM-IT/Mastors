@@ -57,7 +57,8 @@ function render(cursor) {
 }
 
 function runInteractive() {
-  let cursor = 1 // start on first selectable (gridder)
+  // Start cursor on first selectable (index 1 = gridder)
+  let cursor = 1
   readline.emitKeypressEvents(process.stdin)
   process.stdin.setRawMode(true)
   render(cursor)
