@@ -1,0 +1,1729 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>@mastors/flexer — Documentation</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" id="hljs-dark" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" />
+  <link rel="stylesheet" id="hljs-light" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter','system-ui','sans-serif'], mono: ['JetBrains Mono','monospace'] },
+          colors: {
+            brand: { 50:'#fdf4ff',100:'#fae8ff',200:'#f5d0fe',300:'#f0abfc',400:'#e879f9',500:'#d946ef',600:'#c026d3',700:'#a21caf',800:'#86198f',900:'#701a75',950:'#4a044e' }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    *{font-family:'Inter',system-ui,sans-serif}
+    code,pre,.mono{font-family:'JetBrains Mono',monospace!important}
+    ::-webkit-scrollbar{width:5px;height:5px}
+    ::-webkit-scrollbar-track{background:transparent}
+    ::-webkit-scrollbar-thumb{background:#6b7280;border-radius:4px}
+
+    /* nav active */
+    .nav-link.active{background:#fdf4ff;color:#a21caf;font-weight:600;border-left:3px solid #a21caf}
+    .dark .nav-link.active{background:#4a044e;color:#e879f9;border-left:3px solid #e879f9}
+
+    /* code block */
+    .cb{position:relative;border-radius:.5rem;overflow:hidden}
+    .cb pre{margin:0!important;border-radius:0!important;font-size:.8rem!important;line-height:1.65!important}
+    .copy-btn{position:absolute;top:.45rem;right:.45rem;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);color:#d1d5db;border-radius:.3rem;padding:.2rem .55rem;font-size:.7rem;cursor:pointer;transition:.15s all;font-family:'JetBrains Mono',monospace}
+    .copy-btn:hover{background:rgba(255,255,255,.22);color:#fff}
+    .copy-btn.ok{background:#16a34a;border-color:#16a34a;color:#fff}
+
+    /* demo box */
+    .demo{border:2px dashed #e5e7eb;border-radius:.6rem;padding:1.2rem;background:#f9fafb;min-height:3rem}
+    .dark .demo{border-color:#374151;background:#111827}
+
+    /* flex demo items */
+    .fi{background:#a21caf;color:#fff;border-radius:.35rem;padding:.35rem .75rem;font-size:.78rem;font-weight:600;white-space:nowrap;display:flex;align-items:center;justify-content:center;min-width:2rem}
+    .fi-sm{background:#c026d3;color:#fff;border-radius:.3rem;padding:.25rem .5rem;font-size:.72rem;font-weight:600}
+    .fi-alt{background:#7c3aed;color:#fff;border-radius:.35rem;padding:.35rem .75rem;font-size:.78rem;font-weight:600}
+    .fi-tall{height:3.5rem}
+    .fi-taller{height:5rem}
+    .fi-sm-h{height:2rem}
+    .fi-md-h{height:3rem}
+
+    /* badge */
+    .badge{display:inline-flex;align-items:center;padding:.12rem .5rem;border-radius:9999px;font-size:.68rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+    .b-purple{background:#f5d0fe;color:#7c3aed}.dark .b-purple{background:#4a044e;color:#f0abfc}
+    .b-blue{background:#dbeafe;color:#1d4ed8}.dark .b-blue{background:#172554;color:#93c5fd}
+    .b-green{background:#dcfce7;color:#15803d}.dark .b-green{background:#052e16;color:#86efac}
+    .b-orange{background:#fef3c7;color:#b45309}.dark .b-orange{background:#451a03;color:#fcd34d}
+    .b-rose{background:#ffe4e6;color:#be123c}.dark .b-rose{background:#4c0519;color:#fda4af}
+
+    /* section scroll offset */
+    .sa{scroll-margin-top:5rem}
+
+    /* sidebar scroll */
+    #sidebar{height:calc(100vh - 4rem);overflow-y:auto}
+
+    /* hljs theme switching */
+    html:not(.dark) #hljs-dark{display:none}
+    .dark #hljs-light{display:none}
+
+    /* table */
+    table{width:100%;border-collapse:collapse}
+    th{background:#f3f4f6;font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:#6b7280;font-weight:600}
+    .dark th{background:#1f2937;color:#9ca3af}
+    td,th{padding:.55rem .9rem;text-align:left;border-bottom:1px solid #e5e7eb;font-size:.83rem}
+    .dark td,.dark th{border-color:#374151}
+    tr:last-child td{border-bottom:none}
+
+    /* responsive demo note */
+    .bp-note{background:#fdf4ff;border:1px solid #f5d0fe;border-radius:.5rem;padding:.6rem 1rem;font-size:.78rem;color:#7c3aed}
+    .dark .bp-note{background:#4a044e40;border-color:#a21caf;color:#f0abfc}
+  </style>
+</head>
+<body class="bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors duration-200">
+
+<!-- ═══════════════════════  TOP NAV  ═══════════════════════ -->
+<header class="sticky top-0 z-50 bg-white/90 dark:bg-gray-950/90 backdrop-blur border-b border-gray-200 dark:border-gray-800 h-16 flex items-center px-4 gap-3">
+  <button id="mob-toggle" class="lg:hidden text-gray-500 hover:text-gray-900 dark:hover:text-white text-xl w-9 h-9 flex items-center justify-center rounded-lg">
+    <i class="fa-solid fa-bars"></i>
+  </button>
+
+  <div class="flex items-center gap-2">
+    <div class="w-8 h-8 rounded-lg bg-brand-600 flex items-center justify-center text-white font-bold text-sm">M</div>
+    <div class="leading-tight">
+      <span class="font-bold text-gray-900 dark:text-white text-sm">@mastors</span><span class="text-brand-600 font-bold text-sm">/flexer</span>
+      <span class="ml-2 badge b-purple">v1.2.7</span>
+    </div>
+  </div>
+
+  <div class="flex-1"></div>
+
+  <!-- search -->
+  <div class="hidden md:flex items-center gap-2 bg-gray-100 dark:bg-gray-800 rounded-lg px-3 py-1.5 w-56 cursor-text" onclick="document.getElementById('q').focus()">
+    <i class="fa-solid fa-magnifying-glass text-gray-400 text-xs"></i>
+    <input id="q" type="text" placeholder="Search docs…" class="bg-transparent outline-none flex-1 text-sm" oninput="doSearch(this.value)" />
+  </div>
+
+  <!-- dark toggle -->
+  <button id="dk" class="w-9 h-9 rounded-lg flex items-center justify-center bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-gray-700 dark:text-gray-300">
+    <i id="dk-icon" class="fa-solid fa-moon text-sm"></i>
+  </button>
+
+  <!-- peer dep badge -->
+  <span class="hidden sm:inline-flex items-center gap-1.5 text-xs bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 px-3 py-1.5 rounded-lg">
+    <i class="fa-solid fa-link text-[10px]"></i> peer: @mastors/core
+  </span>
+</header>
+
+<!-- ═══════════════════════  LAYOUT  ═══════════════════════ -->
+<div class="flex">
+
+  <!-- ─── SIDEBAR ─── -->
+  <aside id="sidebar" class="fixed lg:sticky top-16 left-0 z-40 w-64 bg-white dark:bg-gray-950 border-r border-gray-200 dark:border-gray-800 px-3 py-4 transform -translate-x-full lg:translate-x-0 transition-transform duration-200 overflow-y-auto flex-shrink-0">
+
+    <!-- search results -->
+    <div id="sr" class="hidden mb-3 text-xs text-gray-500 dark:text-gray-400 px-2"></div>
+
+    <nav class="space-y-0.5 text-sm" id="sidenav">
+      <p class="px-3 pt-1 pb-1 text-xs font-semibold text-gray-400 dark:text-gray-600 uppercase tracking-wider">Getting Started</p>
+      <a href="#overview"      class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"><i class="fa-solid fa-rocket w-4 text-center text-xs text-gray-400"></i> Overview</a>
+      <a href="#install"       class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"><i class="fa-solid fa-download w-4 text-center text-xs text-gray-400"></i> Installation</a>
+      <a href="#usage"         class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"><i class="fa-solid fa-code w-4 text-center text-xs text-gray-400"></i> Import & Usage</a>
+
+      <p class="px-3 pt-4 pb-1 text-xs font-semibold text-gray-400 dark:text-gray-600 uppercase tracking-wider">Display</p>
+      <a href="#display"       class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"><i class="fa-solid fa-table-columns w-4 text-center text-xs text-gray-400"></i> Flex Display</a>
+
+      <p class="px-3 pt-4 pb-1 text-xs font-semibold text-gray-400 dark:text-gray-600 uppercase tracking-wider">Direction & Wrapping</p>
+      <a href="#direction"     class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"><i class="fa-solid fa-arrows-left-right w-4 text-center text-xs text-gray-400"></i> Flex Direction</a>
+      <a href="#wrap"          class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"><i class="fa-solid fa-rotate w-4 text-center text-xs text-gray-400"></i> Flex Wrap</a>
+      <a href="#flow"          class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"><i class="fa-solid fa-shuffle w-4 text-center text-xs text-gray-400"></i> Flex Flow</a>
+
+      <p class="px-3 pt-4 pb-1 text-xs font-semibold text-gray-400 dark:text-gray-600 uppercase tracking-wider">Item Sizing</p>
+      <a href="#grow"          class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"><i class="fa-solid fa-expand w-4 text-center text-xs text-gray-400"></i> Flex Grow</a>
+      <a href="#shrink"        class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"><i class="fa-solid fa-compress w-4 text-center text-xs text-gray-400"></i> Flex Shrink</a>
+      <a href="#basis"         class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"><i class="fa-solid fa-ruler-horizontal w-4 text-center text-xs text-gray-400"></i> Flex Basis</a>
+      <a href="#shorthand"     class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"><i class="fa-solid fa-bolt w-4 text-center text-xs text-gray-400"></i> Flex Shorthand</a>
+
+      <p class="px-3 pt-4 pb-1 text-xs font-semibold text-gray-400 dark:text-gray-600 uppercase tracking-wider">Justification</p>
+      <a href="#justify-content"  class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"><i class="fa-solid fa-align-center w-4 text-center text-xs text-gray-400"></i> Justify Content</a>
+      <a href="#justify-items"    class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"><i class="fa-solid fa-list w-4 text-center text-xs text-gray-400"></i> Justify Items</a>
+      <a href="#justify-self"     class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"><i class="fa-solid fa-circle-dot w-4 text-center text-xs text-gray-400"></i> Justify Self</a>
+
+      <p class="px-3 pt-4 pb-1 text-xs font-semibold text-gray-400 dark:text-gray-600 uppercase tracking-wider">Alignment</p>
+      <a href="#align-content"    class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"><i class="fa-solid fa-align-justify w-4 text-center text-xs text-gray-400"></i> Align Content</a>
+      <a href="#align-items"      class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"><i class="fa-solid fa-bars w-4 text-center text-xs text-gray-400"></i> Align Items</a>
+      <a href="#align-self"       class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"><i class="fa-solid fa-minus w-4 text-center text-xs text-gray-400"></i> Align Self</a>
+
+      <p class="px-3 pt-4 pb-1 text-xs font-semibold text-gray-400 dark:text-gray-600 uppercase tracking-wider">Place Shorthands</p>
+      <a href="#place-content"    class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"><i class="fa-solid fa-border-all w-4 text-center text-xs text-gray-400"></i> Place Content</a>
+      <a href="#place-items"      class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"><i class="fa-solid fa-grip w-4 text-center text-xs text-gray-400"></i> Place Items</a>
+      <a href="#place-self"       class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"><i class="fa-solid fa-location-crosshairs w-4 text-center text-xs text-gray-400"></i> Place Self</a>
+
+      <p class="px-3 pt-4 pb-1 text-xs font-semibold text-gray-400 dark:text-gray-600 uppercase tracking-wider">Order & Gap</p>
+      <a href="#order"            class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"><i class="fa-solid fa-arrow-up-1-9 w-4 text-center text-xs text-gray-400"></i> Order</a>
+      <a href="#gap"              class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"><i class="fa-solid fa-grip-lines w-4 text-center text-xs text-gray-400"></i> Gap</a>
+
+      <p class="px-3 pt-4 pb-1 text-xs font-semibold text-gray-400 dark:text-gray-600 uppercase tracking-wider">Responsive</p>
+      <a href="#responsive"       class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"><i class="fa-solid fa-mobile-screen w-4 text-center text-xs text-gray-400"></i> Breakpoints</a>
+
+      <p class="px-3 pt-4 pb-1 text-xs font-semibold text-gray-400 dark:text-gray-600 uppercase tracking-wider">Sass API</p>
+      <a href="#mixin-container"  class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"><i class="fa-solid fa-puzzle-piece w-4 text-center text-xs text-gray-400"></i> flex-container()</a>
+      <a href="#mixin-item"       class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"><i class="fa-solid fa-puzzle-piece w-4 text-center text-xs text-gray-400"></i> flex-item()</a>
+      <a href="#mixin-center"     class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"><i class="fa-solid fa-puzzle-piece w-4 text-center text-xs text-gray-400"></i> flex-center()</a>
+      <a href="#generator"        class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"><i class="fa-solid fa-gears w-4 text-center text-xs text-gray-400"></i> Generator</a>
+    </nav>
+  </aside>
+
+  <!-- ─── MAIN ─── -->
+  <main class="flex-1 min-w-0 max-w-4xl mx-auto px-5 py-10 lg:pl-8">
+
+    <!-- ══════════  OVERVIEW  ══════════ -->
+    <section id="overview" class="sa mb-16">
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-11 h-11 rounded-xl bg-brand-600 flex items-center justify-center text-white shrink-0">
+          <i class="fa-solid fa-table-columns"></i>
+        </div>
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900 dark:text-white">@mastors/flexer</h1>
+          <p class="text-gray-500 dark:text-gray-400 text-sm">Complete flexbox utility system for the Mastors ecosystem</p>
+        </div>
+      </div>
+
+      <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-6">
+        <strong class="text-gray-900 dark:text-white">@mastors/flexer</strong> is a purpose-built SCSS package that provides a complete, production-ready flexbox utility class system. Every CSS flexbox property — from <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">display</code> and <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">flex-direction</code> through to <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">place-self</code> and <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">order</code> — is covered with utility classes, responsive breakpoint variants, and composable Sass mixins. It consumes <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">@mastors/core</code> for its token system and responsive engine.
+      </p>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+        <div class="bg-gray-50 dark:bg-gray-900 rounded-xl p-4 text-center border border-gray-200 dark:border-gray-800">
+          <div class="text-2xl font-bold text-brand-600 dark:text-brand-400">19</div>
+          <div class="text-xs text-gray-500 mt-1">Utility Modules</div>
+        </div>
+        <div class="bg-gray-50 dark:bg-gray-900 rounded-xl p-4 text-center border border-gray-200 dark:border-gray-800">
+          <div class="text-2xl font-bold text-brand-600 dark:text-brand-400">3</div>
+          <div class="text-xs text-gray-500 mt-1">Sass Mixins</div>
+        </div>
+        <div class="bg-gray-50 dark:bg-gray-900 rounded-xl p-4 text-center border border-gray-200 dark:border-gray-800">
+          <div class="text-2xl font-bold text-brand-600 dark:text-brand-400">6</div>
+          <div class="text-xs text-gray-500 mt-1">Breakpoints</div>
+        </div>
+        <div class="bg-gray-50 dark:bg-gray-900 rounded-xl p-4 text-center border border-gray-200 dark:border-gray-800">
+          <div class="text-2xl font-bold text-brand-600 dark:text-brand-400">100%</div>
+          <div class="text-xs text-gray-500 mt-1">CSS Flexbox API</div>
+        </div>
+      </div>
+
+      <div class="bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800 rounded-xl p-4 text-sm text-purple-800 dark:text-purple-300 flex gap-3 mb-4">
+        <i class="fa-solid fa-circle-info mt-0.5 shrink-0"></i>
+        <span>All utilities marked <span class="badge b-green">Responsive</span> generate breakpoint-prefixed variants: <code class="bg-purple-100 dark:bg-purple-900/50 px-1 rounded text-xs">sm:flex-col</code>, <code class="bg-purple-100 dark:bg-purple-900/50 px-1 rounded text-xs">lg:justify-between</code>, etc.</span>
+      </div>
+    </section>
+
+    <!-- ══════════  INSTALLATION  ══════════ -->
+    <section id="install" class="sa mb-16">
+      <h2 class="text-2xl font-bold mb-1 flex items-center gap-2"><i class="fa-solid fa-download text-brand-500 text-lg"></i> Installation</h2>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-5">Requires <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">@mastors/core ≥ 1.0.0</code> and <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">sass ≥ 1.80.0</code> as peer dependencies.</p>
+      <div class="grid sm:grid-cols-3 gap-3">
+        <div>
+          <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">npm</p>
+          <div class="cb"><button class="copy-btn" onclick="cp(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button><pre><code class="language-bash">npm install @mastors/flexer</code></pre></div>
+        </div>
+        <div>
+          <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">pnpm</p>
+          <div class="cb"><button class="copy-btn" onclick="cp(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button><pre><code class="language-bash">pnpm add @mastors/flexer</code></pre></div>
+        </div>
+        <div>
+          <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">yarn</p>
+          <div class="cb"><button class="copy-btn" onclick="cp(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button><pre><code class="language-bash">yarn add @mastors/flexer</code></pre></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════  IMPORT & USAGE  ══════════ -->
+    <section id="usage" class="sa mb-16">
+      <h2 class="text-2xl font-bold mb-1 flex items-center gap-2"><i class="fa-solid fa-code text-brand-500 text-lg"></i> Import & Usage</h2>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-5">Choose between a full CSS import (outputs all utility classes) or the Sass API (zero CSS output — mixins and generators only).</p>
+
+      <div class="space-y-4">
+        <div>
+          <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Full import — outputs all flexbox utility classes</p>
+          <div class="cb"><button class="copy-btn" onclick="cp(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+<pre><code class="language-scss">// In your main stylesheet — after @mastors/core
+@use "@mastors/core";
+@use "@mastors/flexer";</code></pre></div>
+        </div>
+
+        <div>
+          <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Load via Sass loadPaths (no bundler alias needed)</p>
+          <div class="cb"><button class="copy-btn" onclick="cp(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+<pre><code class="language-js">// vite.config.js / webpack.config.js
+css: {
+  preprocessorOptions: {
+    scss: { loadPaths: ['node_modules'] }
+  }
+}</code></pre></div>
+        </div>
+
+        <div>
+          <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Import Sass mixins only (no utility CSS output)</p>
+          <div class="cb"><button class="copy-btn" onclick="cp(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+<pre><code class="language-scss">@use "@mastors/flexer/scss/mixins/flex-container" as *;
+@use "@mastors/flexer/scss/mixins/flex-item"      as *;
+@use "@mastors/flexer/scss/mixins/flex-center"    as *;
+
+.card-grid {
+  @include flex-container($wrap: wrap, $gap: 1.5rem);
+}
+.card {
+  @include flex-item($grow: 1, $basis: 280px);
+}</code></pre></div>
+        </div>
+
+        <div>
+          <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Package exports map</p>
+          <div class="cb"><button class="copy-btn" onclick="cp(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+<pre><code class="language-json">{
+  ".": {
+    "sass":  "./scss/index.scss",
+    "style": "./dist/mastors-flexer.css"
+  },
+  "./scss":   "./scss/index.scss",
+  "./scss/*": "./scss/*"
+}</code></pre></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════  DISPLAY  ══════════════════════════ -->
+    <div class="border-b border-gray-200 dark:border-gray-800 pb-3 mb-8 mt-2">
+      <h2 class="text-xl font-bold flex items-center gap-2"><i class="fa-solid fa-table-columns text-brand-500"></i> Display</h2>
+    </div>
+
+    <section id="display" class="sa mb-16">
+      <div class="flex items-center gap-2 mb-2">
+        <h3 class="text-xl font-bold">Flex Display</h3>
+        <span class="badge b-purple">Display</span>
+        <span class="badge b-green">Responsive</span>
+      </div>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">Establishes a flex formatting context on the element. Use <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">flex</code> for block-level and <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">inline-flex</code> for inline-level containers.</p>
+
+      <div class="overflow-x-auto mb-4">
+        <table>
+          <thead><tr><th>Class</th><th>CSS output</th><th>When to use</th></tr></thead>
+          <tbody>
+            <tr><td class="mono text-xs">.flex</td><td class="mono text-xs">display: flex</td><td class="text-xs">Block-level flex container — takes full width of parent</td></tr>
+            <tr><td class="mono text-xs">.inline-flex</td><td class="mono text-xs">display: inline-flex</td><td class="text-xs">Inline flex container — only as wide as its content</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="cb mb-4"><button class="copy-btn" onclick="cp(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+<pre><code class="language-html">&lt;!-- Block flex container --&gt;
+&lt;div class="flex"&gt;
+  &lt;div&gt;Item 1&lt;/div&gt;
+  &lt;div&gt;Item 2&lt;/div&gt;
+  &lt;div&gt;Item 3&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Inline flex — wraps tightly around children --&gt;
+&lt;span class="inline-flex items-center gap-2"&gt;
+  &lt;i class="fa-solid fa-star"&gt;&lt;/i&gt;
+  &lt;span&gt;Inline badge&lt;/span&gt;
+&lt;/span&gt;
+
+&lt;!-- Responsive: flex on all, column on mobile --&gt;
+&lt;div class="flex md:flex"&gt;...&lt;/div&gt;</code></pre></div>
+
+      <div class="demo">
+        <p class="text-xs text-gray-400 dark:text-gray-500 mb-3 mono">.flex — children laid out in a row by default</p>
+        <div style="display:flex;gap:.75rem">
+          <div class="fi">Item 1</div>
+          <div class="fi">Item 2</div>
+          <div class="fi">Item 3</div>
+        </div>
+        <p class="text-xs text-gray-400 dark:text-gray-500 mt-4 mb-3 mono">.inline-flex — hugs content</p>
+        <span style="display:inline-flex;align-items:center;gap:.5rem;background:#f5d0fe;color:#7c3aed;padding:.35rem .85rem;border-radius:9999px;font-size:.82rem;font-weight:600">
+          <i class="fa-solid fa-star text-xs"></i> Inline flex badge
+        </span>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════  DIRECTION & WRAPPING  ══════════════════════════ -->
+    <div class="border-b border-gray-200 dark:border-gray-800 pb-3 mb-8 mt-2">
+      <h2 class="text-xl font-bold flex items-center gap-2"><i class="fa-solid fa-arrows-left-right text-brand-500"></i> Direction & Wrapping</h2>
+    </div>
+
+    <!-- DIRECTION -->
+    <section id="direction" class="sa mb-16">
+      <div class="flex items-center gap-2 mb-2">
+        <h3 class="text-xl font-bold">Flex Direction</h3>
+        <span class="badge b-purple">Container</span>
+        <span class="badge b-green">Responsive</span>
+      </div>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">Controls the main axis — the direction items are placed in a flex container.</p>
+
+      <div class="overflow-x-auto mb-4">
+        <table>
+          <thead><tr><th>Class</th><th>CSS output</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td class="mono text-xs">.flex-row</td><td class="mono text-xs">flex-direction: row</td><td class="text-xs">Left to right (default). Main axis is horizontal.</td></tr>
+            <tr><td class="mono text-xs">.flex-row-reverse</td><td class="mono text-xs">flex-direction: row-reverse</td><td class="text-xs">Right to left. Items appear in reverse order horizontally.</td></tr>
+            <tr><td class="mono text-xs">.flex-col</td><td class="mono text-xs">flex-direction: column</td><td class="text-xs">Top to bottom. Main axis is vertical.</td></tr>
+            <tr><td class="mono text-xs">.flex-col-reverse</td><td class="mono text-xs">flex-direction: column-reverse</td><td class="text-xs">Bottom to top. Items appear in reverse order vertically.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="cb mb-4"><button class="copy-btn" onclick="cp(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+<pre><code class="language-html">&lt;div class="flex flex-row gap-3"&gt;
+  &lt;div&gt;1&lt;/div&gt;&lt;div&gt;2&lt;/div&gt;&lt;div&gt;3&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="flex flex-row-reverse gap-3"&gt;
+  &lt;div&gt;1&lt;/div&gt;&lt;div&gt;2&lt;/div&gt;&lt;div&gt;3&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="flex flex-col gap-3"&gt;
+  &lt;div&gt;1&lt;/div&gt;&lt;div&gt;2&lt;/div&gt;&lt;div&gt;3&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Responsive: column on mobile, row on md+ --&gt;
+&lt;div class="flex flex-col md:flex-row gap-4"&gt;
+  &lt;aside&gt;Sidebar&lt;/aside&gt;
+  &lt;main&gt;Content&lt;/main&gt;
+&lt;/div&gt;</code></pre></div>
+
+      <div class="demo grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div>
+          <p class="text-xs mono text-gray-400 mb-2">flex-row</p>
+          <div style="display:flex;flex-direction:row;gap:.4rem">
+            <div class="fi">1</div><div class="fi">2</div><div class="fi">3</div>
+          </div>
+        </div>
+        <div>
+          <p class="text-xs mono text-gray-400 mb-2">flex-row-reverse</p>
+          <div style="display:flex;flex-direction:row-reverse;gap:.4rem">
+            <div class="fi">1</div><div class="fi">2</div><div class="fi">3</div>
+          </div>
+        </div>
+        <div>
+          <p class="text-xs mono text-gray-400 mb-2">flex-col</p>
+          <div style="display:flex;flex-direction:column;gap:.4rem">
+            <div class="fi">1</div><div class="fi">2</div><div class="fi">3</div>
+          </div>
+        </div>
+        <div>
+          <p class="text-xs mono text-gray-400 mb-2">flex-col-reverse</p>
+          <div style="display:flex;flex-direction:column-reverse;gap:.4rem">
+            <div class="fi">1</div><div class="fi">2</div><div class="fi">3</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WRAP -->
+    <section id="wrap" class="sa mb-16">
+      <div class="flex items-center gap-2 mb-2">
+        <h3 class="text-xl font-bold">Flex Wrap</h3>
+        <span class="badge b-purple">Container</span>
+        <span class="badge b-green">Responsive</span>
+      </div>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">Controls whether flex items wrap to the next line when they overflow the container's main axis.</p>
+
+      <div class="overflow-x-auto mb-4">
+        <table>
+          <thead><tr><th>Class</th><th>CSS output</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td class="mono text-xs">.flex-wrap</td><td class="mono text-xs">flex-wrap: wrap</td><td class="text-xs">Items wrap to the next row/column when they overflow.</td></tr>
+            <tr><td class="mono text-xs">.flex-wrap-reverse</td><td class="mono text-xs">flex-wrap: wrap-reverse</td><td class="text-xs">Items wrap, but wrapped lines appear before the first line.</td></tr>
+            <tr><td class="mono text-xs">.flex-nowrap</td><td class="mono text-xs">flex-wrap: nowrap</td><td class="text-xs">No wrapping. Items stay on one line and may overflow (browser default).</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="cb mb-4"><button class="copy-btn" onclick="cp(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+<pre><code class="language-html">&lt;!-- Items wrap naturally at container edge --&gt;
+&lt;div class="flex flex-wrap gap-2"&gt;
+  &lt;div&gt;Item 1&lt;/div&gt;&lt;div&gt;Item 2&lt;/div&gt;&lt;div&gt;Item 3&lt;/div&gt;
+  &lt;div&gt;Item 4&lt;/div&gt;&lt;div&gt;Item 5&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Wrap in reverse direction --&gt;
+&lt;div class="flex flex-wrap-reverse gap-2"&gt;...&lt;/div&gt;
+
+&lt;!-- Force single line (overflow possible) --&gt;
+&lt;div class="flex flex-nowrap overflow-x-auto gap-2"&gt;...&lt;/div&gt;</code></pre></div>
+
+      <div class="demo space-y-6">
+        <div>
+          <p class="text-xs mono text-gray-400 mb-2">flex-wrap — items wrap to next line</p>
+          <div style="display:flex;flex-wrap:wrap;gap:.5rem;max-width:280px">
+            <div class="fi">Alpha</div><div class="fi">Beta</div><div class="fi">Gamma</div>
+            <div class="fi">Delta</div><div class="fi">Epsilon</div><div class="fi">Zeta</div>
+          </div>
+        </div>
+        <div>
+          <p class="text-xs mono text-gray-400 mb-2">flex-nowrap — all on one line</p>
+          <div style="display:flex;flex-wrap:nowrap;gap:.5rem;overflow:hidden">
+            <div class="fi shrink-0">Alpha</div><div class="fi shrink-0">Beta</div><div class="fi shrink-0">Gamma</div>
+            <div class="fi shrink-0">Delta</div><div class="fi shrink-0">Epsilon</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FLOW -->
+    <section id="flow" class="sa mb-16">
+      <div class="flex items-center gap-2 mb-2">
+        <h3 class="text-xl font-bold">Flex Flow</h3>
+        <span class="badge b-purple">Container</span>
+        <span class="badge b-green">Responsive</span>
+      </div>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">Shorthand that sets both <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">flex-direction</code> and <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">flex-wrap</code> in a single class.</p>
+
+      <div class="overflow-x-auto mb-4">
+        <table>
+          <thead><tr><th>Class</th><th>CSS output</th></tr></thead>
+          <tbody>
+            <tr><td class="mono text-xs">.flex-flow-row-wrap</td><td class="mono text-xs">flex-flow: row wrap</td></tr>
+            <tr><td class="mono text-xs">.flex-flow-row-nowrap</td><td class="mono text-xs">flex-flow: row nowrap</td></tr>
+            <tr><td class="mono text-xs">.flex-flow-row-wrap-reverse</td><td class="mono text-xs">flex-flow: row wrap-reverse</td></tr>
+            <tr><td class="mono text-xs">.flex-flow-col-wrap</td><td class="mono text-xs">flex-flow: column wrap</td></tr>
+            <tr><td class="mono text-xs">.flex-flow-col-nowrap</td><td class="mono text-xs">flex-flow: column nowrap</td></tr>
+            <tr><td class="mono text-xs">.flex-flow-col-wrap-reverse</td><td class="mono text-xs">flex-flow: column wrap-reverse</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="cb mb-4"><button class="copy-btn" onclick="cp(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+<pre><code class="language-html">&lt;!-- Column direction with wrapping --&gt;
+&lt;div class="flex flex-flow-col-wrap gap-3" style="height:8rem"&gt;
+  &lt;div&gt;A&lt;/div&gt;&lt;div&gt;B&lt;/div&gt;&lt;div&gt;C&lt;/div&gt;&lt;div&gt;D&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Row + no wrap (single scroll line) --&gt;
+&lt;div class="flex flex-flow-row-nowrap gap-3 overflow-x-auto"&gt;
+  &lt;div&gt;1&lt;/div&gt;&lt;div&gt;2&lt;/div&gt;&lt;div&gt;3&lt;/div&gt;
+&lt;/div&gt;</code></pre></div>
+    </section>
+
+    <!-- ══════════════════════════  ITEM SIZING  ══════════════════════════ -->
+    <div class="border-b border-gray-200 dark:border-gray-800 pb-3 mb-8 mt-2">
+      <h2 class="text-xl font-bold flex items-center gap-2"><i class="fa-solid fa-expand text-brand-500"></i> Item Sizing</h2>
+    </div>
+
+    <!-- GROW -->
+    <section id="grow" class="sa mb-16">
+      <div class="flex items-center gap-2 mb-2">
+        <h3 class="text-xl font-bold">Flex Grow</h3>
+        <span class="badge b-blue">Item</span>
+      </div>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">Controls how much a flex item grows to fill available free space in the container relative to its siblings.</p>
+
+      <div class="overflow-x-auto mb-4">
+        <table>
+          <thead><tr><th>Class</th><th>CSS output</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td class="mono text-xs">.grow</td><td class="mono text-xs">flex-grow: 1</td><td class="text-xs">Item grows to fill all available space. Shares evenly with other .grow items.</td></tr>
+            <tr><td class="mono text-xs">.grow-0</td><td class="mono text-xs">flex-grow: 0</td><td class="text-xs">Item does not grow beyond its natural or basis size.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="cb mb-4"><button class="copy-btn" onclick="cp(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+<pre><code class="language-html">&lt;!-- Middle item grows to fill all remaining space --&gt;
+&lt;div class="flex gap-3"&gt;
+  &lt;div class="grow-0"&gt;Fixed&lt;/div&gt;
+  &lt;div class="grow"&gt;Grows to fill space&lt;/div&gt;
+  &lt;div class="grow-0"&gt;Fixed&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- All three items grow equally --&gt;
+&lt;div class="flex gap-3"&gt;
+  &lt;div class="grow"&gt;Equal&lt;/div&gt;
+  &lt;div class="grow"&gt;Equal&lt;/div&gt;
+  &lt;div class="grow"&gt;Equal&lt;/div&gt;
+&lt;/div&gt;</code></pre></div>
+
+      <div class="demo space-y-4">
+        <div>
+          <p class="text-xs mono text-gray-400 mb-2">grow-0 / grow / grow-0</p>
+          <div style="display:flex;gap:.5rem">
+            <div class="fi" style="flex-grow:0;flex-shrink:0">Fixed</div>
+            <div class="fi" style="flex-grow:1;justify-content:center">Grows →</div>
+            <div class="fi" style="flex-grow:0;flex-shrink:0">Fixed</div>
+          </div>
+        </div>
+        <div>
+          <p class="text-xs mono text-gray-400 mb-2">grow grow grow — equal distribution</p>
+          <div style="display:flex;gap:.5rem">
+            <div class="fi" style="flex-grow:1;justify-content:center">Equal</div>
+            <div class="fi fi-alt" style="flex-grow:1;justify-content:center">Equal</div>
+            <div class="fi" style="flex-grow:1;justify-content:center">Equal</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SHRINK -->
+    <section id="shrink" class="sa mb-16">
+      <div class="flex items-center gap-2 mb-2">
+        <h3 class="text-xl font-bold">Flex Shrink</h3>
+        <span class="badge b-blue">Item</span>
+      </div>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">Controls how much a flex item shrinks when the container doesn't have enough space to fit all items at their ideal size.</p>
+
+      <div class="overflow-x-auto mb-4">
+        <table>
+          <thead><tr><th>Class</th><th>CSS output</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td class="mono text-xs">.shrink</td><td class="mono text-xs">flex-shrink: 1</td><td class="text-xs">Item shrinks proportionally when container is too narrow (default).</td></tr>
+            <tr><td class="mono text-xs">.shrink-0</td><td class="mono text-xs">flex-shrink: 0</td><td class="text-xs">Item never shrinks — preserves its full width even when space is tight.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="cb mb-4"><button class="copy-btn" onclick="cp(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+<pre><code class="language-html">&lt;!-- Logo never shrinks; nav items share remaining space --&gt;
+&lt;header class="flex items-center gap-4"&gt;
+  &lt;img class="shrink-0 w-32" src="logo.svg" /&gt;
+  &lt;nav class="flex gap-4 shrink"&gt;...&lt;/nav&gt;
+  &lt;button class="shrink-0"&gt;CTA&lt;/button&gt;
+&lt;/header&gt;</code></pre></div>
+
+      <div class="demo">
+        <p class="text-xs mono text-gray-400 mb-2">shrink-0 item preserves full width; shrink item compresses</p>
+        <div style="display:flex;gap:.5rem;width:100%;overflow:hidden">
+          <div class="fi" style="flex-shrink:0;min-width:90px">shrink-0</div>
+          <div class="fi fi-alt" style="flex-shrink:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">shrink (compresses to fit)</div>
+          <div class="fi" style="flex-shrink:0;min-width:90px">shrink-0</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BASIS -->
+    <section id="basis" class="sa mb-16">
+      <div class="flex items-center gap-2 mb-2">
+        <h3 class="text-xl font-bold">Flex Basis</h3>
+        <span class="badge b-blue">Item</span>
+      </div>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">Sets the initial main size of a flex item before free space is distributed. Acts like <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">width</code> in row direction and <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">height</code> in column direction.</p>
+
+      <div class="overflow-x-auto mb-4">
+        <table>
+          <thead><tr><th>Class</th><th>Value</th><th>Class</th><th>Value</th></tr></thead>
+          <tbody>
+            <tr><td class="mono text-xs">.basis-auto</td><td class="mono text-xs">auto</td><td class="mono text-xs">.basis-1/2</td><td class="mono text-xs">50%</td></tr>
+            <tr><td class="mono text-xs">.basis-full</td><td class="mono text-xs">100%</td><td class="mono text-xs">.basis-1/3</td><td class="mono text-xs">33.33%</td></tr>
+            <tr><td class="mono text-xs">.basis-0</td><td class="mono text-xs">0px</td><td class="mono text-xs">.basis-2/3</td><td class="mono text-xs">66.67%</td></tr>
+            <tr><td class="mono text-xs">.basis-1/4</td><td class="mono text-xs">25%</td><td class="mono text-xs">.basis-3/4</td><td class="mono text-xs">75%</td></tr>
+            <tr><td class="mono text-xs">.basis-1/5</td><td class="mono text-xs">20%</td><td class="mono text-xs">.basis-4/5</td><td class="mono text-xs">80%</td></tr>
+            <tr><td class="mono text-xs">.basis-1/6</td><td class="mono text-xs">16.67%</td><td class="mono text-xs">.basis-5/6</td><td class="mono text-xs">83.33%</td></tr>
+            <tr><td class="mono text-xs">.basis-1/12</td><td class="mono text-xs">8.33%</td><td class="mono text-xs">.basis-16 – .basis-96</td><td class="mono text-xs">4rem – 24rem</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="cb mb-4"><button class="copy-btn" onclick="cp(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+<pre><code class="language-html">&lt;!-- Sidebar 1/4 + Main 3/4 layout --&gt;
+&lt;div class="flex flex-wrap gap-4"&gt;
+  &lt;aside class="basis-1/4"&gt;Sidebar&lt;/aside&gt;
+  &lt;main  class="basis-3/4"&gt;Content&lt;/main&gt;
+&lt;/div&gt;
+
+&lt;!-- Three equal columns --&gt;
+&lt;div class="flex flex-wrap gap-4"&gt;
+  &lt;div class="basis-1/3"&gt;Col 1&lt;/div&gt;
+  &lt;div class="basis-1/3"&gt;Col 2&lt;/div&gt;
+  &lt;div class="basis-1/3"&gt;Col 3&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Fixed sidebar + growing content --&gt;
+&lt;div class="flex gap-4"&gt;
+  &lt;nav class="basis-64 shrink-0"&gt;Nav (16rem)&lt;/nav&gt;
+  &lt;div class="grow"&gt;Main content&lt;/div&gt;
+&lt;/div&gt;</code></pre></div>
+
+      <div class="demo">
+        <p class="text-xs mono text-gray-400 mb-2">basis-1/3 × 3</p>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+          <div class="fi" style="flex-basis:calc(33.33% - .5rem);justify-content:center">1/3</div>
+          <div class="fi fi-alt" style="flex-basis:calc(33.33% - .5rem);justify-content:center">1/3</div>
+          <div class="fi" style="flex-basis:calc(33.33% - .5rem);justify-content:center">1/3</div>
+        </div>
+        <p class="text-xs mono text-gray-400 mt-4 mb-2">basis-1/4 sidebar + basis-3/4 main</p>
+        <div style="display:flex;gap:.5rem">
+          <div class="fi" style="flex-basis:25%">Sidebar</div>
+          <div class="fi fi-alt" style="flex-basis:75%;justify-content:center">Main content</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SHORTHAND -->
+    <section id="shorthand" class="sa mb-16">
+      <div class="flex items-center gap-2 mb-2">
+        <h3 class="text-xl font-bold">Flex Shorthand</h3>
+        <span class="badge b-blue">Item</span>
+      </div>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">Combines <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">flex-grow</code>, <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">flex-shrink</code>, and <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">flex-basis</code> into a single class. These four cover the vast majority of real-world use cases.</p>
+
+      <div class="overflow-x-auto mb-4">
+        <table>
+          <thead><tr><th>Class</th><th>CSS output</th><th>Behaviour</th></tr></thead>
+          <tbody>
+            <tr><td class="mono text-xs">.flex-1</td><td class="mono text-xs">flex: 1 1 0%</td><td class="text-xs">Grows, shrinks, starts from zero basis. The everyday workhorse for equal-width items.</td></tr>
+            <tr><td class="mono text-xs">.flex-auto</td><td class="mono text-xs">flex: 1 1 auto</td><td class="text-xs">Grows and shrinks from the item's natural size. Good for nav links that share leftover space.</td></tr>
+            <tr><td class="mono text-xs">.flex-initial</td><td class="mono text-xs">flex: 0 1 auto</td><td class="text-xs">Won't grow, but will shrink if needed. The browser default behaviour.</td></tr>
+            <tr><td class="mono text-xs">.flex-none</td><td class="mono text-xs">flex: none</td><td class="text-xs">Completely rigid — won't grow or shrink. Use for fixed-size elements.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="cb mb-4"><button class="copy-btn" onclick="cp(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+<pre><code class="language-html">&lt;!-- Three equal-width columns from zero basis --&gt;
+&lt;div class="flex gap-4"&gt;
+  &lt;div class="flex-1"&gt;Column&lt;/div&gt;
+  &lt;div class="flex-1"&gt;Column&lt;/div&gt;
+  &lt;div class="flex-1"&gt;Column&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Fixed avatar + growing text --&gt;
+&lt;div class="flex items-center gap-3"&gt;
+  &lt;img class="flex-none w-10 h-10 rounded-full" src="..." /&gt;
+  &lt;div class="flex-1 min-w-0"&gt;
+    &lt;p class="truncate"&gt;Username&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Nav: auto items share leftover space from natural size --&gt;
+&lt;nav class="flex gap-2"&gt;
+  &lt;a class="flex-auto text-center"&gt;Home&lt;/a&gt;
+  &lt;a class="flex-auto text-center"&gt;About&lt;/a&gt;
+  &lt;a class="flex-auto text-center"&gt;Contact&lt;/a&gt;
+&lt;/nav&gt;</code></pre></div>
+
+      <div class="demo space-y-4">
+        <div>
+          <p class="text-xs mono text-gray-400 mb-2">flex-1 — equal columns from zero</p>
+          <div style="display:flex;gap:.5rem">
+            <div class="fi" style="flex:1 1 0%;justify-content:center">flex-1</div>
+            <div class="fi fi-alt" style="flex:1 1 0%;justify-content:center">flex-1</div>
+            <div class="fi" style="flex:1 1 0%;justify-content:center">flex-1</div>
+          </div>
+        </div>
+        <div>
+          <p class="text-xs mono text-gray-400 mb-2">flex-none + flex-1 + flex-none</p>
+          <div style="display:flex;gap:.5rem;align-items:center">
+            <div class="fi" style="flex:none;width:5rem">none</div>
+            <div class="fi fi-alt" style="flex:1 1 0%;justify-content:center">grows</div>
+            <div class="fi" style="flex:none;width:5rem">none</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════  JUSTIFICATION  ══════════════════════════ -->
+    <div class="border-b border-gray-200 dark:border-gray-800 pb-3 mb-8 mt-2">
+      <h2 class="text-xl font-bold flex items-center gap-2"><i class="fa-solid fa-align-center text-brand-500"></i> Justification (Main Axis)</h2>
+    </div>
+
+    <!-- JUSTIFY-CONTENT -->
+    <section id="justify-content" class="sa mb-16">
+      <div class="flex items-center gap-2 mb-2">
+        <h3 class="text-xl font-bold">Justify Content</h3>
+        <span class="badge b-purple">Container</span>
+        <span class="badge b-green">Responsive</span>
+      </div>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">Aligns flex items along the <strong>main axis</strong> (horizontal in <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">flex-row</code>, vertical in <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">flex-col</code>). Controls how leftover space is distributed.</p>
+
+      <div class="overflow-x-auto mb-4">
+        <table>
+          <thead><tr><th>Class</th><th>CSS output</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td class="mono text-xs">.justify-start</td><td class="mono text-xs">justify-content: flex-start</td><td class="text-xs">Pack items toward the start of the main axis (default)</td></tr>
+            <tr><td class="mono text-xs">.justify-end</td><td class="mono text-xs">justify-content: flex-end</td><td class="text-xs">Pack items toward the end of the main axis</td></tr>
+            <tr><td class="mono text-xs">.justify-center</td><td class="mono text-xs">justify-content: center</td><td class="text-xs">Center items along the main axis</td></tr>
+            <tr><td class="mono text-xs">.justify-between</td><td class="mono text-xs">justify-content: space-between</td><td class="text-xs">First item at start, last at end, equal space between</td></tr>
+            <tr><td class="mono text-xs">.justify-around</td><td class="mono text-xs">justify-content: space-around</td><td class="text-xs">Equal space around each item (half-size at edges)</td></tr>
+            <tr><td class="mono text-xs">.justify-evenly</td><td class="mono text-xs">justify-content: space-evenly</td><td class="text-xs">Equal space between and around every item</td></tr>
+            <tr><td class="mono text-xs">.justify-stretch</td><td class="mono text-xs">justify-content: stretch</td><td class="text-xs">Items stretch to fill available space</td></tr>
+            <tr><td class="mono text-xs">.justify-normal</td><td class="mono text-xs">justify-content: normal</td><td class="text-xs">Browser default packing</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="cb mb-4"><button class="copy-btn" onclick="cp(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+<pre><code class="language-html">&lt;div class="flex justify-start gap-2"&gt;...&lt;/div&gt;
+&lt;div class="flex justify-center gap-2"&gt;...&lt;/div&gt;
+&lt;div class="flex justify-end gap-2"&gt;...&lt;/div&gt;
+&lt;div class="flex justify-between"&gt;...&lt;/div&gt;
+&lt;div class="flex justify-around"&gt;...&lt;/div&gt;
+&lt;div class="flex justify-evenly"&gt;...&lt;/div&gt;
+
+&lt;!-- Responsive --&gt;
+&lt;div class="flex justify-center lg:justify-between"&gt;...&lt;/div&gt;</code></pre></div>
+
+      <div class="demo space-y-3">
+        <div><p class="text-xs mono text-gray-400 mb-1.5">justify-start</p><div style="display:flex;justify-content:flex-start;gap:.4rem"><div class="fi">A</div><div class="fi">B</div><div class="fi">C</div></div></div>
+        <div><p class="text-xs mono text-gray-400 mb-1.5">justify-center</p><div style="display:flex;justify-content:center;gap:.4rem"><div class="fi">A</div><div class="fi">B</div><div class="fi">C</div></div></div>
+        <div><p class="text-xs mono text-gray-400 mb-1.5">justify-end</p><div style="display:flex;justify-content:flex-end;gap:.4rem"><div class="fi">A</div><div class="fi">B</div><div class="fi">C</div></div></div>
+        <div><p class="text-xs mono text-gray-400 mb-1.5">justify-between</p><div style="display:flex;justify-content:space-between"><div class="fi">A</div><div class="fi">B</div><div class="fi">C</div></div></div>
+        <div><p class="text-xs mono text-gray-400 mb-1.5">justify-around</p><div style="display:flex;justify-content:space-around"><div class="fi">A</div><div class="fi">B</div><div class="fi">C</div></div></div>
+        <div><p class="text-xs mono text-gray-400 mb-1.5">justify-evenly</p><div style="display:flex;justify-content:space-evenly"><div class="fi">A</div><div class="fi">B</div><div class="fi">C</div></div></div>
+      </div>
+    </section>
+
+    <!-- JUSTIFY-ITEMS -->
+    <section id="justify-items" class="sa mb-16">
+      <div class="flex items-center gap-2 mb-2">
+        <h3 class="text-xl font-bold">Justify Items</h3>
+        <span class="badge b-purple">Container</span>
+        <span class="badge b-green">Responsive</span>
+      </div>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">Sets the default <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">justify-self</code> for all flex items in the container. Affects inline-axis alignment of items within their grid/flex area.</p>
+
+      <div class="overflow-x-auto mb-4">
+        <table>
+          <thead><tr><th>Class</th><th>CSS output</th></tr></thead>
+          <tbody>
+            <tr><td class="mono text-xs">.justify-items-start</td><td class="mono text-xs">justify-items: start</td></tr>
+            <tr><td class="mono text-xs">.justify-items-end</td><td class="mono text-xs">justify-items: end</td></tr>
+            <tr><td class="mono text-xs">.justify-items-center</td><td class="mono text-xs">justify-items: center</td></tr>
+            <tr><td class="mono text-xs">.justify-items-stretch</td><td class="mono text-xs">justify-items: stretch</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="cb mb-4"><button class="copy-btn" onclick="cp(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+<pre><code class="language-html">&lt;div class="flex justify-items-center"&gt;
+  &lt;div&gt;Item 1&lt;/div&gt;
+  &lt;div&gt;Item 2&lt;/div&gt;
+&lt;/div&gt;</code></pre></div>
+    </section>
+
+    <!-- JUSTIFY-SELF -->
+    <section id="justify-self" class="sa mb-16">
+      <div class="flex items-center gap-2 mb-2">
+        <h3 class="text-xl font-bold">Justify Self</h3>
+        <span class="badge b-blue">Item</span>
+        <span class="badge b-green">Responsive</span>
+      </div>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">Overrides the container's <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">justify-items</code> for a single flex item.</p>
+
+      <div class="overflow-x-auto mb-4">
+        <table>
+          <thead><tr><th>Class</th><th>CSS output</th></tr></thead>
+          <tbody>
+            <tr><td class="mono text-xs">.justify-self-auto</td><td class="mono text-xs">justify-self: auto</td></tr>
+            <tr><td class="mono text-xs">.justify-self-start</td><td class="mono text-xs">justify-self: start</td></tr>
+            <tr><td class="mono text-xs">.justify-self-end</td><td class="mono text-xs">justify-self: end</td></tr>
+            <tr><td class="mono text-xs">.justify-self-center</td><td class="mono text-xs">justify-self: center</td></tr>
+            <tr><td class="mono text-xs">.justify-self-stretch</td><td class="mono text-xs">justify-self: stretch</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="cb mb-4"><button class="copy-btn" onclick="cp(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+<pre><code class="language-html">&lt;div class="flex"&gt;
+  &lt;div&gt;Default&lt;/div&gt;
+  &lt;div class="justify-self-center"&gt;Centered&lt;/div&gt;
+  &lt;div class="justify-self-end"&gt;End&lt;/div&gt;
+&lt;/div&gt;</code></pre></div>
+    </section>
+
+    <!-- ══════════════════════════  ALIGNMENT  ══════════════════════════ -->
+    <div class="border-b border-gray-200 dark:border-gray-800 pb-3 mb-8 mt-2">
+      <h2 class="text-xl font-bold flex items-center gap-2"><i class="fa-solid fa-bars text-brand-500"></i> Alignment (Cross Axis)</h2>
+    </div>
+
+    <!-- ALIGN-CONTENT -->
+    <section id="align-content" class="sa mb-16">
+      <div class="flex items-center gap-2 mb-2">
+        <h3 class="text-xl font-bold">Align Content</h3>
+        <span class="badge b-purple">Container</span>
+        <span class="badge b-green">Responsive</span>
+      </div>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">Aligns flex lines along the <strong>cross axis</strong> when there are multiple lines (i.e. when <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">flex-wrap</code> is enabled and items wrap). Has no effect on single-line containers.</p>
+
+      <div class="overflow-x-auto mb-4">
+        <table>
+          <thead><tr><th>Class</th><th>CSS output</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td class="mono text-xs">.content-normal</td><td class="mono text-xs">align-content: normal</td><td class="text-xs">Default packing</td></tr>
+            <tr><td class="mono text-xs">.content-start</td><td class="mono text-xs">align-content: flex-start</td><td class="text-xs">Lines packed to the start of cross axis</td></tr>
+            <tr><td class="mono text-xs">.content-end</td><td class="mono text-xs">align-content: flex-end</td><td class="text-xs">Lines packed to the end</td></tr>
+            <tr><td class="mono text-xs">.content-center</td><td class="mono text-xs">align-content: center</td><td class="text-xs">Lines centered on cross axis</td></tr>
+            <tr><td class="mono text-xs">.content-between</td><td class="mono text-xs">align-content: space-between</td><td class="text-xs">First line at start, last at end, equal space between</td></tr>
+            <tr><td class="mono text-xs">.content-around</td><td class="mono text-xs">align-content: space-around</td><td class="text-xs">Equal space around each line</td></tr>
+            <tr><td class="mono text-xs">.content-evenly</td><td class="mono text-xs">align-content: space-evenly</td><td class="text-xs">Equal space between and around every line</td></tr>
+            <tr><td class="mono text-xs">.content-stretch</td><td class="mono text-xs">align-content: stretch</td><td class="text-xs">Lines stretch to fill container height</td></tr>
+            <tr><td class="mono text-xs">.content-baseline</td><td class="mono text-xs">align-content: baseline</td><td class="text-xs">Lines aligned by their text baseline</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="cb mb-4"><button class="copy-btn" onclick="cp(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+<pre><code class="language-html">&lt;!-- Must have flex-wrap + fixed height to see effect --&gt;
+&lt;div class="flex flex-wrap content-start gap-2" style="height: 180px"&gt;
+  &lt;div&gt;1&lt;/div&gt;&lt;div&gt;2&lt;/div&gt;&lt;div&gt;3&lt;/div&gt;&lt;div&gt;4&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="flex flex-wrap content-between gap-2" style="height: 180px"&gt;...&lt;/div&gt;
+&lt;div class="flex flex-wrap content-center gap-2" style="height: 180px"&gt;...&lt;/div&gt;</code></pre></div>
+
+      <div class="demo grid grid-cols-2 md:grid-cols-3 gap-4">
+        <div><p class="text-xs mono text-gray-400 mb-1">content-start</p><div style="display:flex;flex-wrap:wrap;align-content:flex-start;gap:.3rem;height:100px;border:1px dashed #a21caf;border-radius:.3rem;padding:.3rem"><div class="fi-sm">A</div><div class="fi-sm">B</div><div class="fi-sm">C</div><div class="fi-sm">D</div></div></div>
+        <div><p class="text-xs mono text-gray-400 mb-1">content-center</p><div style="display:flex;flex-wrap:wrap;align-content:center;gap:.3rem;height:100px;border:1px dashed #a21caf;border-radius:.3rem;padding:.3rem"><div class="fi-sm">A</div><div class="fi-sm">B</div><div class="fi-sm">C</div><div class="fi-sm">D</div></div></div>
+        <div><p class="text-xs mono text-gray-400 mb-1">content-between</p><div style="display:flex;flex-wrap:wrap;align-content:space-between;gap:.3rem;height:100px;border:1px dashed #a21caf;border-radius:.3rem;padding:.3rem"><div class="fi-sm">A</div><div class="fi-sm">B</div><div class="fi-sm">C</div><div class="fi-sm">D</div></div></div>
+        <div><p class="text-xs mono text-gray-400 mb-1">content-end</p><div style="display:flex;flex-wrap:wrap;align-content:flex-end;gap:.3rem;height:100px;border:1px dashed #a21caf;border-radius:.3rem;padding:.3rem"><div class="fi-sm">A</div><div class="fi-sm">B</div><div class="fi-sm">C</div><div class="fi-sm">D</div></div></div>
+        <div><p class="text-xs mono text-gray-400 mb-1">content-around</p><div style="display:flex;flex-wrap:wrap;align-content:space-around;gap:.3rem;height:100px;border:1px dashed #a21caf;border-radius:.3rem;padding:.3rem"><div class="fi-sm">A</div><div class="fi-sm">B</div><div class="fi-sm">C</div><div class="fi-sm">D</div></div></div>
+        <div><p class="text-xs mono text-gray-400 mb-1">content-stretch</p><div style="display:flex;flex-wrap:wrap;align-content:stretch;gap:.3rem;height:100px;border:1px dashed #a21caf;border-radius:.3rem;padding:.3rem"><div class="fi-sm" style="flex:1 0 40%">A</div><div class="fi-sm" style="flex:1 0 40%">B</div><div class="fi-sm" style="flex:1 0 40%">C</div><div class="fi-sm" style="flex:1 0 40%">D</div></div></div>
+      </div>
+    </section>
+
+    <!-- ALIGN-ITEMS -->
+    <section id="align-items" class="sa mb-16">
+      <div class="flex items-center gap-2 mb-2">
+        <h3 class="text-xl font-bold">Align Items</h3>
+        <span class="badge b-purple">Container</span>
+        <span class="badge b-green">Responsive</span>
+      </div>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">Aligns all flex items along the <strong>cross axis</strong> within a single flex line. This is one of the most frequently used flexbox properties.</p>
+
+      <div class="overflow-x-auto mb-4">
+        <table>
+          <thead><tr><th>Class</th><th>CSS output</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td class="mono text-xs">.items-start</td><td class="mono text-xs">align-items: flex-start</td><td class="text-xs">Items align to the start of the cross axis</td></tr>
+            <tr><td class="mono text-xs">.items-end</td><td class="mono text-xs">align-items: flex-end</td><td class="text-xs">Items align to the end of the cross axis</td></tr>
+            <tr><td class="mono text-xs">.items-center</td><td class="mono text-xs">align-items: center</td><td class="text-xs">Items center on the cross axis</td></tr>
+            <tr><td class="mono text-xs">.items-stretch</td><td class="mono text-xs">align-items: stretch</td><td class="text-xs">Items stretch to fill the cross-axis size of the container (default)</td></tr>
+            <tr><td class="mono text-xs">.items-baseline</td><td class="mono text-xs">align-items: baseline</td><td class="text-xs">Items align by their text baselines</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="cb mb-4"><button class="copy-btn" onclick="cp(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+<pre><code class="language-html">&lt;!-- Vertically center items --&gt;
+&lt;div class="flex items-center gap-4 h-24"&gt;
+  &lt;div&gt;Short&lt;/div&gt;
+  &lt;div class="h-16"&gt;Tall&lt;/div&gt;
+  &lt;div class="h-8"&gt;Medium&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Baseline alignment for mixed font sizes --&gt;
+&lt;div class="flex items-baseline gap-3"&gt;
+  &lt;span class="text-3xl font-bold"&gt;Big&lt;/span&gt;
+  &lt;span class="text-sm"&gt;small text aligned by baseline&lt;/span&gt;
+&lt;/div&gt;
+
+&lt;!-- Responsive --&gt;
+&lt;div class="flex items-start md:items-center"&gt;...&lt;/div&gt;</code></pre></div>
+
+      <div class="demo grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+        <div><p class="text-xs mono text-gray-400 mb-1">items-start</p><div style="display:flex;align-items:flex-start;gap:.35rem;height:72px;border:1px dashed #a21caf;border-radius:.3rem;padding:.35rem"><div class="fi fi-tall">A</div><div class="fi">B</div><div class="fi fi-tall">C</div></div></div>
+        <div><p class="text-xs mono text-gray-400 mb-1">items-center</p><div style="display:flex;align-items:center;gap:.35rem;height:72px;border:1px dashed #a21caf;border-radius:.3rem;padding:.35rem"><div class="fi fi-tall">A</div><div class="fi">B</div><div class="fi fi-tall">C</div></div></div>
+        <div><p class="text-xs mono text-gray-400 mb-1">items-end</p><div style="display:flex;align-items:flex-end;gap:.35rem;height:72px;border:1px dashed #a21caf;border-radius:.3rem;padding:.35rem"><div class="fi fi-tall">A</div><div class="fi">B</div><div class="fi fi-tall">C</div></div></div>
+        <div><p class="text-xs mono text-gray-400 mb-1">items-stretch</p><div style="display:flex;align-items:stretch;gap:.35rem;height:72px;border:1px dashed #a21caf;border-radius:.3rem;padding:.35rem"><div class="fi">A</div><div class="fi">B</div><div class="fi">C</div></div></div>
+        <div><p class="text-xs mono text-gray-400 mb-1">items-baseline</p><div style="display:flex;align-items:baseline;gap:.35rem;height:72px;border:1px dashed #a21caf;border-radius:.3rem;padding:.35rem"><div style="background:#a21caf;color:#fff;border-radius:.3rem;padding:.2rem .4rem;font-size:1.4rem;font-weight:700">A</div><div style="background:#a21caf;color:#fff;border-radius:.3rem;padding:.2rem .4rem;font-size:.7rem;font-weight:700">B</div></div></div>
+      </div>
+    </section>
+
+    <!-- ALIGN-SELF -->
+    <section id="align-self" class="sa mb-16">
+      <div class="flex items-center gap-2 mb-2">
+        <h3 class="text-xl font-bold">Align Self</h3>
+        <span class="badge b-blue">Item</span>
+        <span class="badge b-green">Responsive</span>
+      </div>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">Overrides the container's <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">align-items</code> for a single flex item on the cross axis.</p>
+
+      <div class="overflow-x-auto mb-4">
+        <table>
+          <thead><tr><th>Class</th><th>CSS output</th></tr></thead>
+          <tbody>
+            <tr><td class="mono text-xs">.self-auto</td><td class="mono text-xs">align-self: auto</td></tr>
+            <tr><td class="mono text-xs">.self-start</td><td class="mono text-xs">align-self: flex-start</td></tr>
+            <tr><td class="mono text-xs">.self-end</td><td class="mono text-xs">align-self: flex-end</td></tr>
+            <tr><td class="mono text-xs">.self-center</td><td class="mono text-xs">align-self: center</td></tr>
+            <tr><td class="mono text-xs">.self-stretch</td><td class="mono text-xs">align-self: stretch</td></tr>
+            <tr><td class="mono text-xs">.self-baseline</td><td class="mono text-xs">align-self: baseline</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="cb mb-4"><button class="copy-btn" onclick="cp(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+<pre><code class="language-html">&lt;!-- All items start, but middle one centers itself --&gt;
+&lt;div class="flex items-start gap-4 h-32"&gt;
+  &lt;div&gt;Top&lt;/div&gt;
+  &lt;div class="self-center"&gt;Middle&lt;/div&gt;
+  &lt;div class="self-end"&gt;Bottom&lt;/div&gt;
+  &lt;div class="self-stretch"&gt;Full height&lt;/div&gt;
+&lt;/div&gt;</code></pre></div>
+
+      <div class="demo">
+        <div style="display:flex;align-items:flex-start;gap:.5rem;height:90px;border:1px dashed #a21caf;border-radius:.3rem;padding:.4rem">
+          <div class="fi">start</div>
+          <div class="fi fi-alt" style="align-self:center">center</div>
+          <div class="fi" style="align-self:flex-end">end</div>
+          <div class="fi fi-alt" style="align-self:stretch">stretch</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════  PLACE SHORTHANDS  ══════════════════════════ -->
+    <div class="border-b border-gray-200 dark:border-gray-800 pb-3 mb-8 mt-2">
+      <h2 class="text-xl font-bold flex items-center gap-2"><i class="fa-solid fa-border-all text-brand-500"></i> Place Shorthands</h2>
+    </div>
+
+    <!-- PLACE-CONTENT -->
+    <section id="place-content" class="sa mb-16">
+      <div class="flex items-center gap-2 mb-2">
+        <h3 class="text-xl font-bold">Place Content</h3>
+        <span class="badge b-purple">Container</span>
+        <span class="badge b-green">Responsive</span>
+      </div>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">Shorthand that sets both <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">align-content</code> and <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">justify-content</code> in one property. Useful for 2D centering of wrapped items.</p>
+
+      <div class="overflow-x-auto mb-4">
+        <table>
+          <thead><tr><th>Class</th><th>CSS output</th></tr></thead>
+          <tbody>
+            <tr><td class="mono text-xs">.place-content-center</td><td class="mono text-xs">place-content: center</td></tr>
+            <tr><td class="mono text-xs">.place-content-start</td><td class="mono text-xs">place-content: start</td></tr>
+            <tr><td class="mono text-xs">.place-content-end</td><td class="mono text-xs">place-content: end</td></tr>
+            <tr><td class="mono text-xs">.place-content-between</td><td class="mono text-xs">place-content: space-between</td></tr>
+            <tr><td class="mono text-xs">.place-content-around</td><td class="mono text-xs">place-content: space-around</td></tr>
+            <tr><td class="mono text-xs">.place-content-evenly</td><td class="mono text-xs">place-content: space-evenly</td></tr>
+            <tr><td class="mono text-xs">.place-content-stretch</td><td class="mono text-xs">place-content: stretch</td></tr>
+            <tr><td class="mono text-xs">.place-content-baseline</td><td class="mono text-xs">place-content: baseline</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="cb mb-4"><button class="copy-btn" onclick="cp(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+<pre><code class="language-html">&lt;!-- Center all wrapped content both axes --&gt;
+&lt;div class="flex flex-wrap place-content-center gap-3" style="height:200px"&gt;
+  &lt;div&gt;A&lt;/div&gt;&lt;div&gt;B&lt;/div&gt;&lt;div&gt;C&lt;/div&gt;
+  &lt;div&gt;D&lt;/div&gt;&lt;div&gt;E&lt;/div&gt;
+&lt;/div&gt;</code></pre></div>
+    </section>
+
+    <!-- PLACE-ITEMS -->
+    <section id="place-items" class="sa mb-16">
+      <div class="flex items-center gap-2 mb-2">
+        <h3 class="text-xl font-bold">Place Items</h3>
+        <span class="badge b-purple">Container</span>
+        <span class="badge b-green">Responsive</span>
+      </div>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">Shorthand for <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">align-items</code> + <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">justify-items</code>.</p>
+
+      <div class="overflow-x-auto mb-4">
+        <table>
+          <thead><tr><th>Class</th><th>CSS output</th></tr></thead>
+          <tbody>
+            <tr><td class="mono text-xs">.place-items-start</td><td class="mono text-xs">place-items: start</td></tr>
+            <tr><td class="mono text-xs">.place-items-end</td><td class="mono text-xs">place-items: end</td></tr>
+            <tr><td class="mono text-xs">.place-items-center</td><td class="mono text-xs">place-items: center</td></tr>
+            <tr><td class="mono text-xs">.place-items-stretch</td><td class="mono text-xs">place-items: stretch</td></tr>
+            <tr><td class="mono text-xs">.place-items-baseline</td><td class="mono text-xs">place-items: baseline</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="cb mb-4"><button class="copy-btn" onclick="cp(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+<pre><code class="language-html">&lt;div class="flex place-items-center h-24"&gt;
+  &lt;div&gt;Centered both ways&lt;/div&gt;
+&lt;/div&gt;</code></pre></div>
+    </section>
+
+    <!-- PLACE-SELF -->
+    <section id="place-self" class="sa mb-16">
+      <div class="flex items-center gap-2 mb-2">
+        <h3 class="text-xl font-bold">Place Self</h3>
+        <span class="badge b-blue">Item</span>
+        <span class="badge b-green">Responsive</span>
+      </div>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">Shorthand for <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">align-self</code> + <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">justify-self</code> on a single flex item.</p>
+
+      <div class="overflow-x-auto mb-4">
+        <table>
+          <thead><tr><th>Class</th><th>CSS output</th></tr></thead>
+          <tbody>
+            <tr><td class="mono text-xs">.place-self-auto</td><td class="mono text-xs">place-self: auto</td></tr>
+            <tr><td class="mono text-xs">.place-self-start</td><td class="mono text-xs">place-self: start</td></tr>
+            <tr><td class="mono text-xs">.place-self-end</td><td class="mono text-xs">place-self: end</td></tr>
+            <tr><td class="mono text-xs">.place-self-center</td><td class="mono text-xs">place-self: center</td></tr>
+            <tr><td class="mono text-xs">.place-self-stretch</td><td class="mono text-xs">place-self: stretch</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="cb mb-4"><button class="copy-btn" onclick="cp(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+<pre><code class="language-html">&lt;div class="flex h-32"&gt;
+  &lt;div class="place-self-start"&gt;Top-left&lt;/div&gt;
+  &lt;div class="place-self-center"&gt;Center&lt;/div&gt;
+  &lt;div class="place-self-end"&gt;Bottom-right&lt;/div&gt;
+&lt;/div&gt;</code></pre></div>
+    </section>
+
+    <!-- ══════════════════════════  ORDER & GAP  ══════════════════════════ -->
+    <div class="border-b border-gray-200 dark:border-gray-800 pb-3 mb-8 mt-2">
+      <h2 class="text-xl font-bold flex items-center gap-2"><i class="fa-solid fa-arrow-up-1-9 text-brand-500"></i> Order & Gap</h2>
+    </div>
+
+    <!-- ORDER -->
+    <section id="order" class="sa mb-16">
+      <div class="flex items-center gap-2 mb-2">
+        <h3 class="text-xl font-bold">Order</h3>
+        <span class="badge b-blue">Item</span>
+      </div>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">Controls the visual order of flex items without changing the DOM order. Useful for responsive reordering and screen-reader-friendly layouts.</p>
+
+      <div class="overflow-x-auto mb-4">
+        <table>
+          <thead><tr><th>Class</th><th>CSS output</th><th>Use case</th></tr></thead>
+          <tbody>
+            <tr><td class="mono text-xs">.order-first</td><td class="mono text-xs">order: -9999</td><td class="text-xs">Visually first regardless of DOM position</td></tr>
+            <tr><td class="mono text-xs">.order-last</td><td class="mono text-xs">order: 9999</td><td class="text-xs">Visually last regardless of DOM position</td></tr>
+            <tr><td class="mono text-xs">.order-none</td><td class="mono text-xs">order: 0</td><td class="text-xs">Reset to natural order</td></tr>
+            <tr><td class="mono text-xs">.order-1 – .order-12</td><td class="mono text-xs">order: 1–12</td><td class="text-xs">Numeric ordering for up to 12 items</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="cb mb-4"><button class="copy-btn" onclick="cp(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+<pre><code class="language-html">&lt;!-- DOM order: A B C D — Visual order: C A D B --&gt;
+&lt;div class="flex gap-3"&gt;
+  &lt;div class="order-2"&gt;A (DOM 1st)&lt;/div&gt;
+  &lt;div class="order-4"&gt;B (DOM 2nd)&lt;/div&gt;
+  &lt;div class="order-1"&gt;C (DOM 3rd)&lt;/div&gt;
+  &lt;div class="order-3"&gt;D (DOM 4th)&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Move sidebar before main on mobile --&gt;
+&lt;div class="flex flex-col md:flex-row gap-4"&gt;
+  &lt;main class="order-2 md:order-1"&gt;Content (DOM first)&lt;/main&gt;
+  &lt;aside class="order-1 md:order-2"&gt;Sidebar (DOM second, visually first on mobile)&lt;/aside&gt;
+&lt;/div&gt;
+
+&lt;!-- Always first, regardless of position in DOM --&gt;
+&lt;div class="order-first"&gt;Pinned to front&lt;/div&gt;</code></pre></div>
+
+      <div class="demo">
+        <p class="text-xs mono text-gray-400 mb-2">DOM: A B C D — Visual: C A D B</p>
+        <div style="display:flex;gap:.5rem">
+          <div class="fi" style="order:2">A</div>
+          <div class="fi fi-alt" style="order:4">B</div>
+          <div class="fi" style="order:1">C</div>
+          <div class="fi fi-alt" style="order:3">D</div>
+        </div>
+        <p class="text-xs text-gray-400 mt-3">↑ Visual rendering reorders items without touching the DOM. Screen readers see A B C D.</p>
+      </div>
+    </section>
+
+    <!-- GAP -->
+    <section id="gap" class="sa mb-16">
+      <div class="flex items-center gap-2 mb-2">
+        <h3 class="text-xl font-bold">Gap</h3>
+        <span class="badge b-purple">Container</span>
+        <span class="badge b-orange">From @mastors/core</span>
+      </div>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">Gap utilities are provided by <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">@mastors/core</code>'s spacing module and work for both flex and grid containers. They are available whenever <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">@mastors/core</code> is loaded. Use <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">gap-{key}</code>, <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">gap-x-{key}</code>, or <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">gap-y-{key}</code> where key is any spacing token.</p>
+
+      <div class="overflow-x-auto mb-4">
+        <table>
+          <thead><tr><th>Class</th><th>CSS output</th><th>Value</th></tr></thead>
+          <tbody>
+            <tr><td class="mono text-xs">.gap-0</td><td class="mono text-xs">gap: 0</td><td class="text-xs">No gap</td></tr>
+            <tr><td class="mono text-xs">.gap-1</td><td class="mono text-xs">gap: 0.25rem</td><td class="text-xs">4px</td></tr>
+            <tr><td class="mono text-xs">.gap-2</td><td class="mono text-xs">gap: 0.5rem</td><td class="text-xs">8px</td></tr>
+            <tr><td class="mono text-xs">.gap-3</td><td class="mono text-xs">gap: 0.75rem</td><td class="text-xs">12px</td></tr>
+            <tr><td class="mono text-xs">.gap-4</td><td class="mono text-xs">gap: 1rem</td><td class="text-xs">16px</td></tr>
+            <tr><td class="mono text-xs">.gap-6</td><td class="mono text-xs">gap: 1.5rem</td><td class="text-xs">24px</td></tr>
+            <tr><td class="mono text-xs">.gap-8</td><td class="mono text-xs">gap: 2rem</td><td class="text-xs">32px</td></tr>
+            <tr><td class="mono text-xs">.gap-x-{key}</td><td class="mono text-xs">column-gap: …</td><td class="text-xs">Horizontal gap only</td></tr>
+            <tr><td class="mono text-xs">.gap-y-{key}</td><td class="mono text-xs">row-gap: …</td><td class="text-xs">Vertical gap only</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="cb mb-4"><button class="copy-btn" onclick="cp(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+<pre><code class="language-html">&lt;!-- Uniform gap --&gt;
+&lt;div class="flex flex-wrap gap-4"&gt;
+  &lt;div&gt;Item&lt;/div&gt;&lt;div&gt;Item&lt;/div&gt;&lt;div&gt;Item&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Different column and row gaps --&gt;
+&lt;div class="flex flex-wrap gap-x-6 gap-y-2"&gt;
+  &lt;div&gt;Item&lt;/div&gt;&lt;div&gt;Item&lt;/div&gt;&lt;div&gt;Item&lt;/div&gt;
+&lt;/div&gt;</code></pre></div>
+
+      <div class="demo space-y-4">
+        <div><p class="text-xs mono text-gray-400 mb-1.5">gap-2</p><div style="display:flex;flex-wrap:wrap;gap:.5rem"><div class="fi">A</div><div class="fi">B</div><div class="fi">C</div><div class="fi">D</div></div></div>
+        <div><p class="text-xs mono text-gray-400 mb-1.5">gap-6</p><div style="display:flex;flex-wrap:wrap;gap:1.5rem"><div class="fi">A</div><div class="fi">B</div><div class="fi">C</div><div class="fi">D</div></div></div>
+        <div><p class="text-xs mono text-gray-400 mb-1.5">gap-x-8 gap-y-2</p><div style="display:flex;flex-wrap:wrap;column-gap:2rem;row-gap:.5rem"><div class="fi">A</div><div class="fi">B</div><div class="fi">C</div><div class="fi">D</div></div></div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════  RESPONSIVE  ══════════════════════════ -->
+    <div class="border-b border-gray-200 dark:border-gray-800 pb-3 mb-8 mt-2">
+      <h2 class="text-xl font-bold flex items-center gap-2"><i class="fa-solid fa-mobile-screen text-brand-500"></i> Responsive</h2>
+    </div>
+
+    <section id="responsive" class="sa mb-16">
+      <div class="flex items-center gap-2 mb-2">
+        <h3 class="text-xl font-bold">Breakpoint Variants</h3>
+        <span class="badge b-green">Engine</span>
+      </div>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">All utility modules marked <span class="badge b-green">Responsive</span> generate breakpoint-prefixed variants using the core responsive engine. The pattern is <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">{breakpoint}:{utility-class}</code>. Breakpoints are mobile-first: a prefix means "apply at this breakpoint <em>and above</em>".</p>
+
+      <div class="overflow-x-auto mb-4">
+        <table>
+          <thead><tr><th>Prefix</th><th>Min-width</th><th>Target</th></tr></thead>
+          <tbody>
+            <tr><td class="mono text-xs">(none)</td><td class="mono text-xs">0px</td><td class="text-xs">All viewports — base styles</td></tr>
+            <tr><td class="mono text-xs">sm:</td><td class="mono text-xs">640px</td><td class="text-xs">Large phones and up</td></tr>
+            <tr><td class="mono text-xs">md:</td><td class="mono text-xs">768px</td><td class="text-xs">Tablets and up</td></tr>
+            <tr><td class="mono text-xs">lg:</td><td class="mono text-xs">1024px</td><td class="text-xs">Laptops and up</td></tr>
+            <tr><td class="mono text-xs">xl:</td><td class="mono text-xs">1280px</td><td class="text-xs">Desktops and up</td></tr>
+            <tr><td class="mono text-xs">2xl:</td><td class="mono text-xs">1536px</td><td class="text-xs">Wide screens and up</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Responsive utilities available in @mastors/flexer:</p>
+      <div class="flex flex-wrap gap-2 mb-5 text-xs mono">
+        <span class="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">flex / inline-flex</span>
+        <span class="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">flex-row / col / row-reverse / col-reverse</span>
+        <span class="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">flex-wrap / nowrap / wrap-reverse</span>
+        <span class="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">flex-flow-*</span>
+        <span class="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">justify-*</span>
+        <span class="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">justify-items-*</span>
+        <span class="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">justify-self-*</span>
+        <span class="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">content-*</span>
+        <span class="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">items-*</span>
+        <span class="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">self-*</span>
+        <span class="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">place-content-*</span>
+        <span class="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">place-items-*</span>
+        <span class="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">place-self-*</span>
+      </div>
+
+      <div class="cb mb-4"><button class="copy-btn" onclick="cp(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+<pre><code class="language-html">&lt;!-- Classic two-pane layout: stacked on mobile, side-by-side on md+ --&gt;
+&lt;div class="flex flex-col md:flex-row gap-6"&gt;
+  &lt;aside class="md:w-64 shrink-0"&gt;Sidebar&lt;/aside&gt;
+  &lt;main class="flex-1 min-w-0"&gt;Content&lt;/main&gt;
+&lt;/div&gt;
+
+&lt;!-- Center on mobile, space-between on lg+ --&gt;
+&lt;nav class="flex justify-center lg:justify-between items-center"&gt;
+  &lt;div&gt;Logo&lt;/div&gt;
+  &lt;ul class="hidden lg:flex gap-8"&gt;...&lt;/ul&gt;
+  &lt;button&gt;CTA&lt;/button&gt;
+&lt;/nav&gt;
+
+&lt;!-- Wrap on small, single row on xl+ --&gt;
+&lt;div class="flex flex-wrap xl:flex-nowrap gap-4"&gt;
+  &lt;div class="basis-full sm:basis-1/2 xl:flex-1"&gt;Card&lt;/div&gt;
+  &lt;div class="basis-full sm:basis-1/2 xl:flex-1"&gt;Card&lt;/div&gt;
+  &lt;div class="basis-full sm:basis-1/2 xl:flex-1"&gt;Card&lt;/div&gt;
+  &lt;div class="basis-full sm:basis-1/2 xl:flex-1"&gt;Card&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Reorder items responsively --&gt;
+&lt;div class="flex flex-col md:flex-row gap-4"&gt;
+  &lt;main class="order-2 md:order-1"&gt;Main (DOM 1st)&lt;/main&gt;
+  &lt;aside class="order-1 md:order-2"&gt;Sidebar (DOM 2nd, first on mobile)&lt;/aside&gt;
+&lt;/div&gt;</code></pre></div>
+
+      <div class="bp-note">
+        <i class="fa-solid fa-circle-info mr-2"></i>
+        Resize this browser window to see responsive classes activate. The sidebar in the layout above stacks on mobile and moves beside the content at <code class="bg-purple-100 dark:bg-purple-900/50 px-1 rounded text-xs">md</code> (768px+).
+      </div>
+    </section>
+
+    <!-- ══════════════════════════  SASS MIXINS  ══════════════════════════ -->
+    <div class="border-b border-gray-200 dark:border-gray-800 pb-3 mb-8 mt-2">
+      <h2 class="text-xl font-bold flex items-center gap-2"><i class="fa-solid fa-puzzle-piece text-brand-500"></i> Sass API — Mixins</h2>
+    </div>
+
+    <!-- flex-container() -->
+    <section id="mixin-container" class="sa mb-16">
+      <div class="flex items-center gap-2 mb-2">
+        <h3 class="text-xl font-bold">flex-container()</h3>
+        <span class="badge b-rose">Mixin</span>
+      </div>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">Configure a complete flex container in a single <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">@include</code>. Eliminates the need to write <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">display</code>, <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">flex-direction</code>, <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">flex-wrap</code>, <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">justify-content</code>, <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">align-items</code>, and <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">gap</code> as separate declarations.</p>
+
+      <div class="overflow-x-auto mb-4">
+        <table>
+          <thead><tr><th>Parameter</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td class="mono text-xs">$direction</td><td class="mono text-xs">String</td><td class="mono text-xs">row</td><td class="text-xs">Sets flex-direction</td></tr>
+            <tr><td class="mono text-xs">$wrap</td><td class="mono text-xs">String</td><td class="mono text-xs">nowrap</td><td class="text-xs">Sets flex-wrap</td></tr>
+            <tr><td class="mono text-xs">$justify</td><td class="mono text-xs">String</td><td class="mono text-xs">flex-start</td><td class="text-xs">Sets justify-content</td></tr>
+            <tr><td class="mono text-xs">$align</td><td class="mono text-xs">String</td><td class="mono text-xs">stretch</td><td class="text-xs">Sets align-items</td></tr>
+            <tr><td class="mono text-xs">$gap</td><td class="mono text-xs">CSS value | null</td><td class="mono text-xs">null</td><td class="text-xs">Sets gap (omitted if null)</td></tr>
+            <tr><td class="mono text-xs">$inline</td><td class="mono text-xs">Boolean</td><td class="mono text-xs">false</td><td class="text-xs">Use inline-flex instead of flex</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="cb mb-4"><button class="copy-btn" onclick="cp(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+<pre><code class="language-scss">@use "@mastors/flexer/scss/mixins/flex-container" as *;
+
+// Basic horizontal centered container
+.hero {
+  @include flex-container($justify: center, $align: center);
+}
+
+// Card grid — wrapping row with gap
+.card-grid {
+  @include flex-container($wrap: wrap, $gap: 1.5rem);
+}
+
+// Vertical nav sidebar
+.sidebar-nav {
+  @include flex-container($direction: column, $align: flex-start, $gap: .5rem);
+}
+
+// Inline badge container
+.chip-group {
+  @include flex-container($align: center, $gap: .5rem, $inline: true);
+}
+
+// Full toolbar: space-between with centered cross axis
+.toolbar {
+  @include flex-container($justify: space-between, $align: center, $gap: 1rem);
+  padding: .75rem 1.25rem;
+  background: var(--mastors-surface);
+}</code></pre></div>
+
+      <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">The mixin compiles to:</p>
+      <div class="cb"><button class="copy-btn" onclick="cp(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+<pre><code class="language-css">/* @include flex-container($wrap: wrap, $justify: space-between, $gap: 1rem) */
+.example {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: stretch;
+  gap: 1rem;
+}</code></pre></div>
+    </section>
+
+    <!-- flex-item() -->
+    <section id="mixin-item" class="sa mb-16">
+      <div class="flex items-center gap-2 mb-2">
+        <h3 class="text-xl font-bold">flex-item()</h3>
+        <span class="badge b-rose">Mixin</span>
+      </div>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">Configure a flex child item in one include. Sets <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">flex</code>, <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">align-self</code>, and <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">order</code> together.</p>
+
+      <div class="overflow-x-auto mb-4">
+        <table>
+          <thead><tr><th>Parameter</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td class="mono text-xs">$grow</td><td class="mono text-xs">Number</td><td class="mono text-xs">0</td><td class="text-xs">flex-grow value</td></tr>
+            <tr><td class="mono text-xs">$shrink</td><td class="mono text-xs">Number</td><td class="mono text-xs">1</td><td class="text-xs">flex-shrink value</td></tr>
+            <tr><td class="mono text-xs">$basis</td><td class="mono text-xs">CSS value</td><td class="mono text-xs">auto</td><td class="text-xs">flex-basis value</td></tr>
+            <tr><td class="mono text-xs">$align</td><td class="mono text-xs">String</td><td class="mono text-xs">auto</td><td class="text-xs">align-self (omitted when auto)</td></tr>
+            <tr><td class="mono text-xs">$order</td><td class="mono text-xs">Number | null</td><td class="mono text-xs">null</td><td class="text-xs">order (omitted when null)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="cb mb-4"><button class="copy-btn" onclick="cp(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+<pre><code class="language-scss">@use "@mastors/flexer/scss/mixins/flex-item" as *;
+
+// Fluid main content that grows from zero
+.main-content {
+  @include flex-item($grow: 1, $basis: 0%);
+}
+
+// Fixed-width sidebar — never grows or shrinks
+.sidebar {
+  @include flex-item($grow: 0, $shrink: 0, $basis: 280px);
+}
+
+// Card that starts at 300px but can shrink, centers itself
+.card {
+  @include flex-item($grow: 1, $basis: 300px, $align: center);
+}
+
+// Item with explicit visual order
+.featured {
+  @include flex-item($grow: 2, $order: 1);
+}</code></pre></div>
+
+      <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">The mixin compiles to:</p>
+      <div class="cb"><button class="copy-btn" onclick="cp(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+<pre><code class="language-css">/* @include flex-item($grow: 1, $basis: 0%, $align: center) */
+.main-content {
+  flex: 1 1 0%;
+  align-self: center;
+}</code></pre></div>
+    </section>
+
+    <!-- flex-center() -->
+    <section id="mixin-center" class="sa mb-16">
+      <div class="flex items-center gap-2 mb-2">
+        <h3 class="text-xl font-bold">flex-center()</h3>
+        <span class="badge b-rose">Mixin</span>
+      </div>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">The single most common flex pattern — centering children on both axes — in one line. Comes in three variants: both axes, horizontal only (X), and vertical only (Y).</p>
+
+      <div class="overflow-x-auto mb-4">
+        <table>
+          <thead><tr><th>Mixin</th><th>Compiles to</th><th>Use case</th></tr></thead>
+          <tbody>
+            <tr><td class="mono text-xs">flex-center($inline?)</td><td class="mono text-xs">display:flex; align-items:center; justify-content:center</td><td class="text-xs">Both axes — icon buttons, hero sections, modal overlays</td></tr>
+            <tr><td class="mono text-xs">flex-center-x($inline?)</td><td class="mono text-xs">display:flex; justify-content:center</td><td class="text-xs">Main axis only — center a row of items horizontally</td></tr>
+            <tr><td class="mono text-xs">flex-center-y($inline?)</td><td class="mono text-xs">display:flex; align-items:center</td><td class="text-xs">Cross axis only — vertically center inline text + icon</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="cb mb-4"><button class="copy-btn" onclick="cp(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+<pre><code class="language-scss">@use "@mastors/flexer/scss/mixins/flex-center" as *;
+
+// Perfect centering — modal overlay, hero, spinner wrapper
+.overlay {
+  @include flex-center;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.5);
+}
+
+// Center content area horizontally, not vertically
+.page-header {
+  @include flex-center-x;
+  padding: 2rem 1rem;
+}
+
+// Icon + label inline — vertically center only
+.btn {
+  @include flex-center-y($inline: true);
+  gap: .5rem;
+  padding: .5rem 1rem;
+  border-radius: .375rem;
+}
+
+// Inline icon badge
+.badge {
+  @include flex-center($inline: true);
+  gap: .35rem;
+  padding: .2rem .5rem;
+  border-radius: 9999px;
+}</code></pre></div>
+
+      <div class="demo grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div>
+          <p class="text-xs mono text-gray-400 mb-2">flex-center — both axes</p>
+          <div style="display:flex;align-items:center;justify-content:center;height:80px;background:#fae8ff;border-radius:.5rem">
+            <div class="fi">Centered</div>
+          </div>
+        </div>
+        <div>
+          <p class="text-xs mono text-gray-400 mb-2">flex-center-x — horizontal</p>
+          <div style="display:flex;justify-content:center;height:80px;background:#fae8ff;border-radius:.5rem;padding:.5rem">
+            <div class="fi">Center H</div>
+          </div>
+        </div>
+        <div>
+          <p class="text-xs mono text-gray-400 mb-2">flex-center-y — vertical</p>
+          <div style="display:flex;align-items:center;height:80px;background:#fae8ff;border-radius:.5rem;padding:.5rem">
+            <div class="fi">Center V</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════  GENERATOR  ══════════════════════════ -->
+    <div class="border-b border-gray-200 dark:border-gray-800 pb-3 mb-8 mt-2">
+      <h2 class="text-xl font-bold flex items-center gap-2"><i class="fa-solid fa-gears text-brand-500"></i> Generator</h2>
+    </div>
+
+    <section id="generator" class="sa mb-16">
+      <div class="flex items-center gap-2 mb-2">
+        <h3 class="text-xl font-bold">generate-flex-utilities()</h3>
+        <span class="badge b-orange">Generator</span>
+      </div>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">Emit a selective subset of flex utilities from a single config map. Use this when you want the utility pattern but not the full set — for example in a design system where you output only what each package needs.</p>
+
+      <div class="overflow-x-auto mb-4">
+        <table>
+          <thead><tr><th>Config key</th><th>Type</th><th>Utilities emitted when true</th></tr></thead>
+          <tbody>
+            <tr><td class="mono text-xs">direction</td><td class="mono text-xs">boolean</td><td class="text-xs">flex-row, flex-col, flex-row-reverse, flex-col-reverse</td></tr>
+            <tr><td class="mono text-xs">wrap</td><td class="mono text-xs">boolean</td><td class="text-xs">flex-wrap, flex-nowrap, flex-wrap-reverse</td></tr>
+            <tr><td class="mono text-xs">justify</td><td class="mono text-xs">boolean</td><td class="text-xs">justify-start, justify-center, justify-between, etc.</td></tr>
+            <tr><td class="mono text-xs">align</td><td class="mono text-xs">boolean</td><td class="text-xs">items-start, items-center, items-end, items-stretch, items-baseline</td></tr>
+            <tr><td class="mono text-xs">grow</td><td class="mono text-xs">boolean</td><td class="text-xs">grow, grow-0</td></tr>
+            <tr><td class="mono text-xs">shrink</td><td class="mono text-xs">boolean</td><td class="text-xs">shrink, shrink-0</td></tr>
+            <tr><td class="mono text-xs">order</td><td class="mono text-xs">boolean</td><td class="text-xs">order-first, order-last, order-none</td></tr>
+            <tr><td class="mono text-xs">responsive</td><td class="mono text-xs">boolean</td><td class="text-xs">Adds breakpoint-prefixed variants to all generated utilities</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="cb mb-4"><button class="copy-btn" onclick="cp(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+<pre><code class="language-scss">@use "@mastors/flexer/scss/generators/flex-generator" as gen;
+
+// Emit only direction + justify + align with responsive variants
+// Useful for a component library that just needs layout primitives
+@include gen.generate-flex-utilities((
+  direction:  true,
+  justify:    true,
+  align:      true,
+  responsive: true,
+));
+
+// Emit everything including responsive variants
+@include gen.generate-flex-utilities((
+  direction:  true,
+  wrap:       true,
+  justify:    true,
+  align:      true,
+  grow:       true,
+  shrink:     true,
+  order:      true,
+  responsive: true,
+));
+
+// Emit only grow/shrink — no responsive variants needed
+@include gen.generate-flex-utilities((
+  grow:   true,
+  shrink: true,
+));</code></pre></div>
+
+      <div class="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl p-4 text-sm text-amber-800 dark:text-amber-300 flex gap-3">
+        <i class="fa-solid fa-lightbulb mt-0.5 shrink-0"></i>
+        <span>When using <code class="bg-amber-100 dark:bg-amber-900/50 px-1 rounded text-xs">generate-flex-utilities()</code> inside a design system or component package that extends Mastors, omit <code class="bg-amber-100 dark:bg-amber-900/50 px-1 rounded text-xs">responsive: true</code> unless you actually need breakpoint variants — each responsive utility emits one class per breakpoint × per value, which can add up.</span>
+      </div>
+    </section>
+
+    <!-- ══════════════  COMMON PATTERNS  ══════════════ -->
+    <div class="border-b border-gray-200 dark:border-gray-800 pb-3 mb-8 mt-2">
+      <h2 class="text-xl font-bold flex items-center gap-2"><i class="fa-solid fa-layer-group text-brand-500"></i> Common Patterns</h2>
+    </div>
+
+    <section class="sa mb-16">
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-6">Real-world compositions using @mastors/flexer classes and mixins together.</p>
+
+      <div class="space-y-8">
+
+        <!-- Navbar -->
+        <div>
+          <h4 class="font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2"><i class="fa-solid fa-bars text-brand-500 text-sm"></i> Responsive Navbar</h4>
+          <div class="cb mb-3"><button class="copy-btn" onclick="cp(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+<pre><code class="language-html">&lt;header class="flex items-center justify-between gap-4 px-6 py-3"&gt;
+  &lt;div class="flex items-center gap-3 shrink-0"&gt;
+    &lt;img class="w-8 h-8" src="logo.svg" /&gt;
+    &lt;span class="font-bold"&gt;Brand&lt;/span&gt;
+  &lt;/div&gt;
+
+  &lt;nav class="hidden md:flex items-center gap-8"&gt;
+    &lt;a href="#"&gt;Home&lt;/a&gt;
+    &lt;a href="#"&gt;Docs&lt;/a&gt;
+    &lt;a href="#"&gt;Blog&lt;/a&gt;
+  &lt;/nav&gt;
+
+  &lt;div class="flex items-center gap-3 shrink-0"&gt;
+    &lt;button class="hidden md:inline-flex items-center gap-2"&gt;Sign in&lt;/button&gt;
+    &lt;button class="md:hidden"&gt;&lt;i class="fa-solid fa-bars"&gt;&lt;/i&gt;&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/header&gt;</code></pre></div>
+          <div class="demo">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.5rem .75rem;background:#fae8ff;border-radius:.5rem">
+              <div style="display:flex;align-items:center;gap:.5rem"><div class="w-6 h-6 rounded bg-brand-600 flex items-center justify-center text-white text-xs font-bold">M</div><span class="font-bold text-sm">Brand</span></div>
+              <nav style="display:flex;align-items:center;gap:1.5rem" class="hidden sm:flex"><a class="text-sm text-brand-700 font-medium hover:text-brand-900">Home</a><a class="text-sm text-brand-700 font-medium">Docs</a><a class="text-sm text-brand-700 font-medium">Blog</a></nav>
+              <button style="background:#a21caf;color:#fff;padding:.3rem .8rem;border-radius:.35rem;font-size:.78rem;font-weight:600">Sign in</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card grid -->
+        <div>
+          <h4 class="font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2"><i class="fa-solid fa-grip text-brand-500 text-sm"></i> Responsive Card Grid</h4>
+          <div class="cb mb-3"><button class="copy-btn" onclick="cp(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+<pre><code class="language-html">&lt;div class="flex flex-wrap gap-4"&gt;
+  &lt;!-- Each card: full width on xs, half on sm, third on lg --&gt;
+  &lt;article class="basis-full sm:basis-[calc(50%-0.5rem)] lg:basis-[calc(33.333%-1rem)] flex flex-col gap-3 p-5 border rounded-xl"&gt;
+    &lt;img class="w-full rounded-lg aspect-video object-cover" /&gt;
+    &lt;div class="flex-1 flex flex-col gap-2"&gt;
+      &lt;h3 class="font-semibold"&gt;Card title&lt;/h3&gt;
+      &lt;p class="text-sm text-muted flex-1"&gt;Description&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div class="flex items-center justify-between"&gt;
+      &lt;span class="text-xs text-muted"&gt;Jan 2025&lt;/span&gt;
+      &lt;button class="inline-flex items-center gap-1.5 text-sm"&gt;Read &lt;i class="fa-solid fa-arrow-right"&gt;&lt;/i&gt;&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/article&gt;
+&lt;/div&gt;</code></pre></div>
+          <div class="demo">
+            <div style="display:flex;flex-wrap:wrap;gap:.75rem">
+              <div style="flex:1 1 140px;display:flex;flex-direction:column;gap:.5rem;padding:.75rem;background:#fae8ff;border-radius:.5rem">
+                <div style="background:#e879f9;height:50px;border-radius:.3rem;width:100%"></div>
+                <p class="text-sm font-semibold text-purple-900">Card title</p>
+                <p style="font-size:.75rem;color:#9333ea;flex:1">Short description text that fills the card.</p>
+                <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:.7rem;color:#a21caf">Jan 2025</span><span style="font-size:.75rem;font-weight:600;color:#a21caf">Read →</span></div>
+              </div>
+              <div style="flex:1 1 140px;display:flex;flex-direction:column;gap:.5rem;padding:.75rem;background:#fae8ff;border-radius:.5rem">
+                <div style="background:#c026d3;height:50px;border-radius:.3rem;width:100%"></div>
+                <p class="text-sm font-semibold text-purple-900">Card title</p>
+                <p style="font-size:.75rem;color:#9333ea;flex:1">Another card with more description text here.</p>
+                <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:.7rem;color:#a21caf">Feb 2025</span><span style="font-size:.75rem;font-weight:600;color:#a21caf">Read →</span></div>
+              </div>
+              <div style="flex:1 1 140px;display:flex;flex-direction:column;gap:.5rem;padding:.75rem;background:#fae8ff;border-radius:.5rem">
+                <div style="background:#7c3aed;height:50px;border-radius:.3rem;width:100%"></div>
+                <p class="text-sm font-semibold text-purple-900">Card title</p>
+                <p style="font-size:.75rem;color:#9333ea;flex:1">Third card example in the flex grid layout.</p>
+                <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:.7rem;color:#a21caf">Mar 2025</span><span style="font-size:.75rem;font-weight:600;color:#a21caf">Read →</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Media object -->
+        <div>
+          <h4 class="font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2"><i class="fa-solid fa-image text-brand-500 text-sm"></i> Media Object (Avatar + Content)</h4>
+          <div class="cb mb-3"><button class="copy-btn" onclick="cp(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+<pre><code class="language-html">&lt;div class="flex items-start gap-4"&gt;
+  &lt;img class="shrink-0 w-12 h-12 rounded-full object-cover" src="avatar.jpg" /&gt;
+  &lt;div class="flex-1 min-w-0"&gt;
+    &lt;div class="flex items-center justify-between gap-2"&gt;
+      &lt;p class="font-semibold truncate"&gt;Jane Doe&lt;/p&gt;
+      &lt;time class="shrink-0 text-xs text-muted"&gt;2h ago&lt;/time&gt;
+    &lt;/div&gt;
+    &lt;p class="text-sm text-muted mt-1"&gt;This is a reply or comment body...&lt;/p&gt;
+    &lt;div class="flex items-center gap-4 mt-2"&gt;
+      &lt;button class="inline-flex items-center gap-1 text-xs"&gt;
+        &lt;i class="fa-regular fa-heart"&gt;&lt;/i&gt; 12
+      &lt;/button&gt;
+      &lt;button class="inline-flex items-center gap-1 text-xs"&gt;
+        &lt;i class="fa-regular fa-comment"&gt;&lt;/i&gt; Reply
+      &lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre></div>
+          <div class="demo">
+            <div style="display:flex;align-items:flex-start;gap:.75rem">
+              <div style="width:2.75rem;height:2.75rem;border-radius:9999px;background:linear-gradient(135deg,#a21caf,#7c3aed);flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:.9rem">J</div>
+              <div style="flex:1;min-width:0">
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:.5rem">
+                  <p style="font-weight:600;font-size:.875rem">Jane Doe</p>
+                  <time style="font-size:.7rem;color:#9ca3af;flex-shrink:0">2h ago</time>
+                </div>
+                <p style="font-size:.82rem;color:#6b7280;margin-top:.25rem">This is a reply or comment body with some text that might be longer.</p>
+                <div style="display:flex;align-items:center;gap:1rem;margin-top:.5rem">
+                  <button style="display:inline-flex;align-items:center;gap:.3rem;font-size:.72rem;color:#a21caf;background:none;border:none;cursor:pointer"><i class="fa-regular fa-heart"></i> 12</button>
+                  <button style="display:inline-flex;align-items:center;gap:.3rem;font-size:.72rem;color:#a21caf;background:none;border:none;cursor:pointer"><i class="fa-regular fa-comment"></i> Reply</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- footer -->
+    <footer class="mt-8 pt-8 border-t border-gray-200 dark:border-gray-800 text-center text-sm text-gray-400 dark:text-gray-600">
+      <p>@mastors/flexer Documentation — v1.2.7</p>
+      <p class="mt-1 text-xs">Package path: <code class="bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded">packages/flexer/scss</code></p>
+    </footer>
+  </main>
+</div>
+
+<!-- mobile overlay -->
+<div id="mob-overlay" class="fixed inset-0 bg-black/40 z-30 lg:hidden hidden" onclick="closeSidebar()"></div>
+
+<script>
+  // ── init highlight.js ──────────────────────────────
+  document.addEventListener('DOMContentLoaded', () => { hljs.highlightAll(); });
+
+  // ── dark mode ──────────────────────────────────────
+  const html = document.documentElement;
+  const dkBtn = document.getElementById('dk');
+  const dkIcon = document.getElementById('dk-icon');
+
+  function applyDark(on) {
+    on ? html.classList.add('dark') : html.classList.remove('dark');
+    dkIcon.className = on ? 'fa-solid fa-sun text-sm' : 'fa-solid fa-moon text-sm';
+    localStorage.setItem('mf-dark', on ? '1' : '');
+  }
+
+  const stored = localStorage.getItem('mf-dark');
+  applyDark(stored === '1' || (stored === null && matchMedia('(prefers-color-scheme:dark)').matches));
+  dkBtn.addEventListener('click', () => applyDark(!html.classList.contains('dark')));
+
+  // ── copy code ──────────────────────────────────────
+  function cp(btn) {
+    const text = btn.closest('.cb').querySelector('pre').innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.innerHTML = '<i class="fa-solid fa-check mr-1"></i>Copied!';
+      btn.classList.add('ok');
+      setTimeout(() => { btn.innerHTML = '<i class="fa-regular fa-copy mr-1"></i>Copy'; btn.classList.remove('ok'); }, 1800);
+    });
+  }
+
+  // ── sidebar mobile ────────────────────────────────
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('mob-overlay');
+
+  document.getElementById('mob-toggle').addEventListener('click', () => {
+    sidebar.classList.remove('-translate-x-full');
+    overlay.classList.remove('hidden');
+  });
+
+  function closeSidebar() {
+    sidebar.classList.add('-translate-x-full');
+    overlay.classList.add('hidden');
+  }
+
+  sidebar.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    if (window.innerWidth < 1024) closeSidebar();
+  }));
+
+  // ── scroll spy ───────────────────────────────────
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-link');
+
+  function setActive() {
+    let cur = '';
+    sections.forEach(s => { if (scrollY >= s.offsetTop - 100) cur = s.id; });
+    navLinks.forEach(l => {
+      l.classList.remove('active');
+      if (l.getAttribute('href') === '#' + cur) l.classList.add('active');
+    });
+  }
+  window.addEventListener('scroll', setActive, { passive: true });
+  setActive();
+
+  // ── search ───────────────────────────────────────
+  function doSearch(v) {
+    const q = v.toLowerCase().trim();
+    const sr = document.getElementById('sr');
+    navLinks.forEach(l => l.closest('a').style.display = '');
+    if (!q) { sr.classList.add('hidden'); return; }
+    let count = 0;
+    navLinks.forEach(l => {
+      const match = l.textContent.toLowerCase().includes(q);
+      l.closest('a').style.display = match ? '' : 'none';
+      if (match) count++;
+    });
+    sr.textContent = count + ' result' + (count !== 1 ? 's' : '');
+    sr.classList.remove('hidden');
+  }
+</script>
+</body>
+</html>
