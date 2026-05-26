@@ -1,6 +1,13 @@
 #!/usr/bin/env node
-// postinstall.js — runs automatically after: npm install mastors
+// packages/mastors/postinstall.js
+// Runs automatically after: npm install mastors
+// 1. Prints welcome banner
+// 2. Triggers @mastors/core init-config to scaffold config files
 'use strict'
+
+const path = require('path')
+const fs   = require('fs')
+const { execSync } = require('child_process')
 
 const C = {
   reset:  '\x1b[0m',
@@ -37,3 +44,33 @@ const msg = [
 ].join('\n')
 
 process.stdout.write(msg)
+
+// Skip CI / monorepo self-installs
+const cwd  = process.env.INIT_CWD || process.cwd()
+const isCi = process.env.CI === 'true' || process.env.CI === '1'
+const isRepo = (() => {
+  try {
+    const pkg = require(path.join(cwd, 'package.json'))
+    return pkg.name === 'mastors-monorepo' || pkg.name === '@mastors/monorepo'
+  } catch (_) { return false }
+})()
+
+if (isCi || isRepo) process.exit(0)
+
+// Try to locate @mastors/core's init-config relative to this package
+const candidates = [
+  // Hoisted (npm / yarn / bun)
+  path.join(cwd, 'node_modules', '@mastors', 'core', 'scripts', 'init-config.js'),
+  // Nested under mastors package
+  path.join(__dirname, 'node_modules', '@mastors', 'core', 'scripts', 'init-config.js'),
+]
+
+const initScript = candidates.find(p => fs.existsSync(p))
+
+if (initScript) {
+  try {
+    execSync(`node "${initScript}"`, { stdio: 'inherit', env: { ...process.env, INIT_CWD: cwd } })
+  } catch (_) {
+    // Never fail the install on config-init error
+  }
+}

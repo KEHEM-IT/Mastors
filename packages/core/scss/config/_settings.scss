@@ -1,18 +1,305 @@
 // config/_settings.scss
-// Master feature flags and global configuration map.
+// Master design tokens and global configuration map.
+// Overridden by mastors.config.scss (the generated bridge file).
 // ─────────────────────────────────────────────────────────────
 
-// @use must come before everything else
 @use "sass:map";
+@use "sass:color";
 
-$mastors-config: (
-  "prefix":       "",
-  "important":    false,
-  "dark-mode":    "class",
-  "rtl":          false,
+// ── General settings ──────────────────────────────────────────
+$mastors-prefix:    ""      !default;
+$mastors-important: false   !default;
+$mastors-dark-mode: "class" !default;  // "class" | "media" | "data-attribute"
+$mastors-rtl:       false   !default;
+
+// ── Color palettes ────────────────────────────────────────────
+$mastors-primary-color: (
+  "50":  #eff6ff,
+  "100": #dbeafe,
+  "200": #bfdbfe,
+  "300": #93c5fd,
+  "400": #60a5fa,
+  "500": #3b82f6,
+  "600": #2563eb,
+  "700": #1d4ed8,
+  "800": #1e40af,
+  "900": #1e3a8a,
+  "950": #172554,
 ) !default;
 
-// Convenience accessors
+$mastors-secondary-color: (
+  "50":  #f5f3ff,
+  "100": #ede9fe,
+  "200": #ddd6fe,
+  "300": #c4b5fd,
+  "400": #a78bfa,
+  "500": #8b5cf6,
+  "600": #7c3aed,
+  "700": #6d28d9,
+  "800": #5b21b6,
+  "900": #4c1d95,
+  "950": #2e1065,
+) !default;
+
+// Semantic color overrides (null = derive from primary/secondary)
+$mastors-accent-color:  null !default;
+$mastors-success-color: null !default;
+$mastors-warning-color: null !default;
+$mastors-error-color:   null !default;
+$mastors-info-color:    null !default;
+
+// Built-in semantic fallbacks
+$mastors-success-fallback: #22c55e !default;
+$mastors-warning-fallback: #f59e0b !default;
+$mastors-error-fallback:   #ef4444 !default;
+$mastors-info-fallback:    #3b82f6 !default;
+
+// Neutral / gray scale
+$mastors-neutral-color: (
+  "50":  #f9fafb,
+  "100": #f3f4f6,
+  "200": #e5e7eb,
+  "300": #d1d5db,
+  "400": #9ca3af,
+  "500": #6b7280,
+  "600": #4b5563,
+  "700": #374151,
+  "800": #1f2937,
+  "900": #111827,
+  "950": #030712,
+) !default;
+
+// ── Typography settings ───────────────────────────────────────
+$mastors-base-font-size:      16px     !default;
+$mastors-base-line-height:    1.5      !default;
+$mastors-base-letter-spacing: normal   !default;
+$mastors-default-font:        "sans"   !default;
+$mastors-heading-font:        "sans"   !default;
+$mastors-heading-font-weight: 700      !default;
+$mastors-heading-smoothing:   true     !default;
+
+$mastors-font-families: (
+  "sans":  (system-ui, -apple-system, "Segoe UI", Roboto, sans-serif),
+  "serif": (Georgia, Cambria, "Times New Roman", Times, serif),
+  "mono":  (ui-monospace, "SFMono-Regular", Menlo, Monaco, Consolas, monospace),
+) !default;
+
+$mastors-font-sizes: (
+  "xs":   0.75rem,
+  "sm":   0.875rem,
+  "base": 1rem,
+  "lg":   1.125rem,
+  "xl":   1.25rem,
+  "2xl":  1.5rem,
+  "3xl":  1.875rem,
+  "4xl":  2.25rem,
+  "5xl":  3rem,
+  "6xl":  3.75rem,
+  "7xl":  4.5rem,
+  "8xl":  6rem,
+  "9xl":  8rem,
+) !default;
+
+$mastors-font-weights: (
+  "thin":       100,
+  "extralight": 200,
+  "light":      300,
+  "normal":     400,
+  "medium":     500,
+  "semibold":   600,
+  "bold":       700,
+  "extrabold":  800,
+  "black":      900,
+) !default;
+
+$mastors-line-heights: (
+  "none":    1,
+  "tight":   1.25,
+  "snug":    1.375,
+  "normal":  1.5,
+  "relaxed": 1.625,
+  "loose":   2,
+) !default;
+
+$mastors-letter-spacings: (
+  "tighter": -0.05em,
+  "tight":   -0.025em,
+  "normal":   0em,
+  "wide":     0.025em,
+  "wider":    0.05em,
+  "widest":   0.1em,
+) !default;
+
+$mastors-font-size-overrides:   () !default;
+$mastors-font-weight-overrides: () !default;
+$mastors-line-height-overrides: () !default;
+
+// ── Spacing settings ──────────────────────────────────────────
+$mastors-spacing-unit:    "rem" !default;
+$mastors-spacing-base-px: 4     !default;
+
+// ── Shadow scale ─────────────────────────────────────────────
+$mastors-shadows: (
+  "none": none,
+  "sm":   0 1px 2px 0 rgb(0 0 0 / 0.05),
+  "md":   0 4px 6px -1px rgb(0 0 0 / 0.10) COMMA 0 2px 4px -2px rgb(0 0 0 / 0.10),
+  "lg":   0 10px 15px -3px rgb(0 0 0 / 0.10) COMMA 0 4px 6px -4px rgb(0 0 0 / 0.10),
+  "xl":   0 20px 25px -5px rgb(0 0 0 / 0.10) COMMA 0 8px 10px -6px rgb(0 0 0 / 0.10),
+  "2xl":  0 25px 50px -12px rgb(0 0 0 / 0.25),
+  "inner": inset 0 2px 4px 0 rgb(0 0 0 / 0.05),
+) !default;
+
+$mastors-shadow-overrides: () !default;
+
+// ── Z-index scale ─────────────────────────────────────────────
+$mastors-z-index: (
+  "auto":    auto,
+  "0":       0,
+  "10":      10,
+  "20":      20,
+  "30":      30,
+  "40":      40,
+  "50":      50,
+  "sticky":  100,
+  "fixed":   200,
+  "overlay": 300,
+  "modal":   400,
+  "popover": 500,
+  "tooltip": 600,
+  "toast":   700,
+  "max":     9999,
+) !default;
+
+$mastors-z-index-overrides: () !default;
+
+// ── Opacity scale ─────────────────────────────────────────────
+$mastors-opacity: (
+  "0":   0,
+  "5":   0.05,
+  "10":  0.10,
+  "15":  0.15,
+  "20":  0.20,
+  "25":  0.25,
+  "30":  0.30,
+  "40":  0.40,
+  "50":  0.50,
+  "60":  0.60,
+  "70":  0.70,
+  "75":  0.75,
+  "80":  0.80,
+  "90":  0.90,
+  "95":  0.95,
+  "100": 1,
+) !default;
+
+$mastors-opacity-overrides: () !default;
+
+// ── Border radius settings ────────────────────────────────────
+$mastors-radius-default: 0.375rem !default;
+
+// ── Border settings ───────────────────────────────────────────
+$mastors-border-default-width: 1px     !default;
+$mastors-border-default-style: solid   !default;
+$mastors-border-default-color: "border" !default;
+
+// ── Transition settings ───────────────────────────────────────
+$mastors-default-duration: 200ms                          !default;
+$mastors-default-easing:   cubic-bezier(0.4, 0, 0.2, 1)  !default;
+
+$mastors-durations: (
+  "instant": 0ms,
+  "fast":    100ms,
+  "normal":  200ms,
+  "slow":    300ms,
+  "slower":  500ms,
+  "slowest": 700ms,
+) !default;
+
+$mastors-duration-overrides: () !default;
+
+// ── Container settings ────────────────────────────────────────
+$mastors-container-center:  true  !default;
+$mastors-container-padding: 1rem  !default;
+
+$mastors-container-max-widths: (
+  "sm":  640px,
+  "md":  768px,
+  "lg":  1024px,
+  "xl":  1280px,
+  "2xl": 1536px,
+) !default;
+
+// ── Breakpoints ───────────────────────────────────────────────
+$mastors-breakpoints: (
+  "xs":  475px,
+  "sm":  640px,
+  "md":  768px,
+  "lg":  1024px,
+  "xl":  1280px,
+  "2xl": 1536px,
+) !default;
+
+// ── Semantic theme tokens (CSS custom properties) ────────────
+// Light theme defaults
+$mastors-theme-light: (
+  "bg":              #ffffff,
+  "bg-subtle":       #f9fafb,
+  "surface":         #ffffff,
+  "text":            #111827,
+  "text-muted":      #6b7280,
+  "text-subtle":     #9ca3af,
+  "border":          #e5e7eb,
+  "border-strong":   #9ca3af,
+  "accent":          #2563eb,
+  "accent-hover":    #1d4ed8,
+  "accent-subtle":   #eff6ff,
+  "accent-text":     #ffffff,
+) !default;
+
+// Dark theme defaults
+$mastors-theme-dark: (
+  "bg":              #0f172a,
+  "bg-subtle":       #111827,
+  "surface":         #111827,
+  "text":            #f9fafb,
+  "text-muted":      #9ca3af,
+  "text-subtle":     #6b7280,
+  "border":          #374151,
+  "border-strong":   #4b5563,
+  "accent":          #60a5fa,
+  "accent-hover":    #93c5fd,
+  "accent-subtle":   #1e3a8a,
+  "accent-text":     #ffffff,
+) !default;
+
+// ── Full config map (for programmatic access) ─────────────────
+// Built from the above variables so SCSS modules can @use this
+// file and call config("key") instead of referencing each var.
+$mastors-config: (
+  "prefix":               $mastors-prefix,
+  "important":            $mastors-important,
+  "dark-mode":            $mastors-dark-mode,
+  "rtl":                  $mastors-rtl,
+  "base-font-size":       $mastors-base-font-size,
+  "base-line-height":     $mastors-base-line-height,
+  "base-letter-spacing":  $mastors-base-letter-spacing,
+  "default-font":         $mastors-default-font,
+  "heading-font":         $mastors-heading-font,
+  "heading-font-weight":  $mastors-heading-font-weight,
+  "heading-smoothing":    $mastors-heading-smoothing,
+  "spacing-unit":         $mastors-spacing-unit,
+  "spacing-base-px":      $mastors-spacing-base-px,
+  "radius-default":       $mastors-radius-default,
+  "border-width":         $mastors-border-default-width,
+  "border-style":         $mastors-border-default-style,
+  "default-duration":     $mastors-default-duration,
+  "default-easing":       $mastors-default-easing,
+  "container-center":     $mastors-container-center,
+  "container-padding":    $mastors-container-padding,
+  "radius-default":       $mastors-radius-default,
+) !default;
+
+// ── Convenience accessor ──────────────────────────────────────
 @function config($key) {
   @return map.get($mastors-config, $key);
 }

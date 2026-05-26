@@ -9,15 +9,64 @@ const path         = require('path')
 const C = {
   reset:  '\x1b[0m',
   bold:   '\x1b[1m',
+  dim:    '\x1b[2m',
   green:  '\x1b[32m',
   cyan:   '\x1b[36m',
+  yellow: '\x1b[33m',
   gray:   '\x1b[90m',
   white:  '\x1b[37m',
+  red:    '\x1b[31m',
 }
 
 const W = 60
 const ln = (char = '─') => C.gray + char.repeat(W) + C.reset
 let firstRender = true
+
+// ── Handle explicit sub-commands ──────────────────────────────
+const [,, cmd, ...cmdArgs] = process.argv
+
+if (cmd === 'init') {
+  runInit(cmdArgs.includes('--force'))
+  process.exit(0)
+}
+
+if (cmd === 'build') {
+  runBuild()
+  process.exit(0)
+}
+
+// ── init: scaffold / regenerate config files ─────────────────
+function runInit(force) {
+  const cwd = process.env.INIT_CWD || process.cwd()
+  const candidates = [
+    path.join(cwd, 'node_modules', '@mastors', 'core', 'scripts', 'init-config.js'),
+    path.join(__dirname, 'node_modules', '@mastors', 'core', 'scripts', 'init-config.js'),
+    // Monorepo / local dev path
+    path.join(__dirname, '..', 'core', 'scripts', 'init-config.js'),
+  ]
+  const initScript = candidates.find(p => fs.existsSync(p))
+  if (!initScript) {
+    console.error(`${C.red}[✗]${C.reset} Could not find @mastors/core/scripts/init-config.js`)
+    console.error(`    Make sure @mastors/core is installed.`)
+    process.exit(1)
+  }
+  const extra = force ? ' --force' : ''
+  try {
+    execSync(`node "${initScript}"${extra}`, { stdio: 'inherit', env: { ...process.env, INIT_CWD: cwd } })
+  } catch (_) { process.exit(1) }
+}
+
+// ── build: regenerate SCSS bridge from existing JS config ─────
+function runBuild() {
+  const cwd = process.env.INIT_CWD || process.cwd()
+  const jsConfig = path.join(cwd, 'mastors.config.js')
+  if (!fs.existsSync(jsConfig)) {
+    console.error(`${C.red}[✗]${C.reset} mastors.config.js not found. Run: ${C.cyan}npx mastors init${C.reset}`)
+    process.exit(1)
+  }
+  // Re-use init-config in --force mode so the SCSS bridge is always regenerated
+  runInit(true)
+}
 
 const PACKAGES = [
   { name: '@mastors/core',    desc: 'Tokens, mixins, functions & SCSS architecture', selected: true,  required: true  },
@@ -129,6 +178,10 @@ function runInteractive() {
         const cmd = `${pm} install ${toInstall.join(' ')}`
         console.log(`${C.gray}$ ${cmd}${C.reset}\n`)
         try { execSync(cmd, { stdio: 'inherit' }) } catch (_) {}
+
+        // After install, run init-config so config files are scaffolded
+        console.log()
+        runInit(false)
       }
       console.log(ln('═'))
       console.log(`${C.green}${C.bold}✦  Thank you for using Mastors!${C.reset}`)

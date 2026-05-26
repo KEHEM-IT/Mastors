@@ -32,6 +32,7 @@
   "files": [
     "_index.scss",
     "dist",
+    "postinstall.js",
     "scss",
     "README.md"
   ],
@@ -39,7 +40,8 @@
     "build": "node build.js",
     "build:prod": "node build.js --prod",
     "dev": "node build.js --watch",
-    "clean": "rimraf dist"
+    "clean": "rimraf dist",
+    "postinstall": "node postinstall.js"
   },
   "devDependencies": {
     "@mastors/build-utils": "workspace:*",

@@ -1,13 +1,46 @@
 // config/_flags.scss
-// Boolean feature flags to tree-shake generated output.
+// Boolean feature flags — tree-shake generated output.
+// Override via mastors.config.js → features: { ... }
+// or directly in your SCSS before @use "@mastors/core".
 // ─────────────────────────────────────────────────────────────
 
-$enable-flexer: true !default;
-$enable-gridder: true !default;
-$enable-typography: true !default;
-$enable-themes: true !default;
-$enable-animator: true !default;
-$enable-responsive: true !default;
-$enable-utilities: true !default;
-$enable-helpers: true !default;
-$enable-a11y: true !default;
+// ── Module toggles ────────────────────────────────────────────
+$enable-flexer:     true !default;   // Flexbox utility classes
+$enable-gridder:    true !default;   // CSS Grid utility classes
+$enable-typography: true !default;   // Type-scale utilities
+$enable-themes:     true !default;   // Light / dark theme CSS vars
+$enable-animator:   true !default;   // Animation & transition utilities
+$enable-responsive: true !default;   // Responsive modifier prefixes (sm:, md:…)
+$enable-utilities:  true !default;   // General utility classes
+$enable-helpers:    true !default;   // Helper classes (sr-only, truncate…)
+$enable-a11y:       true !default;   // Accessibility utilities
+
+// ── Sub-feature toggles ───────────────────────────────────────
+$enable-dark-mode:      true  !default;   // Dark theme output
+$enable-rtl:            false !default;   // Right-to-left utilities
+$enable-print:          true  !default;   // @media print utilities
+$enable-container:      true  !default;   // .container class
+$enable-reset:          true  !default;   // CSS reset / normalize layer
+$enable-base-styles:    true  !default;   // Body, heading, link base styles
+$enable-focus-ring:     true  !default;   // :focus-visible ring styles
+$enable-smooth-scroll:  false !default;   // html { scroll-behavior: smooth }
+$enable-color-scheme:   true  !default;   // color-scheme meta on :root
+$enable-custom-props:   true  !default;   // Emit --mastors-* CSS custom properties
+$enable-negative-space: true  !default;   // -mt-4, -mx-2 … negative spacing
+$enable-truncate:       true  !default;   // .truncate, .line-clamp-* helpers
+$enable-sr-only:        true  !default;   // .sr-only / .not-sr-only
+$enable-aspect-ratio:   true  !default;   // aspect-ratio utilities
+$enable-object-fit:     true  !default;   // object-fit / object-position
+$enable-cursor:         true  !default;   // cursor utilities
+$enable-pointer-events: true  !default;   // pointer-events utilities
+$enable-select:         true  !default;   // user-select utilities
+$enable-appearance:     true  !default;   // appearance utilities
+$enable-list-style:     true  !default;   // list-style utilities
+$enable-outline:        true  !default;   // outline utilities
+$enable-placeholder:    true  !default;   // ::placeholder color utilities
+$enable-caret:          true  !default;   // caret-color utilities
+$enable-accent-color:   true  !default;   // accent-color utilities (checkboxes…)
+$enable-scroll-snap:    false !default;   // scroll-snap utilities
+$enable-columns:        false !default;   // CSS multi-column utilities
+$enable-backdrop:       false !default;   // backdrop-filter utilities
+$enable-overscroll:     false !default;   // overscroll-behavior utilities
