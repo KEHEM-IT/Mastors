@@ -9,6 +9,9 @@
 @forward "../functions/index";
 @forward "../mixins/index";
 @forward "../tokens/index";
-@forward "../variables/index";
+// variables/_global.scss no longer defines $mastors-prefix (moved to config/_settings.scss
+// in v1.2.6). The hide guard below ensures a safe publish even if any future variable
+// is accidentally duplicated across these two modules.
+@forward "../variables/index" hide $mastors-prefix;
 @forward "../config/index";
 @forward "../responsive/container-queries";
