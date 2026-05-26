@@ -32,8 +32,18 @@ const dest = process.env.INIT_CWD || process.cwd()
 const JS_CONFIG   = path.join(dest, 'mastors.config.js')
 const SCSS_BRIDGE = path.join(dest, 'mastors.config.scss')
 
+// ── Detect if the user's project is ESM ("type": "module") ──
+function isEsmProject(dir) {
+  try {
+    const pkg = JSON.parse(fs.readFileSync(path.join(dir, 'package.json'), 'utf8'))
+    return pkg.type === 'module'
+  } catch (_) { return false }
+}
+const ESM_PROJECT = isEsmProject(dest)
+
 // ── Config template ───────────────────────────────────────────
-const JS_TEMPLATE = `\
+// CJS template  (projects without "type":"module")
+const CJS_TEMPLATE = `\
 // mastors.config.js
 // ─────────────────────────────────────────────────────────────
 // Mastors Design System — Configuration File
@@ -310,6 +320,13 @@ module.exports = {
 }
 `
 
+// ESM template — used when the project has "type": "module" in package.json.
+// Replaces `module.exports = {` with `export default {`.
+const ESM_TEMPLATE = CJS_TEMPLATE.replace('module.exports = {', 'export default {')
+
+// Pick the right template based on the project's module system
+const JS_TEMPLATE = ESM_PROJECT ? ESM_TEMPLATE : CJS_TEMPLATE
+
 // ── SCSS bridge builder ───────────────────────────────────────
 function buildScssBridge(cfg) {
   const colors      = cfg.colors      || {}
@@ -534,9 +551,25 @@ function main() {
   // ── Load the just-written (or existing) JS config ────────
   let cfg = {}
   try {
-    // Clear require cache so we always read the live file
-    delete require.cache[require.resolve(JS_CONFIG)]
-    cfg = require(JS_CONFIG)
+    if (ESM_PROJECT) {
+      // ESM config: we can't require() it in a CJS script.
+      // Parse the SCSS bridge directly from the raw JS source text.
+      // This covers the common case where the user hasn't changed defaults yet.
+      const raw = fs.readFileSync(JS_CONFIG, 'utf8')
+      // Evaluate as CJS by temporarily swapping the export keyword back
+      const cjsSrc = raw.replace(/^export\s+default\s+\{/, 'module.exports = {')
+      const tmpFile = JS_CONFIG + '.mastors-tmp.cjs'
+      fs.writeFileSync(tmpFile, cjsSrc, 'utf8')
+      try {
+        cfg = require(tmpFile)
+      } finally {
+        try { fs.unlinkSync(tmpFile) } catch (_) {}
+      }
+    } else {
+      // CJS config: safe to require() directly
+      delete require.cache[require.resolve(JS_CONFIG)]
+      cfg = require(JS_CONFIG)
+    }
   } catch (e) {
     console.warn(`  ${C.yellow}[!]${C.reset} Could not load mastors.config.js — using defaults for SCSS bridge.`)
   }

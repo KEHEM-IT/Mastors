@@ -1,6 +1,6 @@
 {
   "name": "@mastors/core",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "description": "Mastors Core — foundational tokens, mixins, functions, and SCSS architecture",
   "license": "MIT",
   "author": "Mastors Contributors",
@@ -40,6 +40,7 @@
     "api",
     "dist",
     "postinstall.js",
+    "preuninstall.js",
     "scripts",
     "scss",
     "README.md"
@@ -51,6 +52,7 @@
     "clean": "rimraf dist",
     "typecheck": "tsc --noEmit",
     "lint": "stylelint \"scss/**/*.scss\" --custom-syntax postcss-scss",
+    "preuninstall": "node preuninstall.js",
     "postinstall": "node postinstall.js"
   },
   "devDependencies": {
@@ -67,6 +69,9 @@
   },
   "peerDependencies": {
     "sass": ">=1.80.0"
+  },
+  "peerDependenciesMeta": {
+    "sass": { "optional": true }
   },
   "sideEffects": [
     "dist/*.css",

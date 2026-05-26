@@ -1,5 +1,14 @@
 # @mastors/gridder
 
+## 1.2.7
+
+### Patch Changes
+
+- **Fix:** `preuninstall` hook added — `mastors.config.js` and `mastors.config.scss` are deleted from the project root when all `@mastors/*` packages are removed; configs are preserved if any package remains
+- **Fix:** `"peerDependenciesMeta": { "sass": { "optional": true } }` added — suppresses the unmet peer dependency warning for projects that supply Sass through a bundler rather than as a standalone package
+- Added `preuninstall.js` to the published `"files"` list
+- Updated dependency: `@mastors/core@1.2.7`
+
 ## 1.2.4
 
 ### Patch Changes

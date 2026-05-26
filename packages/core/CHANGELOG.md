@@ -1,5 +1,15 @@
 # @mastors/core
 
+## 1.2.7
+
+### Patch Changes
+
+- **Fix:** ESM project compatibility — `init-config.js` now detects `"type": "module"` in the host project's `package.json` and generates `mastors.config.js` using `export default {` instead of `module.exports = {`, resolving the `ReferenceError: module is not defined` crash on install in Vite/Vue/React projects
+- **Fix:** ESM config loading — when reading an ESM-format `mastors.config.js` to generate the SCSS bridge, the script now writes a temporary `.cjs` proxy, `require()`s it, then removes it — instead of calling `require()` directly on an ES module file
+- **Fix:** `preuninstall` hook added — `mastors.config.js` and `mastors.config.scss` are deleted from the project root when all `@mastors/*` packages are removed; configs are preserved if any package remains
+- **Fix:** `"peerDependenciesMeta": { "sass": { "optional": true } }` added — suppresses the unmet peer dependency warning for projects that supply Sass through a bundler rather than as a standalone package
+- Added `preuninstall.js` and `scripts/cleanup.js` to the published `"files"` list
+
 ## 1.2.4
 
 ### Patch Changes
