@@ -34,7 +34,7 @@
     "postinstall": "node postinstall.js"
   },
   "dependencies": {
-    "@mastors/core": ">=1.2.4"
+    "@mastors/core": ">=1.2.5"
   },
   "peerDependencies": {
     "sass": ">=1.80.0"
