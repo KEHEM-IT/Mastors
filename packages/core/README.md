@@ -3,7 +3,44 @@
 > Foundational tokens, mixins, functions, reset, and responsive engine for the Mastors ecosystem.
 
 [![npm version](https://img.shields.io/npm/v/@mastors/core.svg)](https://www.npmjs.com/package/@mastors/core)
+[![sass](https://img.shields.io/badge/sass-%3E%3D1.80.0-pink.svg)](https://sass-lang.com)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](../../LICENSE)
+
+---
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Installation](#installation)
+- [Import & Usage](#import--usage)
+- [Package Exports](#package-exports)
+- [Design Tokens](#design-tokens)
+  - [Colors](#colors)
+  - [Spacing](#spacing)
+  - [Sizing](#sizing)
+  - [Typography](#typography)
+  - [Shadows](#shadows)
+  - [Radii](#radii)
+  - [Opacity](#opacity)
+  - [Z-Index](#z-index)
+  - [Transitions](#transitions)
+- [Theme System](#theme-system)
+  - [Light & Dark Themes](#light--dark-themes)
+  - [Semantic Layer](#semantic-layer)
+- [Utility Classes](#utility-classes)
+- [Helpers](#helpers)
+- [Sass API — Functions](#sass-api--functions)
+- [Sass API — Mixins](#sass-api--mixins)
+- [Responsive Engine](#responsive-engine)
+  - [Breakpoints](#breakpoints)
+  - [Fluid Typography](#fluid-typography)
+  - [Container Queries](#container-queries)
+- [Accessibility](#accessibility)
+- [Base & Reset](#base--reset)
+- [TypeScript Mirror](#typescript-mirror)
+- [Build](#build)
+- [Changelog](#changelog)
+- [License](#license)
 
 ---
 
@@ -13,7 +50,7 @@
 
 - **Token system** — color, spacing, typography, radii, shadows, z-index, opacity, transitions, sizing
 - **Functions** — `rem()`, `em()`, `color()`, `spacing()`, `vars()`, `tint()`, `shade()`, `fluid()`, and more
-- **Mixins** — `bp()`, `dark-mode()`, `theme()`, `elevation()`, `transition()`, `container()`, `pseudo()`
+- **Mixins** — `bp()`, `dark-mode()`, `theme()`, `elevation()`, `transition()`, `container()`, `pseudo()`, `cq()`
 - **Generator engine** — `generate-utilities()`, `emit-custom-properties()`, `generate-responsive()`
 - **Utility classes** — display, spacing, sizing, colors, borders, shadows, typography, animation, interaction, layout, accessibility
 - **Theme system** — CSS custom property contract, light/dark themes, `data-theme` support
@@ -21,6 +58,19 @@
 - **TypeScript mirror** — runtime token access and full type definitions
 
 All other `@mastors/*` packages consume `@mastors/core/api` as a peer dependency.
+
+**Stats at a glance:**
+
+| | |
+|---|---|
+| Utility modules | 18 |
+| Token types | 10 |
+| Breakpoints | 6 |
+| Themes | Light + Dark |
+| Sass peer requirement | `>= 1.80.0` |
+| Current version | `1.2.7` |
+
+> All token-generated classes are driven by SCSS maps. The library uses **CSS custom properties** so themes update at runtime without a rebuild.
 
 ---
 
@@ -42,17 +92,20 @@ npm install --save-dev sass
 
 ---
 
-## Usage
+## Import & Usage
 
-### Import the full stylesheet
+The main entry point compiles the full library in this order:
+`config → abstracts → variables → tokens → functions → mixins → base → themes → semantic → responsive → helpers → utilities → accessibility`
+
+### Full import (outputs all CSS)
 
 ```scss
-@use "@mastors/core/scss";
+@use "@mastors/core";
+// or via loadPaths (no bundler alias required)
+@use "@mastors/core"; // resolves _index.scss at root
 ```
 
-This imports the complete output: reset, custom properties, themes, utilities, helpers, and accessibility classes.
-
-### Use the public API (zero CSS output)
+### Public API — zero CSS output
 
 ```scss
 @use "@mastors/core/api" as m;
@@ -74,11 +127,35 @@ This imports the complete output: reset, custom properties, themes, utilities, h
 }
 ```
 
-### Import a single partial
+### Selective partial import
 
 ```scss
-@use "@mastors/core/scss/tokens/color" as colors;
-@use "@mastors/core/scss/mixins/breakpoint" as bp;
+@use "@mastors/core/scss/tokens/color"      as ct;
+@use "@mastors/core/scss/tokens/spacing"    as sp;
+@use "@mastors/core/scss/mixins/breakpoint" as *;
+
+.card {
+  padding:    sp.spacing(4);
+  background: ct.color("primary", 50);
+
+  @include bp(md) {
+    padding: sp.spacing(8);
+  }
+}
+```
+
+### Using the `vars()` function
+
+```scss
+@use "@mastors/core/scss/functions/vars" as *;
+
+.btn {
+  background:    vars(accent);
+  color:         vars(accent-text);
+  padding:       vars(spacing-2) vars(spacing-4);
+  border-radius: vars(radius-md);
+  box-shadow:    vars(shadow-sm, none); // with fallback
+}
 ```
 
 ### JavaScript / TypeScript
@@ -112,126 +189,351 @@ const space4  = tokens.spacing['4']          // '1rem'
 
 ---
 
-## Public API (`@mastors/core/api`)
+## Design Tokens
 
-Importing `@mastors/core/api` gives access to:
-
-### Functions
-
-| Function | Description |
-|---|---|
-| `color($name, $shade)` | Look up a palette color by name and shade |
-| `spacing($key)` | Look up a spacing token |
-| `radius($key)` | Look up a border-radius token |
-| `shadow($key)` | Look up a box-shadow token |
-| `z($key)` | Look up a z-index token |
-| `opacity($key)` | Look up an opacity token |
-| `duration($key)` | Look up a transition duration |
-| `easing($key)` | Look up an easing curve |
-| `vars($token, $fallback?)` | Emit `var(--mastors-{token})` with optional fallback |
-| `rem($px)` | Convert px to rem |
-| `em($px, $base?)` | Convert px to em |
-| `tint($color, $amount)` | Mix color toward white |
-| `shade($color, $amount)` | Mix color toward black |
-| `alpha($color, $opacity)` | Set color opacity |
-| `fluid($min, $max, $min-bp?, $max-bp?)` | Generate a fluid `clamp()` value |
-
-### Mixins
-
-| Mixin | Description |
-|---|---|
-| `bp($key)` | Mobile-first breakpoint media query |
-| `breakpoint-up($key)` | Alias for `bp()` |
-| `breakpoint-down($key)` | Max-width media query |
-| `respond-to($key)` | Alias for `bp()` |
-| `dark-mode` | Dark mode block (class or media, per config) |
-| `light-mode` | Light mode block |
-| `theme($name)` | `[data-theme="name"]` scoped block |
-| `elevation($level)` | Token-driven box-shadow by level |
-| `transition($props...)` | Token-driven transition shorthand |
-| `container($size?)` | Responsive container width |
-| `pseudo($display, $pos, $content)` | `::before` / `::after` boilerplate |
-| `cq($size, $name?)` | Container query block |
-| `fluid-type($min, $max, $min-bp?, $max-bp?)` | Fluid font-size via `clamp()` |
-
-### Config
-
-```scss
-@use "@mastors/core/api" as m;
-
-// Read config values
-$mode: m.config("dark-mode");   // "class" | "media"
-
-// Check feature flags
-$enabled: m.$enable-flexer;
-```
-
----
-
-## Token Reference
-
-### Color
+### Colors
 
 Palette keys: `primary`, `secondary`, `neutral`, `success`, `warning`, `danger`, `info`
 Shades: `50`, `100`, `200`, `300`, `400`, `500`, `600`, `700`, `800`, `900`, `950`
 
+Each color is also emitted as a CSS custom property: `--mastors-color-{palette}-{shade}`
+
 ```scss
-m.color("primary", 600)   // #2563eb
-m.color("neutral", 100)   // #f5f5f5
+@use "@mastors/core/scss/tokens/color" as ct;
+
+$blue:     ct.color("primary", 500); // → #3b82f6
+$green-50: ct.color("success", 50);  // → #f0fdf4
+$white:    ct.color("white");        // → #fff
 ```
+
+| Palette | 500 (base) |
+|---|---|
+| `primary` | `#3b82f6` |
+| `success` | `#22c55e` |
+| `warning` | `#f59e0b` |
+| `error` / `danger` | `#ef4444` |
+| `info` | `#06b6d4` |
+| `neutral` | `#6b7280` |
+
+---
 
 ### Spacing
 
-35-step scale — `0` through `96`:
+A complete scale from `0` to `96` (0 → 24rem). Emitted as `--mastors-spacing-{key}`.
 
 ```scss
-m.spacing(0)   // 0
-m.spacing(1)   // 0.25rem
-m.spacing(4)   // 1rem
-m.spacing(16)  // 4rem
+@use "@mastors/core/scss/tokens/spacing" as sp;
+
+.btn { padding: sp.spacing(2) sp.spacing(4); }
+// → padding: 0.5rem 1rem;
 ```
 
-### Breakpoints
+| Key | Value | px |
+|---|---|---|
+| `0` | `0px` | 0 |
+| `px` | `1px` | 1px |
+| `0.5` | `0.125rem` | 2px |
+| `1` | `0.25rem` | 4px |
+| `1.5` | `0.375rem` | 6px |
+| `2` | `0.5rem` | 8px |
+| `2.5` | `0.625rem` | 10px |
+| `3` | `0.75rem` | 12px |
+| `4` | `1rem` | 16px |
+| `5` | `1.25rem` | 20px |
+| `6` | `1.5rem` | 24px |
+| `8` | `2rem` | 32px |
+| `10` | `2.5rem` | 40px |
+| `12` | `3rem` | 48px |
+| `16` | `4rem` | 64px |
+| `20` | `5rem` | 80px |
+| `24` | `6rem` | 96px |
+| `32` | `8rem` | 128px |
+| `40` | `10rem` | 160px |
+| `48` | `12rem` | 192px |
+| `64` | `16rem` | 256px |
+| `80` | `20rem` | 320px |
+| `96` | `24rem` | 384px |
 
-| Key | Min-width |
+Full key list: `0, px, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64, 72, 80, 96` + `auto` (margin only).
+
+---
+
+### Sizing
+
+Width/height scale including fractional percentages, viewport units, and keyword values. Emitted as `--mastors-sizing-{key}`.
+
+```scss
+@use "@mastors/core/scss/tokens/sizing" as sz;
+
+.hero { width: sz.sizing("full"); height: sz.sizing("screen"); }
+.card { width: sz.sizing("1/3"); max-width: sz.sizing(64); }
+```
+
+| Key | Value |
 |---|---|
-| `xs` | 0px (base) |
-| `sm` | 640px |
-| `md` | 768px |
-| `lg` | 1024px |
-| `xl` | 1280px |
-| `2xl` | 1536px |
+| `0` | `0` |
+| `1/2` | `50%` |
+| `1/3` | `33.3333%` |
+| `2/3` | `66.6667%` |
+| `1/4` | `25%` |
+| `3/4` | `75%` |
+| `full` | `100%` |
+| `screen` | `100vw` |
+| `svw` | `100svw` |
+| `dvw` | `100dvw` |
+| `auto` | `auto` |
+| `min` | `min-content` |
+| `max` | `max-content` |
+| `fit` | `fit-content` |
 
-### Radii
+---
 
-`none`, `sm`, `md`, `lg`, `xl`, `2xl`, `3xl`, `full`
+### Typography
+
+Font sizes (xs–9xl), weights (thin–black), families (sans/serif/mono), line heights, and letter spacing. Emitted as CSS custom properties.
+
+```scss
+@use "@mastors/core/scss/tokens/typography" as ty;
+
+h1 {
+  font-size:      ty.font-size("4xl");         // 2.25rem
+  font-weight:    ty.font-weight("bold");       // 700
+  line-height:    ty.line-height("tight");      // 1.25
+  letter-spacing: ty.letter-spacing("tight");   // -0.025em
+}
+
+code { font-family: ty.font-family("mono"); }
+```
+
+**Font sizes:**
+
+| Key | Value |
+|---|---|
+| `xs` | `0.75rem` |
+| `sm` | `0.875rem` |
+| `base` | `1rem` |
+| `lg` | `1.125rem` |
+| `xl` | `1.25rem` |
+| `2xl` | `1.5rem` |
+| `3xl` | `1.875rem` |
+| `4xl` | `2.25rem` |
+| `5xl` | `3rem` |
+| `6xl` | `3.75rem` |
+| `7xl` | `4.5rem` |
+| `8xl` | `6rem` |
+| `9xl` | `8rem` |
+
+**Font weights:**
+
+| Key | Value |
+|---|---|
+| `thin` | `100` |
+| `extralight` | `200` |
+| `light` | `300` |
+| `normal` | `400` |
+| `medium` | `500` |
+| `semibold` | `600` |
+| `bold` | `700` |
+| `extrabold` | `800` |
+| `black` | `900` |
+
+**Line heights:** `none` (1), `tight` (1.25), `snug` (1.375), `normal` (1.5), `relaxed` (1.625), `loose` (2)
+
+**Letter spacing:** `tighter` (-0.05em), `tight` (-0.025em), `normal` (0), `wide` (0.025em), `wider` (0.05em), `widest` (0.1em)
+
+---
 
 ### Shadows
 
-`xs`, `sm`, `md`, `lg`, `xl`, `2xl`, `inner`, `none`
+8 elevation steps. Emitted as `--mastors-shadow-{key}`.
 
-### Durations
+```scss
+@use "@mastors/core/scss/tokens/shadows" as sh;
 
-`75`, `100`, `150`, `200`, `300`, `500`, `700`, `1000` (ms)
+.card  { box-shadow: sh.shadow("md"); }
+.modal { box-shadow: sh.shadow("2xl"); }
+.input { box-shadow: sh.shadow("inner"); }
+```
 
-### Easings
+| Key | Use case |
+|---|---|
+| `xs` | Subtle outlines |
+| `sm` | Cards, inputs |
+| `md` | Default elevation |
+| `lg` | Dropdowns |
+| `xl` | Modals, popovers |
+| `2xl` | Large dialogs |
+| `inner` | Inset / pressed state |
+| `none` | Remove shadow |
 
-`linear`, `in`, `out`, `in-out`
+---
+
+### Radii
+
+Border-radius scale from `none` (0) to `full` (9999px). Emitted as `--mastors-radius-{key}`.
+
+```scss
+@use "@mastors/core/scss/tokens/radii" as ra;
+
+.btn   { border-radius: ra.radius("md"); }   // 0.375rem
+.badge { border-radius: ra.radius("full"); } // 9999px
+.card  { border-radius: ra.radius("xl"); }   // 0.75rem
+```
+
+| Key | Value |
+|---|---|
+| `none` | `0` |
+| `sm` | `0.125rem` |
+| `base` | `0.25rem` |
+| `md` | `0.375rem` |
+| `lg` | `0.5rem` |
+| `xl` | `0.75rem` |
+| `2xl` | `1rem` |
+| `3xl` | `1.5rem` |
+| `full` | `9999px` |
+
+---
+
+### Opacity
+
+17-step opacity scale 0–100. Emitted as `--mastors-opacity-{key}`.
+
+```scss
+@use "@mastors/core/scss/tokens/opacity" as op;
+
+.overlay  { opacity: op.opacity(50); }  // → 0.5
+.disabled { opacity: op.opacity(30); }  // → 0.3
+```
+
+| Key | Value |
+|---|---|
+| `0` | `0` |
+| `5` | `0.05` |
+| `10` | `0.1` |
+| `20` | `0.2` |
+| `25` | `0.25` |
+| `30` | `0.3` |
+| `40` | `0.4` |
+| `50` | `0.5` |
+| `60` | `0.6` |
+| `70` | `0.7` |
+| `75` | `0.75` |
+| `80` | `0.8` |
+| `90` | `0.9` |
+| `95` | `0.95` |
+| `100` | `1` |
+
+---
+
+### Z-Index
+
+Named stacking layers for predictable layering. Emitted as `--mastors-z-{key}`.
+
+```scss
+@use "@mastors/core/scss/tokens/z-index" as zi;
+
+.dropdown { z-index: zi.z("dropdown"); } // 100
+.modal    { z-index: zi.z("modal"); }    // 400
+.toast    { z-index: zi.z("toast"); }    // 500
+```
+
+| Key | Value | Intended use |
+|---|---|---|
+| `base` | `0` | Default document flow |
+| `raised` | `10` | Slightly elevated elements |
+| `dropdown` | `100` | Dropdown menus |
+| `sticky` | `200` | Sticky headers / sidebars |
+| `overlay` | `300` | Overlay backdrops |
+| `modal` | `400` | Modal dialogs |
+| `toast` | `500` | Toast notifications |
+| `tooltip` | `600` | Tooltips |
+| `max` | `9999` | Escape hatch |
+
+---
+
+### Transitions
+
+Duration tokens (75ms–1000ms) and easing curves. Emitted as `--mastors-duration-{key}` and `--mastors-easing-{key}`.
+
+```scss
+@use "@mastors/core/scss/tokens/transitions" as tr;
+
+.btn {
+  transition: background-color tr.duration("150") tr.easing("in-out");
+}
+```
+
+**Durations:**
+
+| Key | Value |
+|---|---|
+| `75` | `75ms` |
+| `100` | `100ms` |
+| `150` | `150ms` |
+| `200` | `200ms` |
+| `300` | `300ms` |
+| `500` | `500ms` |
+| `700` | `700ms` |
+| `1000` | `1000ms` |
+
+**Easings:**
+
+| Key | Value |
+|---|---|
+| `linear` | `linear` |
+| `in` | `cubic-bezier(0.4, 0, 1, 1)` |
+| `out` | `cubic-bezier(0, 0, 0.2, 1)` |
+| `in-out` | `cubic-bezier(0.4, 0, 0.2, 1)` |
+| `bounce` | `cubic-bezier(0.34, 1.56, 0.64, 1)` |
 
 ---
 
 ## Theme System
 
-```scss
-// Class-based dark mode (default)
-// Activate with: <html class="dark">
-$mastors-config: ("dark-mode": "class") !default;
+### Light & Dark Themes
 
-// Media-query dark mode
-$mastors-config: ("dark-mode": "media") !default;
+Themes are toggled via `.dark` / `[data-theme="dark"]` on any ancestor element (class strategy, default), or via `prefers-color-scheme` (media strategy). Themes redefine semantic custom properties — no class changes needed on individual components.
+
+```html
+<!-- Class strategy (default) -->
+<html class="dark">
+<!-- or -->
+<html data-theme="dark">
+
+<!-- Toggle with JS -->
+<script>
+  document.documentElement.classList.toggle('dark');
+</script>
 ```
 
-Custom theme:
+```scss
+// Override dark strategy to media query:
+// In your entry SCSS, before @use "@mastors/core"
+$dark-mode-strategy: "media"; // default: "class"
+@use "@mastors/core";
+```
+
+**Light theme custom properties (selection):**
+
+| Property | Value |
+|---|---|
+| `--mastors-bg` | `#fff` |
+| `--mastors-bg-subtle` | `#f9fafb` |
+| `--mastors-text` | `#111827` |
+| `--mastors-accent` | `#2563eb` |
+| `--mastors-border` | `#e5e7eb` |
+
+**Dark theme custom properties (selection):**
+
+| Property | Value |
+|---|---|
+| `--mastors-bg` | `#030712` |
+| `--mastors-bg-subtle` | `#111827` |
+| `--mastors-text` | `#f9fafb` |
+| `--mastors-accent` | `#60a5fa` |
+| `--mastors-border` | `#374151` |
+
+Custom named theme:
 
 ```scss
 @include m.theme("ocean") {
@@ -245,17 +547,1024 @@ Custom theme:
 
 ---
 
+### Semantic Layer
+
+Role-based SCSS variables that map to CSS custom properties. Use these in your components instead of raw token references — they update automatically when the theme changes.
+
+```scss
+@use "@mastors/core/scss/semantic/colors"     as sc;
+@use "@mastors/core/scss/semantic/spacing"    as ss;
+@use "@mastors/core/scss/semantic/typography" as st;
+
+.card {
+  background:  sc.$color-surface;
+  color:       sc.$color-text;
+  border:      1px solid sc.$color-border;
+  padding:     ss.$space-component;
+  font-family: st.$font-body;
+}
+```
+
+| Variable | Custom Property | Role |
+|---|---|---|
+| `$color-bg` | `--mastors-bg` | Page background |
+| `$color-surface` | `--mastors-surface` | Card / panel surface |
+| `$color-surface-raised` | `--mastors-surface-raised` | Dropdowns, tooltips |
+| `$color-text` | `--mastors-text` | Primary text |
+| `$color-text-muted` | `--mastors-text-muted` | Secondary text |
+| `$color-text-subtle` | `--mastors-text-subtle` | Placeholder / tertiary |
+| `$color-border` | `--mastors-border` | Default border |
+| `$color-accent` | `--mastors-accent` | Brand / primary action |
+| `$color-accent-hover` | `--mastors-accent-hover` | Accent hover state |
+| `$space-inline` | `0.25rem` (spacing(1)) | Tight inline gap |
+| `$space-component` | `1rem` (spacing(4)) | Component padding |
+| `$space-section` | `4rem` (spacing(16)) | Between sections |
+
+---
+
+## Utility Classes
+
+### Spacing
+
+Margin, padding, and gap utilities generated from spacing tokens. Supports all directional variants, logical properties, and `auto` for margins.
+
+```html
+<!-- Margin -->
+<div class="m-4">margin: 1rem</div>
+<div class="mx-auto">margin-inline: auto</div>
+<div class="my-8">margin-block: 2rem</div>
+<div class="mt-2 mb-6">top + bottom</div>
+<div class="ms-4 me-4">inline-start/end (logical)</div>
+
+<!-- Padding -->
+<div class="p-6">padding: 1.5rem</div>
+<div class="px-4 py-2">padding-x + padding-y</div>
+<div class="ps-4 pe-4">padding-inline-start/end</div>
+
+<!-- Gap -->
+<div class="flex gap-4">gap: 1rem</div>
+<div class="grid gap-x-6 gap-y-3">column + row gap</div>
+```
+
+---
+
+### Display
+
+Generates display classes including responsive variants (`md:flex`, `lg:hidden`).
+
+```html
+<div class="block">         <!-- display: block -->
+<div class="inline-block">
+<div class="inline">
+<div class="flex">
+<div class="inline-flex">
+<div class="grid">
+<div class="inline-grid">
+<div class="contents">
+<div class="hidden">        <!-- display: none -->
+
+<!-- Responsive -->
+<div class="hidden md:block">Shows from md up</div>
+<div class="flex lg:hidden">Hidden from lg up</div>
+```
+
+---
+
+### Position
+
+```html
+<div class="relative">
+  <div class="absolute top-0 right-0">top-right corner</div>
+  <div class="absolute inset-0">full overlay</div>
+  <div class="absolute inset-x-0 bottom-0">bottom bar</div>
+</div>
+
+<div class="sticky top-0">Sticky header</div>
+<div class="fixed bottom-0 right-0">Floating btn</div>
+```
+
+Inset keys: `0`, `auto`, `full` (100%), `1/2` (50%)
+
+---
+
+### Sizing
+
+Width and height utilities generated from sizing tokens. Includes `min-*` and `max-*` variants.
+
+```html
+<div class="w-full h-screen">Full width, screen height</div>
+<div class="w-1/2 h-32">50% width, 8rem height</div>
+<div class="w-fit">Width: fit-content</div>
+
+<!-- Min / Max -->
+<div class="min-w-0 max-w-prose">Prose width (65ch)</div>
+<div class="min-h-screen">Min 100vh</div>
+<div class="min-h-svh">Min 100svh (small viewport)</div>
+<div class="min-h-dvh">Min 100dvh (dynamic viewport)</div>
+```
+
+---
+
+### Typography Utilities
+
+Text size, weight, family, alignment, leading, tracking, decoration, transform, whitespace, word-break, and more. Most classes have responsive variants.
+
+```html
+<!-- Size: text-xs text-sm text-base text-lg text-xl text-2xl … text-9xl -->
+<!-- Weight: font-thin font-light font-normal font-medium font-semibold font-bold font-extrabold font-black -->
+<!-- Family: font-sans font-serif font-mono -->
+<!-- Align (responsive): text-left text-center text-right md:text-center -->
+<!-- Line height: leading-none leading-tight leading-normal leading-relaxed leading-loose -->
+<!-- Letter spacing: tracking-tight tracking-normal tracking-wide tracking-widest -->
+<!-- Decoration: underline line-through no-underline decoration-wavy -->
+<!-- Transform: uppercase lowercase capitalize -->
+<!-- Style: italic not-italic -->
+<!-- Misc: antialiased text-ellipsis whitespace-nowrap break-words -->
+<!-- Lists: list-disc list-inside list-decimal -->
+```
+
+---
+
+### Color Utilities
+
+Text color, background color, and border color classes for both semantic and primitive palettes.
+
+```html
+<!-- Semantic text -->
+<p class="text-default">   <p class="text-muted">
+<p class="text-subtle">    <p class="text-accent">
+<p class="text-inverse">
+
+<!-- Primitive text: text-{palette}-{shade} -->
+<p class="text-primary-600">  <p class="text-success-500">
+<p class="text-error-500">    <p class="text-white">
+
+<!-- Semantic backgrounds -->
+<div class="bg-default">  <div class="bg-subtle">
+<div class="bg-surface">  <div class="bg-accent">
+
+<!-- Primitive backgrounds: bg-{palette}-{shade} -->
+<div class="bg-primary-50">   <div class="bg-neutral-100">
+<div class="bg-warning-200">  <div class="bg-white">
+<div class="bg-transparent">
+```
+
+---
+
+### Borders
+
+```html
+<!-- Width: border border-0 border-2 border-4 border-t border-b border-l border-r -->
+<!-- Style: border-dashed border-dotted border-solid -->
+<!-- Color: border-default border-strong border-transparent border-primary-500 -->
+<!-- Radius: rounded-none rounded-sm rounded rounded-md rounded-lg rounded-xl rounded-2xl rounded-3xl rounded-full -->
+<!-- Directional: rounded-t-lg rounded-b-xl rounded-l-full rounded-r-md -->
+```
+
+---
+
+### Shadows
+
+```html
+<div class="shadow-xs">    <div class="shadow-sm">
+<div class="shadow">       <!-- md -->
+<div class="shadow-md">    <div class="shadow-lg">
+<div class="shadow-xl">    <div class="shadow-2xl">
+<div class="shadow-inner"> <div class="shadow-none">
+```
+
+---
+
+### Opacity
+
+```html
+<div class="opacity-0">   <div class="opacity-5">   <div class="opacity-10">
+<div class="opacity-25">  <div class="opacity-50">  <div class="opacity-75">
+<div class="opacity-90">  <div class="opacity-100">
+```
+
+---
+
+### Transform
+
+```html
+<!-- Translate -->
+<div class="translate-x-4">    <!-- translateX(1rem) -->
+<div class="translate-y-2">    <!-- translateY(0.5rem) -->
+<div class="-translate-y-1">   <!-- translateY(-0.25rem) -->
+<div class="translate-x-full"> <!-- translateX(100%) -->
+
+<!-- Rotate -->
+<div class="rotate-45">   <div class="rotate-90">
+<div class="rotate-180">  <div class="-rotate-45">
+
+<!-- Scale -->
+<div class="scale-50">   <div class="scale-100">
+<div class="scale-105">  <div class="scale-110">
+<div class="scale-x-75"> <!-- scaleX only -->
+
+<!-- Origin -->
+<div class="origin-center">  <div class="origin-top">
+<div class="origin-bottom-right">
+
+<!-- GPU -->
+<div class="transform-gpu">   <!-- translateZ(0) -->
+<div class="transform-none">
+```
+
+---
+
+### Animation & Transitions
+
+Built-in keyframe animations plus transition property, duration, easing, and delay utilities.
+
+```html
+<!-- Animations -->
+<div class="animate-spin">      <div class="animate-ping">
+<div class="animate-pulse">     <div class="animate-bounce">
+<div class="animate-fade-in">   <div class="animate-fade-out">
+<div class="animate-slide-up">  <div class="animate-slide-down">
+<div class="animate-scale-in">  <div class="animate-none">
+
+<!-- Transitions -->
+<div class="transition">          <!-- all common properties -->
+<div class="transition-colors">   <div class="transition-opacity">
+<div class="transition-transform"> <div class="transition-shadow">
+<div class="transition-none">
+
+<!-- Duration: duration-75 duration-150 duration-300 duration-700 duration-1000 -->
+<!-- Easing: ease-linear ease-in ease-out ease-in-out ease-bounce -->
+<!-- Delay: delay-150 delay-300 delay-700 -->
+
+<!-- Fill mode / play state -->
+<div class="fill-forwards">       <div class="fill-both">
+<div class="animation-paused">    <div class="animation-running">
+
+<!-- Iteration -->
+<div class="animate-repeat-infinite">  <div class="animate-repeat-1">
+```
+
+---
+
+### Overflow
+
+```html
+<div class="overflow-auto">    <!-- scroll when needed -->
+<div class="overflow-hidden">  <!-- clip content -->
+<div class="overflow-scroll">  <!-- always scrollbar -->
+<div class="overflow-visible">
+<div class="overflow-clip">
+
+<!-- Axis-specific -->
+<div class="overflow-x-auto overflow-y-hidden">
+```
+
+---
+
+### Cursor
+
+```html
+<div class="cursor-auto">         <div class="cursor-default">
+<div class="cursor-pointer">      <div class="cursor-wait">
+<div class="cursor-text">         <div class="cursor-move">
+<div class="cursor-not-allowed">  <div class="cursor-grab">
+<div class="cursor-grabbing">     <div class="cursor-zoom-in">
+<div class="cursor-crosshair">    <div class="cursor-none">
+```
+
+---
+
+### Interaction
+
+User-select, resize, scroll behavior, scroll snap, touch action, pointer events, and state-variant utilities.
+
+```html
+<!-- User select -->
+<div class="select-none">   <div class="select-text">   <div class="select-all">
+
+<!-- Resize -->
+<textarea class="resize-none">  <textarea class="resize-y">  <textarea class="resize">
+
+<!-- Scroll -->
+<div class="scroll-smooth">
+
+<!-- Scroll snap -->
+<div class="snap-x snap-mandatory overflow-x-auto">
+  <div class="snap-start">  <div class="snap-center">
+</div>
+
+<!-- Touch -->
+<div class="touch-pan-x">        <div class="touch-manipulation">
+<div class="touch-none">
+
+<!-- Pointer events -->
+<div class="pointer-events-none">  <div class="pointer-events-auto">
+
+<!-- State variants -->
+<button class="hover:bg-accent hover:scale-105">Hover</button>
+<button class="focus:ring focus:ring-2">Focus ring</button>
+<button class="disabled:opacity-50 disabled:cursor-not-allowed">Disabled</button>
+```
+
+---
+
+### Layout
+
+Aspect ratio, object-fit, object-position, float, isolation, mix-blend-mode, background blend, appearance, and will-change.
+
+```html
+<!-- Aspect ratio -->
+<div class="aspect-auto">    <div class="aspect-square">
+<div class="aspect-video">   <!-- 16/9 -->
+<div class="aspect-4-3">     <div class="aspect-21-9">
+<div class="aspect-golden">  <!-- 1.618 -->
+
+<!-- Object -->
+<img class="object-cover">    <img class="object-contain">
+<img class="object-center">   <img class="object-top">
+
+<!-- Float (responsive) -->
+<div class="float-left">  <div class="float-right">  <div class="float-none">
+<div class="lg:float-right">
+
+<!-- Misc -->
+<div class="isolate">               <!-- new stacking context -->
+<div class="mix-blend-multiply">
+<div class="appearance-none">       <!-- custom selects -->
+<div class="will-change-transform">
+```
+
+---
+
+### Z-Index Utilities
+
+```html
+<div class="z-base">     <!-- 0 -->
+<div class="z-raised">   <!-- 10 -->
+<div class="z-dropdown"> <!-- 100 -->
+<div class="z-sticky">   <!-- 200 -->
+<div class="z-overlay">  <!-- 300 -->
+<div class="z-modal">    <!-- 400 -->
+<div class="z-toast">    <!-- 500 -->
+<div class="z-tooltip">  <!-- 600 -->
+<div class="z-max">      <!-- 9999 -->
+```
+
+---
+
+## Helpers
+
+Pre-built helper classes for common patterns.
+
+### Truncate & Line Clamp
+
+```html
+<p class="truncate">Single line truncation with ellipsis</p>
+
+<p class="line-clamp-1">Clamp to 1 line</p>
+<p class="line-clamp-2">Clamp to 2 lines</p>
+<p class="line-clamp-3">Clamp to 3 lines</p>
+<p class="line-clamp-6">Clamp to 6 lines</p>
+
+<p class="break-words">Break long overflow-wrap words</p>
+<p class="break-all">Break at any character</p>
+<p class="break-keep">Keep words together (CJK)</p>
+```
+
+### Ratio Helpers
+
+```html
+<div class="ratio-square">   <!-- 1:1 -->
+<div class="ratio-video">    <!-- 16:9 -->
+<div class="ratio-portrait"> <!-- 3:4 -->
+<div class="ratio-wide">     <!-- 21:9 -->
+<div class="ratio-golden">   <!-- 1.618 -->
+```
+
+### Clearfix
+
+```html
+<div class="clearfix">
+  <img class="float-left" src="..." />
+  <p>Text alongside float</p>
+</div>
+```
+
+---
+
+## Sass API — Functions
+
+Pure Sass functions — zero CSS output when imported alone. Import via `@use "@mastors/core/scss/functions/..."` or all at once via `@use "@mastors/core/api" as m`.
+
+### Summary Table
+
+| Function | Signature | Description |
+|---|---|---|
+| `rem()` | `rem($px)` | Convert px to rem |
+| `em()` | `em($px, $base?)` | Convert px to em |
+| `color()` | `color($name, $shade)` | Look up a palette color by name and shade |
+| `spacing()` | `spacing($key)` | Look up a spacing token |
+| `radius()` | `radius($key)` | Look up a border-radius token |
+| `shadow()` | `shadow($key)` | Look up a box-shadow token |
+| `z()` | `z($key)` | Look up a z-index token |
+| `opacity()` | `opacity($key)` | Look up an opacity token |
+| `duration()` | `duration($key)` | Look up a transition duration |
+| `easing()` | `easing($key)` | Look up an easing curve |
+| `vars()` | `vars($token, $fallback?)` | Emit `var(--mastors-{token})` with optional fallback |
+| `tint()` | `tint($color, $amount)` | Mix color toward white |
+| `shade()` | `shade($color, $amount)` | Mix color toward black |
+| `alpha()` | `alpha($color, $opacity)` | Set color opacity |
+| `contrast()` | `contrast($bg)` | Returns black or white for best contrast |
+| `palette()` | `palette($name, $shade)` | Shorthand palette accessor |
+| `rgb-color()` | `rgb-color($name, $shade, $opacity)` | Palette color with optional alpha |
+| `color-ramp()` | `color-ramp($base, $steps, $dir)` | Generate tint/shade ramp |
+| `fluid()` / `fluid-type()` | `fluid($min, $max, $min-vw?, $max-vw?)` | Generate a fluid `clamp()` value |
+| `clamp-value()` | `clamp-value($min, $val, $max)` | CSS `clamp()` shorthand |
+| `strip-unit()` | `strip-unit($value)` | Remove unit from number |
+| `round-to()` | `round-to($val, $decimals?)` | Round to N decimal places |
+| `lerp()` | `lerp($a, $b, $t)` | Linear interpolation |
+| `map-deep-get()` | `map-deep-get($map, $keys...)` | Deep nested map lookup |
+| `map-collect()` | `map-collect($maps...)` | Shallow merge multiple maps |
+
+---
+
+### `rem()` and `em()`
+
+```scss
+@use "@mastors/core/scss/functions/rem" as *;
+@use "@mastors/core/scss/functions/em"  as *;
+
+.heading { font-size: rem(32px); }        // → 2rem
+.media   { max-width: em(768px, 16px); }  // → 48em
+```
+
+---
+
+### Color Functions
+
+```scss
+@use "@mastors/core/scss/functions/color" as *;
+
+// tint($color, $pct) — mix with white
+$light-blue: tint(#3b82f6, 40%);
+
+// shade($color, $pct) — mix with black
+$dark-blue:  shade(#3b82f6, 30%);
+
+// alpha($color, $alpha) — set alpha channel
+$semi:       alpha(#3b82f6, 0.5);
+
+// contrast($bg) — returns black or white for best contrast
+$text-color: contrast(#3b82f6);     // → white
+
+// palette($name, $shade) — shorthand accessor
+$c: palette("primary", 500);        // → #3b82f6
+
+// rgb-color($name, $shade, $opacity) — with optional alpha
+$c: rgb-color("primary", 500, 0.6);
+
+// color-ramp($base, $steps, $dir) — tint/shade ramp
+$ramp: color-ramp(#3b82f6, 5, "tint");
+```
+
+---
+
+### Math Functions
+
+```scss
+@use "@mastors/core/scss/functions/math" as *;
+
+// fluid($min, $max, $min-vw, $max-vw) — clamp() expression
+font-size: fluid(1rem, 2rem);
+// → clamp(1rem, …vw + …, 2rem)
+
+// clamp-value($min, $val, $max)
+font-size: clamp-value(0.875rem, 4vw, 2rem);
+
+// strip-unit(16px) → 16
+$n: strip-unit(16px);
+
+// round-to($val, $decimals) — default 2
+$r: round-to(3.14159);  // → 3.14
+
+// lerp($a, $b, $t) — linear interpolation
+$v: lerp(0, 100px, 0.5); // → 50px
+```
+
+---
+
+### `vars()` — Token Reference Function
+
+Emits `var(--mastors-{token})` with an optional CSS fallback. Zero output until used.
+
+```scss
+@use "@mastors/core/scss/functions/vars" as *;
+
+.card {
+  background: vars(surface);            // var(--mastors-surface)
+  color:       vars(text);              // var(--mastors-text)
+  border:      1px solid vars(border);  // var(--mastors-border)
+}
+
+// With CSS fallback
+.badge {
+  background: vars(accent-subtle, #eff6ff);
+  // → var(--mastors-accent-subtle, #eff6ff)
+}
+```
+
+---
+
+### `string` — Path-based `vars()` accessor
+
+```scss
+@use "@mastors/core/scss/functions/string" as sf;
+
+color: sf.vars(color, primary, 500);  // var(--mastors-color-primary-500)
+gap:   sf.vars(spacing, 4);           // var(--mastors-spacing-4)
+```
+
+---
+
+### Map Helpers
+
+```scss
+@use "@mastors/core/scss/functions/map-helpers" as *;
+
+$nested: ("colors": ("blue": #3b82f6));
+$blue: map-deep-get($nested, "colors", "blue");  // → #3b82f6
+
+$merged: map-collect($map-a, $map-b, $map-c);    // shallow merge
+```
+
+---
+
+## Sass API — Mixins
+
+All mixins are available via `@use "@mastors/core/api" as m` or individually via `@use "@mastors/core/scss/mixins/..."`.
+
+### Summary Table
+
+| Mixin | Signature | Description |
+|---|---|---|
+| `bp()` | `bp($key)` | Mobile-first min-width media query |
+| `breakpoint-up()` | `breakpoint-up($key)` | Alias for `bp()` |
+| `breakpoint-down()` | `breakpoint-down($key)` | Max-width media query |
+| `respond-to()` | `respond-to($key)` | Alias for `bp()` |
+| `container()` | `container($size?)` | Responsive max-width container |
+| `elevation()` | `elevation($level)` | Token-driven `box-shadow` by level |
+| `transition()` | `transition($props, $duration, $easing)` | Token-driven transition shorthand |
+| `pseudo()` | `pseudo($display, $pos, $content)` | `::before` / `::after` boilerplate |
+| `dark-mode` | `dark-mode` | Dark mode block (class or media, per config) |
+| `light-mode` | `light-mode` | Light mode block |
+| `theme()` | `theme($name)` | `[data-theme="name"]` scoped block |
+| `cq()` | `cq($size, $name?)` | Container query block |
+| `fluid-type()` | `fluid-type($min, $max, $min-bp?, $max-bp?)` | Fluid font-size via `clamp()` |
+
+---
+
+### `bp()` — Breakpoint
+
+Mobile-first `min-width` media query.
+
+```scss
+@use "@mastors/core/scss/mixins/breakpoint" as *;
+
+.sidebar {
+  display: none;
+
+  @include bp(sm)  { display: block; }   // min-width: 640px
+  @include bp(md)  { width: 240px; }     // min-width: 768px
+  @include bp(lg)  { width: 300px; }     // min-width: 1024px
+  @include bp(2xl) { width: 360px; }     // min-width: 1536px
+}
+
+// Aliases — all three are equivalent
+@include respond-to(md)      { ... }
+@include breakpoint-up(md)   { ... }
+
+// Below a breakpoint (max-width)
+@include breakpoint-down(lg) { ... }
+```
+
+**Breakpoint map:**
+
+| Key | min-width |
+|---|---|
+| `xs` | `0px` (base, no prefix) |
+| `sm` | `640px` |
+| `md` | `768px` |
+| `lg` | `1024px` |
+| `xl` | `1280px` |
+| `2xl` | `1536px` |
+
+---
+
+### `container()` — Responsive Container
+
+```scss
+@use "@mastors/core/scss/mixins/container" as *;
+
+.page-wrapper {
+  @include container;
+  // → width: 100%;
+  //   margin-inline: auto;
+  //   padding-inline: 1rem;
+  //   max-width: 640px  @sm
+  //   max-width: 768px  @md
+  //   max-width: 1024px @lg
+  //   max-width: 1280px @xl
+  //   max-width: 1400px @2xl
+}
+```
+
+---
+
+### `elevation()` — Box Shadow
+
+Token-driven box-shadow by level key.
+
+```scss
+@use "@mastors/core/scss/mixins/elevation" as *;
+
+.card { @include elevation("md"); }   // box-shadow: md token
+.nav  { @include elevation("lg"); }   // box-shadow: lg token
+.chip { @include elevation("xs"); }
+```
+
+| Key | Equivalent token |
+|---|---|
+| `xs` | `shadow-xs` |
+| `sm` | `shadow-sm` |
+| `md` | `shadow-md` |
+| `lg` | `shadow-lg` |
+| `xl` | `shadow-xl` |
+| `2xl` | `shadow-2xl` |
+| `inner` | `shadow-inner` |
+| `none` | `none` |
+
+---
+
+### `transition()` — Token-driven Transition
+
+```scss
+@use "@mastors/core/scss/mixins/transition" as *;
+
+.btn {
+  // transition($props, $duration, $easing)
+  @include transition((background-color, color), "150", "in-out");
+  // → transition: background-color 150ms cubic-bezier(0.4,0,0.2,1),
+  //               color 150ms cubic-bezier(0.4,0,0.2,1);
+}
+
+.modal { @include transition((transform, opacity), "300", "out"); }
+```
+
+| Parameter | Type | Example values |
+|---|---|---|
+| `$props` | list or single | `(color, background)`, `opacity` |
+| `$duration` | string key | `"75"`, `"150"`, `"300"`, `"500"` |
+| `$easing` | string key | `"linear"`, `"in"`, `"out"`, `"in-out"`, `"bounce"` |
+
+---
+
+### `pseudo()` — Before / After Boilerplate
+
+```scss
+@use "@mastors/core/scss/mixins/pseudo" as *;
+
+.badge::before {
+  @include pseudo($display: inline-block, $pos: relative, $content: "");
+  width:         8px;
+  height:        8px;
+  border-radius: 50%;
+  background:    currentColor;
+}
+
+// Shorthand with defaults (display:block, pos:absolute, content:"")
+.overlay::after {
+  @include pseudo;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+}
+```
+
+| Parameter | Default | Description |
+|---|---|---|
+| `$display` | `block` | `display` value |
+| `$pos` | `absolute` | `position` value |
+| `$content` | `""` | `content` value |
+
+---
+
+### `dark-mode` / `light-mode` / `theme()` — Theming Mixins
+
+```scss
+@use "@mastors/core/scss/mixins/theme" as *;
+
+.card {
+  background: #fff;
+
+  @include dark-mode {
+    background: #1f2937;
+    color:      #f9fafb;
+  }
+
+  @include light-mode {
+    box-shadow: 0 1px 3px rgb(0 0 0 / 10%);
+  }
+
+  // Named theme — targets [data-theme="ocean"]
+  @include theme("ocean") {
+    background: #083344;
+    color:      #ecfeff;
+  }
+}
+```
+
+The dark/light strategy is read from the `$mastors-config` map and matches the compiled output (class or media).
+
+---
+
+### `cq()` — Container Query
+
+```scss
+@use "@mastors/core/scss/mixins/container" as *;
+// or
+@use "@mastors/core/scss/responsive/container-queries" as cq;
+
+// Step 1: set containment on the wrapper
+<div class="cq-inline">  <!-- container-type: inline-size -->
+
+// Step 2: use the mixin inside your component SCSS
+.card {
+  @include cq.cq(40rem) {
+    display:               grid;
+    grid-template-columns: 1fr 2fr;
+  }
+
+  // Named container
+  @include cq.cq(30rem, "sidebar") {
+    font-size: 0.875rem;
+  }
+}
+```
+
+| Class | Value |
+|---|---|
+| `cq-inline` | `container-type: inline-size` |
+| `cq-size` | `container-type: size` |
+| `data-container` | `container-type: inline-size` |
+
+---
+
+### `fluid-type()` — Fluid Typography Mixin
+
+```scss
+@use "@mastors/core/scss/responsive/fluid-type" as ft;
+
+// Apply fluid font-size to a single element
+.hero-title {
+  @include ft.apply-fluid-type(2rem, 4rem);
+  // → font-size: clamp(2rem, …vw + …, 4rem);
+}
+
+// Custom viewport range
+.headline {
+  @include ft.apply-fluid-type(1.5rem, 3rem, 480px, 1400px);
+}
+
+// Use as a function value
+.lead { font-size: ft.fluid-type(1rem, 1.5rem); }
+
+// Opt-in pre-built fluid heading scale (h1–h6 + p, 320px–1280px)
+@include ft.fluid-scale();
+```
+
+---
+
+## Responsive Engine
+
+### Breakpoints
+
+Mobile-first. The `xs` key is the base and generates no prefix.
+
+| Key | min-width | Device |
+|---|---|---|
+| `xs` | `0px` | All screens (no prefix) |
+| `sm` | `640px` | Large phones + |
+| `md` | `768px` | Tablets + |
+| `lg` | `1024px` | Laptops + |
+| `xl` | `1280px` | Desktops + |
+| `2xl` | `1536px` | Wide screens + |
+
+```html
+<!-- Pattern: {bp}:{utility} -->
+<div class="hidden sm:block">      Shown sm+</div>
+<div class="block md:hidden">      Hidden md+</div>
+<div class="flex-col lg:flex-row"> Row from lg</div>
+<div class="text-sm xl:text-base"> Bigger on xl</div>
+```
+
+> Only utilities with `responsive: true` in their config generate breakpoint variants. Currently enabled by default: display, position, text-align, float, clear.
+
+---
+
+### Fluid Typography
+
+Uses `clamp()` to scale font sizes smoothly between two viewport widths without media queries. See the [`fluid-type()` mixin section](#fluid-type--fluid-typography-mixin) above.
+
+---
+
+### Container Queries
+
+CSS container query helpers for component-level responsive design. See the [`cq()` mixin section](#cq--container-query) above.
+
+---
+
+## Accessibility
+
+### Screen Reader Utilities
+
+```html
+<!-- Visually hidden, accessible to screen readers -->
+<span class="sr-only">Menu (screen reader label)</span>
+
+<!-- Undo sr-only -->
+<span class="not-sr-only">Now visible</span>
+
+<!-- Legacy aliases (equivalent to sr-only) -->
+<span class="visually-hidden">  <span class="vh">
+
+<!-- Shown when focused — skip-link pattern -->
+<a class="visually-hidden-focusable" href="#main">
+  Skip to main content
+</a>
+```
+
+### Focus Ring
+
+Automatically applied to `:focus-visible`. Mouse users do not see the ring.
+
+```css
+/* Auto-applied by accessibility/_focus.scss */
+:focus-visible {
+  outline:        2px solid var(--mastors-color-primary-500, #3b82f6);
+  outline-offset: 2px;
+  border-radius:  2px;
+}
+
+/* Clean up for mouse users */
+:focus:not(:focus-visible) { outline: none; }
+```
+
+### Reduced Motion
+
+Respects `prefers-reduced-motion: reduce` — all animations and transitions are disabled to near-zero duration automatically. No class needed.
+
+```css
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration:        0.01ms !important;
+    animation-iteration-count: 1      !important;
+    transition-duration:       0.01ms !important;
+    scroll-behavior:           auto   !important;
+  }
+}
+```
+
+### Print Utilities
+
+```html
+<!-- Hide in print, show on screen -->
+<nav class="print:hidden">Navigation</nav>
+
+<!-- Show only in print -->
+<div class="screen:hidden">Print-only watermark</div>
+
+<!-- Page break control -->
+<section class="print:break-inside-avoid">...</section>
+<div class="print:break-before">New page before this</div>
+<div class="print:break-after">New page after this</div>
+
+<!-- Print-safe colors -->
+<p class="print:text-black print:bg-white">Print-safe</p>
+<div class="print:shadow-none print:border-none">Clean print</div>
+```
+
+---
+
+## Base & Reset
+
+### Reset Highlights
+
+The base layer applies an opinionated modern CSS reset.
+
+```css
+/* box-sizing: border-box everywhere */
+*, *::before, *::after { box-sizing: border-box; }
+
+/* Zero margin/padding */
+* { margin: 0; padding: 0; }
+
+/* Smooth scroll + tab-size */
+html { text-size-adjust: 100%; tab-size: 4; scroll-behavior: smooth; }
+
+/* Font smoothing */
+body { -webkit-font-smoothing: antialiased; }
+
+/* Block images, max 100% */
+img, picture, video, canvas, svg { display: block; max-width: 100%; }
+
+/* Inherit font in form elements */
+input, button, textarea, select { font: inherit; }
+
+/* Break long words */
+p, h1, h2, h3, h4, h5, h6 { overflow-wrap: break-word; }
+
+/* Remove list styles */
+ol, ul { list-style: none; }
+
+/* Links inherit color and decoration */
+a { color: inherit; text-decoration: inherit; }
+
+/* Collapsed tables */
+table { border-collapse: collapse; border-spacing: 0; }
+
+/* Cursor on interactive elements */
+button, [role="button"] { cursor: pointer; }
+```
+
+### `:root` Custom Properties
+
+Every token map is emitted on `:root` via the generator.
+
+```css
+:root {
+  /* Colors — --mastors-color-{palette}-{shade} */
+  --mastors-color-primary-500: #3b82f6;
+  --mastors-color-success-500: #22c55e;
+  /* 6 palettes × 11 shades + white + black */
+
+  /* Spacing */
+  --mastors-spacing-4: 1rem;
+
+  /* Typography */
+  --mastors-font-size-xl:    1.25rem;
+  --mastors-font-weight-bold: 700;
+
+  /* Radii */
+  --mastors-radius-md: 0.375rem;
+
+  /* Shadows */
+  --mastors-shadow-md: 0 4px 6px -1px rgb(0 0 0/10%), ...;
+
+  /* Transitions */
+  --mastors-duration-300: 300ms;
+  --mastors-easing-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Z-index */
+  --mastors-z-modal: 400;
+
+  /* Opacity */
+  --mastors-opacity-50: 0.5;
+}
+```
+
+---
+
+## TypeScript Mirror
+
+Runtime token access with full type definitions. The `src/tokens.ts` file is **auto-generated** from the SCSS token maps — never edit it manually.
+
+```ts
+import { tokens } from '@mastors/core'
+import type { Breakpoint, SpacingKey, ColorPalette } from '@mastors/core'
+
+const primary = tokens.color.primary['600']  // '#2563eb'
+const space4  = tokens.spacing['4']          // '1rem'
+const mdBp    = tokens.breakpoints['md']     // '768px'
+```
+
+---
+
 ## Build
 
 ```bash
 # From the monorepo root
 pnpm build:core
 
-# Or from this package
+# From this package
 node build.js
+
+# Production build (minified)
+node build.js --prod
+
+# Watch mode
+node build.js --watch
 ```
 
-Build steps: clean → compile SCSS → regenerate `src/tokens.ts` → compile TypeScript.
+Build steps: **clean → compile SCSS → regenerate `src/tokens.ts` → compile TypeScript**
 
 To regenerate the TypeScript token mirror without a full build:
 
@@ -268,6 +1577,10 @@ node scripts/generate-tokens.js
 ---
 
 ## Changelog
+
+### 1.2.7
+
+- Patch release — maintenance and dependency updates
 
 ### 1.2.4
 
@@ -297,6 +1610,8 @@ node scripts/generate-tokens.js
 ### 1.0.0
 
 - Initial release
+
+---
 
 ## License
 

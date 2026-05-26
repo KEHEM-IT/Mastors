@@ -1,0 +1,2044 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>@mastors/core — Documentation</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <!-- Highlight.js for syntax highlighting -->
+  <link rel="stylesheet" id="hljs-theme" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50:  '#eff6ff',
+              100: '#dbeafe',
+              200: '#bfdbfe',
+              300: '#93c5fd',
+              400: '#60a5fa',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a',
+              950: '#172554',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    * { font-family: 'Inter', system-ui, sans-serif; }
+    code, pre, .font-mono { font-family: 'JetBrains Mono', monospace !important; }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+
+    /* Sidebar active link */
+    .nav-link.active {
+      background: #eff6ff;
+      color: #2563eb;
+      font-weight: 600;
+      border-left: 3px solid #2563eb;
+    }
+    .dark .nav-link.active {
+      background: #172554;
+      color: #60a5fa;
+      border-left: 3px solid #60a5fa;
+    }
+
+    /* Code block wrapper */
+    .code-block {
+      position: relative;
+      border-radius: 0.5rem;
+      overflow: hidden;
+    }
+    .code-block pre {
+      margin: 0 !important;
+      border-radius: 0 !important;
+      font-size: 0.82rem !important;
+      line-height: 1.6 !important;
+    }
+    .code-block .copy-btn {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #d1d5db;
+      border-radius: 0.375rem;
+      padding: 0.25rem 0.6rem;
+      font-size: 0.72rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .code-block .copy-btn:hover { background: rgba(255,255,255,0.2); color: #fff; }
+    .code-block .copy-btn.copied { background: #16a34a; border-color: #16a34a; color: #fff; }
+
+    /* Demo boxes */
+    .demo-box {
+      border: 2px dashed #e5e7eb;
+      border-radius: 0.5rem;
+      padding: 1.25rem;
+      background: #f9fafb;
+    }
+    .dark .demo-box {
+      border-color: #374151;
+      background: #111827;
+    }
+
+    /* Swatch */
+    .swatch-grid { display: flex; flex-wrap: wrap; gap: 4px; }
+    .swatch { width: 36px; height: 36px; border-radius: 6px; display: inline-block; border: 1px solid rgba(0,0,0,0.07); cursor: default; }
+
+    /* Section anchor offset */
+    .section-anchor { scroll-margin-top: 5rem; }
+
+    /* Badge */
+    .badge {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.55rem;
+      border-radius: 9999px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .badge-blue   { background: #dbeafe; color: #1d4ed8; }
+    .badge-green  { background: #dcfce7; color: #15803d; }
+    .badge-purple { background: #ede9fe; color: #7c3aed; }
+    .badge-orange { background: #fef3c7; color: #b45309; }
+    .dark .badge-blue   { background: #172554; color: #93c5fd; }
+    .dark .badge-green  { background: #052e16; color: #86efac; }
+    .dark .badge-purple { background: #2e1065; color: #c4b5fd; }
+    .dark .badge-orange { background: #451a03; color: #fcd34d; }
+
+    /* Sticky sidebar */
+    #sidebar { height: calc(100vh - 4rem); overflow-y: auto; }
+
+    /* Animation for demo */
+    @keyframes demo-spin   { from { transform:rotate(0deg); } to { transform:rotate(360deg); } }
+    @keyframes demo-pulse  { 0%,100%{opacity:1;} 50%{opacity:.4;} }
+    @keyframes demo-bounce { 0%,100%{transform:translateY(-25%);} 50%{transform:translateY(0);} }
+    @keyframes demo-fade-in{ from{opacity:0;transform:translateY(8px);} to{opacity:1;transform:translateY(0);} }
+    .demo-spin   { animation: demo-spin   1s linear infinite; display:inline-block; }
+    .demo-pulse  { animation: demo-pulse  2s ease-in-out infinite; }
+    .demo-bounce { animation: demo-bounce 1s infinite; display:inline-block; }
+    .demo-fade-in{ animation: demo-fade-in 0.4s ease-out both; }
+
+    /* Table */
+    table { width: 100%; border-collapse: collapse; }
+    th { background: #f3f4f6; font-size:0.78rem; text-transform:uppercase; letter-spacing:0.06em; color:#6b7280; }
+    .dark th { background: #1f2937; color: #9ca3af; }
+    td, th { padding: 0.6rem 0.9rem; text-align:left; border-bottom: 1px solid #e5e7eb; font-size:0.85rem; }
+    .dark td, .dark th { border-color: #374151; }
+    tr:last-child td { border-bottom: none; }
+
+    /* Hljs light override */
+    html:not(.dark) #hljs-theme { display:none; }
+  </style>
+
+  <!-- Highlight.js light theme for light mode -->
+  <link rel="stylesheet" id="hljs-light-theme" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" />
+  <style>
+    .dark #hljs-light-theme { display:none; }
+    #hljs-light-theme { display: block; }
+    #hljs-theme { display: none; }
+    .dark #hljs-theme { display: block; }
+  </style>
+</head>
+<body class="bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors duration-200">
+
+<!-- ══════════════════════════════════════════════════════
+     TOP NAV
+═══════════════════════════════════════════════════════ -->
+<header class="sticky top-0 z-50 bg-white/90 dark:bg-gray-950/90 backdrop-blur border-b border-gray-200 dark:border-gray-800 h-16 flex items-center px-4 gap-4">
+  <button id="sidebar-toggle" class="lg:hidden text-gray-500 hover:text-gray-900 dark:hover:text-white text-xl">
+    <i class="fa-solid fa-bars"></i>
+  </button>
+  <div class="flex items-center gap-2">
+    <div class="w-8 h-8 rounded-lg bg-brand-600 flex items-center justify-center text-white font-bold text-sm">M</div>
+    <div>
+      <span class="font-bold text-gray-900 dark:text-white text-sm">@mastors</span><span class="text-brand-600 font-bold text-sm">/core</span>
+      <span class="ml-2 badge badge-blue">v1.x</span>
+    </div>
+  </div>
+  <div class="flex-1"></div>
+  <!-- Search -->
+  <div class="hidden md:flex items-center gap-2 bg-gray-100 dark:bg-gray-800 rounded-lg px-3 py-1.5 text-sm text-gray-500 dark:text-gray-400 w-64 cursor-pointer" onclick="document.getElementById('search-input').focus()">
+    <i class="fa-solid fa-magnifying-glass text-xs"></i>
+    <input id="search-input" type="text" placeholder="Search docs..." class="bg-transparent outline-none flex-1 text-sm" oninput="filterSearch(this.value)" />
+  </div>
+  <!-- Dark mode toggle -->
+  <button id="dark-toggle" class="w-9 h-9 rounded-lg flex items-center justify-center bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-gray-700 dark:text-gray-300">
+    <i id="dark-icon" class="fa-solid fa-moon text-sm"></i>
+  </button>
+  <!-- GitHub link -->
+  <a href="#" class="w-9 h-9 rounded-lg flex items-center justify-center bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-gray-700 dark:text-gray-300">
+    <i class="fa-brands fa-github text-sm"></i>
+  </a>
+</header>
+
+<!-- ══════════════════════════════════════════════════════
+     LAYOUT
+═══════════════════════════════════════════════════════ -->
+<div class="flex">
+
+  <!-- SIDEBAR -->
+  <aside id="sidebar" class="fixed lg:sticky top-16 left-0 z-40 w-64 bg-white dark:bg-gray-950 border-r border-gray-200 dark:border-gray-800 px-3 py-4 transform -translate-x-full lg:translate-x-0 transition-transform duration-200 overflow-y-auto">
+
+    <div id="search-results" class="hidden mb-3"></div>
+
+    <nav class="space-y-0.5 text-sm">
+      <!-- Getting Started -->
+      <p class="px-3 pt-2 pb-1 text-xs font-semibold text-gray-400 dark:text-gray-600 uppercase tracking-wider">Getting Started</p>
+      <a href="#overview" class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><i class="fa-solid fa-rocket w-4 text-center text-gray-400 dark:text-gray-600 text-xs"></i> Overview</a>
+      <a href="#installation" class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><i class="fa-solid fa-download w-4 text-center text-gray-400 dark:text-gray-600 text-xs"></i> Installation</a>
+      <a href="#import" class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><i class="fa-solid fa-code w-4 text-center text-gray-400 dark:text-gray-600 text-xs"></i> Import & Usage</a>
+
+      <!-- Tokens -->
+      <p class="px-3 pt-4 pb-1 text-xs font-semibold text-gray-400 dark:text-gray-600 uppercase tracking-wider">Design Tokens</p>
+      <a href="#tokens-colors" class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><i class="fa-solid fa-palette w-4 text-center text-gray-400 dark:text-gray-600 text-xs"></i> Colors</a>
+      <a href="#tokens-spacing" class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><i class="fa-solid fa-arrows-left-right w-4 text-center text-gray-400 dark:text-gray-600 text-xs"></i> Spacing</a>
+      <a href="#tokens-sizing" class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><i class="fa-solid fa-ruler w-4 text-center text-gray-400 dark:text-gray-600 text-xs"></i> Sizing</a>
+      <a href="#tokens-typography" class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><i class="fa-solid fa-font w-4 text-center text-gray-400 dark:text-gray-600 text-xs"></i> Typography</a>
+      <a href="#tokens-shadows" class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><i class="fa-solid fa-layer-group w-4 text-center text-gray-400 dark:text-gray-600 text-xs"></i> Shadows</a>
+      <a href="#tokens-radii" class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><i class="fa-solid fa-square-full w-4 text-center text-gray-400 dark:text-gray-600 text-xs"></i> Radii</a>
+      <a href="#tokens-opacity" class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><i class="fa-solid fa-eye-slash w-4 text-center text-gray-400 dark:text-gray-600 text-xs"></i> Opacity</a>
+      <a href="#tokens-zindex" class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><i class="fa-solid fa-table-cells-large w-4 text-center text-gray-400 dark:text-gray-600 text-xs"></i> Z-Index</a>
+      <a href="#tokens-transitions" class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><i class="fa-solid fa-hourglass-half w-4 text-center text-gray-400 dark:text-gray-600 text-xs"></i> Transitions</a>
+
+      <!-- Themes -->
+      <p class="px-3 pt-4 pb-1 text-xs font-semibold text-gray-400 dark:text-gray-600 uppercase tracking-wider">Theming</p>
+      <a href="#themes" class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><i class="fa-solid fa-circle-half-stroke w-4 text-center text-gray-400 dark:text-gray-600 text-xs"></i> Light & Dark</a>
+      <a href="#semantic" class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><i class="fa-solid fa-tags w-4 text-center text-gray-400 dark:text-gray-600 text-xs"></i> Semantic Layer</a>
+
+      <!-- Utilities -->
+      <p class="px-3 pt-4 pb-1 text-xs font-semibold text-gray-400 dark:text-gray-600 uppercase tracking-wider">Utilities</p>
+      <a href="#util-spacing" class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><i class="fa-solid fa-border-all w-4 text-center text-gray-400 dark:text-gray-600 text-xs"></i> Spacing</a>
+      <a href="#util-display" class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><i class="fa-solid fa-display w-4 text-center text-gray-400 dark:text-gray-600 text-xs"></i> Display</a>
+      <a href="#util-position" class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><i class="fa-solid fa-location-pin w-4 text-center text-gray-400 dark:text-gray-600 text-xs"></i> Position</a>
+      <a href="#util-sizing" class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><i class="fa-solid fa-expand w-4 text-center text-gray-400 dark:text-gray-600 text-xs"></i> Sizing</a>
+      <a href="#util-typography" class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><i class="fa-solid fa-text-height w-4 text-center text-gray-400 dark:text-gray-600 text-xs"></i> Typography</a>
+      <a href="#util-colors" class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><i class="fa-solid fa-fill-drip w-4 text-center text-gray-400 dark:text-gray-600 text-xs"></i> Colors</a>
+      <a href="#util-borders" class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><i class="fa-solid fa-border-top-left w-4 text-center text-gray-400 dark:text-gray-600 text-xs"></i> Borders</a>
+      <a href="#util-shadows" class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><i class="fa-solid fa-clone w-4 text-center text-gray-400 dark:text-gray-600 text-xs"></i> Shadows</a>
+      <a href="#util-opacity" class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><i class="fa-solid fa-droplet w-4 text-center text-gray-400 dark:text-gray-600 text-xs"></i> Opacity</a>
+      <a href="#util-transform" class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><i class="fa-solid fa-rotate w-4 text-center text-gray-400 dark:text-gray-600 text-xs"></i> Transform</a>
+      <a href="#util-animation" class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><i class="fa-solid fa-film w-4 text-center text-gray-400 dark:text-gray-600 text-xs"></i> Animation</a>
+      <a href="#util-overflow" class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><i class="fa-solid fa-scissors w-4 text-center text-gray-400 dark:text-gray-600 text-xs"></i> Overflow</a>
+      <a href="#util-cursor" class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><i class="fa-solid fa-arrow-pointer w-4 text-center text-gray-400 dark:text-gray-600 text-xs"></i> Cursor</a>
+      <a href="#util-interaction" class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><i class="fa-solid fa-hand-pointer w-4 text-center text-gray-400 dark:text-gray-600 text-xs"></i> Interaction</a>
+      <a href="#util-layout" class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><i class="fa-solid fa-table-columns w-4 text-center text-gray-400 dark:text-gray-600 text-xs"></i> Layout</a>
+      <a href="#util-zindex" class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><i class="fa-solid fa-layer-group w-4 text-center text-gray-400 dark:text-gray-600 text-xs"></i> Z-Index</a>
+
+      <!-- Helpers -->
+      <p class="px-3 pt-4 pb-1 text-xs font-semibold text-gray-400 dark:text-gray-600 uppercase tracking-wider">Helpers</p>
+      <a href="#helpers" class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><i class="fa-solid fa-toolbox w-4 text-center text-gray-400 dark:text-gray-600 text-xs"></i> Helpers</a>
+
+      <!-- Functions & Mixins -->
+      <p class="px-3 pt-4 pb-1 text-xs font-semibold text-gray-400 dark:text-gray-600 uppercase tracking-wider">Sass API</p>
+      <a href="#functions" class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><i class="fa-solid fa-function w-4 text-center text-gray-400 dark:text-gray-600 text-xs"></i> Functions</a>
+      <a href="#mixins" class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><i class="fa-solid fa-puzzle-piece w-4 text-center text-gray-400 dark:text-gray-600 text-xs"></i> Mixins</a>
+
+      <!-- Responsive -->
+      <p class="px-3 pt-4 pb-1 text-xs font-semibold text-gray-400 dark:text-gray-600 uppercase tracking-wider">Responsive</p>
+      <a href="#breakpoints" class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><i class="fa-solid fa-mobile-screen w-4 text-center text-gray-400 dark:text-gray-600 text-xs"></i> Breakpoints</a>
+      <a href="#fluid-type" class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><i class="fa-solid fa-text-width w-4 text-center text-gray-400 dark:text-gray-600 text-xs"></i> Fluid Type</a>
+      <a href="#container-queries" class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><i class="fa-solid fa-vector-square w-4 text-center text-gray-400 dark:text-gray-600 text-xs"></i> Container Queries</a>
+
+      <!-- Accessibility -->
+      <p class="px-3 pt-4 pb-1 text-xs font-semibold text-gray-400 dark:text-gray-600 uppercase tracking-wider">Accessibility</p>
+      <a href="#a11y" class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><i class="fa-solid fa-universal-access w-4 text-center text-gray-400 dark:text-gray-600 text-xs"></i> A11y Utilities</a>
+
+      <!-- Base -->
+      <p class="px-3 pt-4 pb-1 text-xs font-semibold text-gray-400 dark:text-gray-600 uppercase tracking-wider">Base</p>
+      <a href="#base" class="nav-link flex items-center gap-2 px-3 py-1.5 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><i class="fa-solid fa-layer-group w-4 text-center text-gray-400 dark:text-gray-600 text-xs"></i> Reset & Root</a>
+    </nav>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="flex-1 min-w-0 max-w-4xl mx-auto px-6 py-10 lg:pl-8">
+
+    <!-- ────────────────────────────── OVERVIEW ─────────────────────── -->
+    <section id="overview" class="section-anchor mb-16">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-xl bg-brand-600 flex items-center justify-center text-white"><i class="fa-solid fa-rocket text-sm"></i></div>
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900 dark:text-white">@mastors/core</h1>
+          <p class="text-gray-500 dark:text-gray-400 text-sm">The design system foundation</p>
+        </div>
+      </div>
+      <p class="text-gray-600 dark:text-gray-400 text-base leading-relaxed mb-6">
+        <strong class="text-gray-900 dark:text-white">@mastors/core</strong> is a utility-first SCSS library providing design tokens, utility classes, mixins, functions, and a responsive engine. It is the foundation for every package in the Mastors design system — and can be consumed standalone.
+      </p>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+        <div class="bg-gray-50 dark:bg-gray-900 rounded-xl p-4 text-center border border-gray-200 dark:border-gray-800">
+          <div class="text-2xl font-bold text-brand-600 dark:text-brand-400">18</div>
+          <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">Utility Modules</div>
+        </div>
+        <div class="bg-gray-50 dark:bg-gray-900 rounded-xl p-4 text-center border border-gray-200 dark:border-gray-800">
+          <div class="text-2xl font-bold text-brand-600 dark:text-brand-400">10</div>
+          <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">Token Types</div>
+        </div>
+        <div class="bg-gray-50 dark:bg-gray-900 rounded-xl p-4 text-center border border-gray-200 dark:border-gray-800">
+          <div class="text-2xl font-bold text-brand-600 dark:text-brand-400">6</div>
+          <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">Breakpoints</div>
+        </div>
+        <div class="bg-gray-50 dark:bg-gray-900 rounded-xl p-4 text-center border border-gray-200 dark:border-gray-800">
+          <div class="text-2xl font-bold text-brand-600 dark:text-brand-400">2</div>
+          <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">Themes</div>
+        </div>
+      </div>
+      <div class="bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 rounded-xl p-4 text-sm text-blue-800 dark:text-blue-300 flex gap-3">
+        <i class="fa-solid fa-circle-info mt-0.5 flex-shrink-0"></i>
+        <span>All token-generated classes are driven by SCSS maps. The library uses <strong>CSS custom properties</strong> so themes update at runtime without a rebuild.</span>
+      </div>
+    </section>
+
+    <!-- ────────────────────────────── INSTALLATION ─────────────────── -->
+    <section id="installation" class="section-anchor mb-16">
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2"><i class="fa-solid fa-download text-brand-500 text-lg"></i> Installation</h2>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-5">Add the package via your package manager of choice.</p>
+      <div class="grid md:grid-cols-3 gap-3">
+        <div>
+          <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">npm</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+            <pre><code class="language-bash">npm install @mastors/core</code></pre>
+          </div>
+        </div>
+        <div>
+          <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">yarn</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+            <pre><code class="language-bash">yarn add @mastors/core</code></pre>
+          </div>
+        </div>
+        <div>
+          <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">pnpm</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+            <pre><code class="language-bash">pnpm add @mastors/core</code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ────────────────────────────── IMPORT ───────────────────────── -->
+    <section id="import" class="section-anchor mb-16">
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2"><i class="fa-solid fa-code text-brand-500 text-lg"></i> Import & Usage</h2>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-5">The main entry point compiles the full library in this order: config → abstracts → variables → tokens → functions → mixins → base → themes → semantic → responsive → helpers → utilities → accessibility.</p>
+      <div class="space-y-4">
+        <div>
+          <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Full import (outputs all CSS)</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+            <pre><code class="language-scss">@use "@mastors/core";</code></pre>
+          </div>
+        </div>
+        <div>
+          <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Selective import (tokens + mixins only, no utility output)</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+            <pre><code class="language-scss">@use "@mastors/core/scss/tokens/color"   as ct;
+@use "@mastors/core/scss/tokens/spacing" as sp;
+@use "@mastors/core/scss/mixins/breakpoint" as *;
+
+.card {
+  padding: sp.spacing(4);
+  background: ct.color("primary", 50);
+
+  @include bp(md) {
+    padding: sp.spacing(8);
+  }
+}</code></pre>
+          </div>
+        </div>
+        <div>
+          <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Using the vars() function</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+            <pre><code class="language-scss">@use "@mastors/core/scss/functions/vars" as *;
+
+.btn {
+  background: vars(accent);
+  color: vars(accent-text);
+  padding: vars(spacing-2) vars(spacing-4);
+  border-radius: vars(radius-md);
+  box-shadow: vars(shadow-sm, none);
+}</code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         TOKENS
+    ═══════════════════════════════════════════════════════ -->
+    <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6 mt-2 border-b border-gray-200 dark:border-gray-800 pb-3">
+      <i class="fa-solid fa-gem text-brand-500 mr-2"></i>Design Tokens
+    </h2>
+
+    <!-- COLOR TOKENS -->
+    <section id="tokens-colors" class="section-anchor mb-14">
+      <div class="flex items-center gap-2 mb-1"><h3 class="text-xl font-bold text-gray-900 dark:text-white">Colors</h3><span class="badge badge-blue">Token</span></div>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">6 palettes × 11 shades (50–950) plus white, black, and transparent. Each color is also emitted as a CSS custom property: <code class="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-xs">--mastors-color-{palette}-{shade}</code>.</p>
+      <div class="code-block mb-4">
+        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+        <pre><code class="language-scss">@use "@mastors/core/scss/tokens/color" as ct;
+
+// Accessor
+$blue: ct.color("primary", 500); // → #3b82f6
+$green-50: ct.color("success", 50); // → #f0fdf4
+$white: ct.color("white");          // → #fff</code></pre>
+      </div>
+      <div class="demo-box space-y-3">
+        <!-- Primary -->
+        <div>
+          <p class="text-xs font-mono text-gray-500 dark:text-gray-400 mb-1">primary</p>
+          <div class="swatch-grid">
+            <div title="#eff6ff" class="swatch" style="background:#eff6ff"></div>
+            <div title="#dbeafe" class="swatch" style="background:#dbeafe"></div>
+            <div title="#bfdbfe" class="swatch" style="background:#bfdbfe"></div>
+            <div title="#93c5fd" class="swatch" style="background:#93c5fd"></div>
+            <div title="#60a5fa" class="swatch" style="background:#60a5fa"></div>
+            <div title="#3b82f6" class="swatch" style="background:#3b82f6"></div>
+            <div title="#2563eb" class="swatch" style="background:#2563eb"></div>
+            <div title="#1d4ed8" class="swatch" style="background:#1d4ed8"></div>
+            <div title="#1e40af" class="swatch" style="background:#1e40af"></div>
+            <div title="#1e3a8a" class="swatch" style="background:#1e3a8a"></div>
+            <div title="#172554" class="swatch" style="background:#172554"></div>
+          </div>
+        </div>
+        <!-- Success -->
+        <div>
+          <p class="text-xs font-mono text-gray-500 dark:text-gray-400 mb-1">success</p>
+          <div class="swatch-grid">
+            <div class="swatch" style="background:#f0fdf4"></div><div class="swatch" style="background:#dcfce7"></div><div class="swatch" style="background:#bbf7d0"></div><div class="swatch" style="background:#86efac"></div><div class="swatch" style="background:#4ade80"></div><div class="swatch" style="background:#22c55e"></div><div class="swatch" style="background:#16a34a"></div><div class="swatch" style="background:#15803d"></div><div class="swatch" style="background:#166534"></div><div class="swatch" style="background:#14532d"></div><div class="swatch" style="background:#052e16"></div>
+          </div>
+        </div>
+        <!-- Warning -->
+        <div>
+          <p class="text-xs font-mono text-gray-500 dark:text-gray-400 mb-1">warning</p>
+          <div class="swatch-grid">
+            <div class="swatch" style="background:#fffbeb"></div><div class="swatch" style="background:#fef3c7"></div><div class="swatch" style="background:#fde68a"></div><div class="swatch" style="background:#fcd34d"></div><div class="swatch" style="background:#fbbf24"></div><div class="swatch" style="background:#f59e0b"></div><div class="swatch" style="background:#d97706"></div><div class="swatch" style="background:#b45309"></div><div class="swatch" style="background:#92400e"></div><div class="swatch" style="background:#78350f"></div><div class="swatch" style="background:#451a03"></div>
+          </div>
+        </div>
+        <!-- Error -->
+        <div>
+          <p class="text-xs font-mono text-gray-500 dark:text-gray-400 mb-1">error</p>
+          <div class="swatch-grid">
+            <div class="swatch" style="background:#fef2f2"></div><div class="swatch" style="background:#fee2e2"></div><div class="swatch" style="background:#fecaca"></div><div class="swatch" style="background:#fca5a5"></div><div class="swatch" style="background:#f87171"></div><div class="swatch" style="background:#ef4444"></div><div class="swatch" style="background:#dc2626"></div><div class="swatch" style="background:#b91c1c"></div><div class="swatch" style="background:#991b1b"></div><div class="swatch" style="background:#7f1d1d"></div><div class="swatch" style="background:#450a0a"></div>
+          </div>
+        </div>
+        <!-- Info -->
+        <div>
+          <p class="text-xs font-mono text-gray-500 dark:text-gray-400 mb-1">info</p>
+          <div class="swatch-grid">
+            <div class="swatch" style="background:#ecfeff"></div><div class="swatch" style="background:#cffafe"></div><div class="swatch" style="background:#a5f3fc"></div><div class="swatch" style="background:#67e8f9"></div><div class="swatch" style="background:#22d3ee"></div><div class="swatch" style="background:#06b6d4"></div><div class="swatch" style="background:#0891b2"></div><div class="swatch" style="background:#0e7490"></div><div class="swatch" style="background:#155e75"></div><div class="swatch" style="background:#164e63"></div><div class="swatch" style="background:#083344"></div>
+          </div>
+        </div>
+        <!-- Neutral -->
+        <div>
+          <p class="text-xs font-mono text-gray-500 dark:text-gray-400 mb-1">neutral</p>
+          <div class="swatch-grid">
+            <div class="swatch" style="background:#f9fafb"></div><div class="swatch" style="background:#f3f4f6"></div><div class="swatch" style="background:#e5e7eb"></div><div class="swatch" style="background:#d1d5db"></div><div class="swatch" style="background:#9ca3af"></div><div class="swatch" style="background:#6b7280"></div><div class="swatch" style="background:#4b5563"></div><div class="swatch" style="background:#374151"></div><div class="swatch" style="background:#1f2937"></div><div class="swatch" style="background:#111827"></div><div class="swatch" style="background:#030712"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SPACING TOKENS -->
+    <section id="tokens-spacing" class="section-anchor mb-14">
+      <div class="flex items-center gap-2 mb-1"><h3 class="text-xl font-bold text-gray-900 dark:text-white">Spacing</h3><span class="badge badge-green">Token</span></div>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">A complete scale from <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">0</code> to <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">96</code> (0 → 24rem). Emitted as <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">--mastors-spacing-{key}</code>.</p>
+      <div class="code-block mb-4">
+        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+        <pre><code class="language-scss">@use "@mastors/core/scss/tokens/spacing" as sp;
+
+.btn { padding: sp.spacing(2) sp.spacing(4); }
+// → padding: 0.5rem 1rem;</code></pre>
+      </div>
+      <div class="demo-box overflow-x-auto">
+        <table>
+          <thead><tr><th>Key</th><th>Value</th><th>px</th></tr></thead>
+          <tbody id="spacing-table">
+            <tr><td class="font-mono text-xs">0</td><td class="font-mono text-xs">0px</td><td class="font-mono text-xs">0</td></tr>
+            <tr><td class="font-mono text-xs">px</td><td class="font-mono text-xs">1px</td><td class="font-mono text-xs">1px</td></tr>
+            <tr><td class="font-mono text-xs">0.5</td><td class="font-mono text-xs">0.125rem</td><td class="font-mono text-xs">2px</td></tr>
+            <tr><td class="font-mono text-xs">1</td><td class="font-mono text-xs">0.25rem</td><td class="font-mono text-xs">4px</td></tr>
+            <tr><td class="font-mono text-xs">2</td><td class="font-mono text-xs">0.5rem</td><td class="font-mono text-xs">8px</td></tr>
+            <tr><td class="font-mono text-xs">3</td><td class="font-mono text-xs">0.75rem</td><td class="font-mono text-xs">12px</td></tr>
+            <tr><td class="font-mono text-xs">4</td><td class="font-mono text-xs">1rem</td><td class="font-mono text-xs">16px</td></tr>
+            <tr><td class="font-mono text-xs">6</td><td class="font-mono text-xs">1.5rem</td><td class="font-mono text-xs">24px</td></tr>
+            <tr><td class="font-mono text-xs">8</td><td class="font-mono text-xs">2rem</td><td class="font-mono text-xs">32px</td></tr>
+            <tr><td class="font-mono text-xs">12</td><td class="font-mono text-xs">3rem</td><td class="font-mono text-xs">48px</td></tr>
+            <tr><td class="font-mono text-xs">16</td><td class="font-mono text-xs">4rem</td><td class="font-mono text-xs">64px</td></tr>
+            <tr><td class="font-mono text-xs">24</td><td class="font-mono text-xs">6rem</td><td class="font-mono text-xs">96px</td></tr>
+            <tr><td class="font-mono text-xs">32</td><td class="font-mono text-xs">8rem</td><td class="font-mono text-xs">128px</td></tr>
+            <tr><td class="font-mono text-xs">64</td><td class="font-mono text-xs">16rem</td><td class="font-mono text-xs">256px</td></tr>
+            <tr><td class="font-mono text-xs">96</td><td class="font-mono text-xs">24rem</td><td class="font-mono text-xs">384px</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SIZING TOKENS -->
+    <section id="tokens-sizing" class="section-anchor mb-14">
+      <div class="flex items-center gap-2 mb-1"><h3 class="text-xl font-bold text-gray-900 dark:text-white">Sizing</h3><span class="badge badge-green">Token</span></div>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">Width/height scale including fractional percentages, viewport units and keyword values. Emitted as <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">--mastors-sizing-{key}</code>.</p>
+      <div class="code-block mb-4">
+        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+        <pre><code class="language-scss">@use "@mastors/core/scss/tokens/sizing" as sz;
+
+.hero { width: sz.sizing("full"); height: sz.sizing("screen"); }
+.card { width: sz.sizing("1/3"); max-width: sz.sizing(64); }</code></pre>
+      </div>
+      <div class="demo-box overflow-x-auto">
+        <table>
+          <thead><tr><th>Key</th><th>Value</th></tr></thead>
+          <tbody>
+            <tr><td class="font-mono text-xs">0</td><td class="font-mono text-xs">0</td></tr>
+            <tr><td class="font-mono text-xs">1/2</td><td class="font-mono text-xs">50%</td></tr>
+            <tr><td class="font-mono text-xs">1/3</td><td class="font-mono text-xs">33.3333%</td></tr>
+            <tr><td class="font-mono text-xs">2/3</td><td class="font-mono text-xs">66.6667%</td></tr>
+            <tr><td class="font-mono text-xs">1/4</td><td class="font-mono text-xs">25%</td></tr>
+            <tr><td class="font-mono text-xs">3/4</td><td class="font-mono text-xs">75%</td></tr>
+            <tr><td class="font-mono text-xs">full</td><td class="font-mono text-xs">100%</td></tr>
+            <tr><td class="font-mono text-xs">screen</td><td class="font-mono text-xs">100vw</td></tr>
+            <tr><td class="font-mono text-xs">svw</td><td class="font-mono text-xs">100svw</td></tr>
+            <tr><td class="font-mono text-xs">dvw</td><td class="font-mono text-xs">100dvw</td></tr>
+            <tr><td class="font-mono text-xs">auto</td><td class="font-mono text-xs">auto</td></tr>
+            <tr><td class="font-mono text-xs">min</td><td class="font-mono text-xs">min-content</td></tr>
+            <tr><td class="font-mono text-xs">max</td><td class="font-mono text-xs">max-content</td></tr>
+            <tr><td class="font-mono text-xs">fit</td><td class="font-mono text-xs">fit-content</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- TYPOGRAPHY TOKENS -->
+    <section id="tokens-typography" class="section-anchor mb-14">
+      <div class="flex items-center gap-2 mb-1"><h3 class="text-xl font-bold text-gray-900 dark:text-white">Typography</h3><span class="badge badge-purple">Token</span></div>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">Font sizes (xs–9xl), weights (thin–black), families (sans/serif/mono), line heights, and letter spacing. Emitted as CSS custom properties.</p>
+      <div class="code-block mb-4">
+        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+        <pre><code class="language-scss">@use "@mastors/core/scss/tokens/typography" as ty;
+
+h1 {
+  font-size:   ty.font-size("4xl");   // 2.25rem
+  font-weight: ty.font-weight("bold"); // 700
+  line-height: ty.line-height("tight"); // 1.25
+  letter-spacing: ty.letter-spacing("tight"); // -0.025em
+}
+
+code {
+  font-family: ty.font-family("mono");
+}</code></pre>
+      </div>
+      <div class="demo-box space-y-2">
+        <div style="font-size:3rem;font-weight:700;line-height:1.1">9xl — 8rem</div>
+        <div style="font-size:2.25rem;font-weight:700;line-height:1.15">4xl — 2.25rem</div>
+        <div style="font-size:1.5rem;font-weight:600">2xl — 1.5rem</div>
+        <div style="font-size:1.125rem;font-weight:500">lg — 1.125rem</div>
+        <div style="font-size:1rem">base — 1rem</div>
+        <div style="font-size:0.875rem;color:#6b7280">sm — 0.875rem</div>
+        <div style="font-size:0.75rem;color:#9ca3af">xs — 0.75rem</div>
+      </div>
+    </section>
+
+    <!-- SHADOW TOKENS -->
+    <section id="tokens-shadows" class="section-anchor mb-14">
+      <div class="flex items-center gap-2 mb-1"><h3 class="text-xl font-bold text-gray-900 dark:text-white">Shadows</h3><span class="badge badge-blue">Token</span></div>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">8 elevation steps: xs, sm, md, lg, xl, 2xl, inner, none. Emitted as <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">--mastors-shadow-{key}</code>.</p>
+      <div class="code-block mb-4">
+        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+        <pre><code class="language-scss">@use "@mastors/core/scss/tokens/shadows" as sh;
+
+.card  { box-shadow: sh.shadow("md"); }
+.modal { box-shadow: sh.shadow("2xl"); }
+.input { box-shadow: sh.shadow("inner"); }</code></pre>
+      </div>
+      <div class="demo-box flex flex-wrap gap-6 items-end">
+        <div class="w-16 h-16 bg-white dark:bg-gray-700 rounded-lg" style="box-shadow:0 1px 2px 0 rgb(0 0 0/5%)"><p class="text-xs text-center mt-1 text-gray-400">xs</p></div>
+        <div class="w-16 h-16 bg-white dark:bg-gray-700 rounded-lg" style="box-shadow:0 1px 3px 0 rgb(0 0 0/10%),0 1px 2px -1px rgb(0 0 0/10%)"><p class="text-xs text-center mt-1 text-gray-400">sm</p></div>
+        <div class="w-16 h-16 bg-white dark:bg-gray-700 rounded-lg" style="box-shadow:0 4px 6px -1px rgb(0 0 0/10%),0 2px 4px -2px rgb(0 0 0/10%)"><p class="text-xs text-center mt-1 text-gray-400">md</p></div>
+        <div class="w-16 h-16 bg-white dark:bg-gray-700 rounded-lg" style="box-shadow:0 10px 15px -3px rgb(0 0 0/10%),0 4px 6px -4px rgb(0 0 0/10%)"><p class="text-xs text-center mt-1 text-gray-400">lg</p></div>
+        <div class="w-16 h-16 bg-white dark:bg-gray-700 rounded-lg" style="box-shadow:0 20px 25px -5px rgb(0 0 0/10%),0 8px 10px -6px rgb(0 0 0/10%)"><p class="text-xs text-center mt-1 text-gray-400">xl</p></div>
+        <div class="w-16 h-16 bg-white dark:bg-gray-700 rounded-lg" style="box-shadow:0 25px 50px -12px rgb(0 0 0/25%)"><p class="text-xs text-center mt-1 text-gray-400">2xl</p></div>
+        <div class="w-16 h-16 bg-white dark:bg-gray-700 rounded-lg" style="box-shadow:inset 0 2px 4px 0 rgb(0 0 0/5%)"><p class="text-xs text-center mt-1 text-gray-400">inner</p></div>
+      </div>
+    </section>
+
+    <!-- RADII TOKENS -->
+    <section id="tokens-radii" class="section-anchor mb-14">
+      <div class="flex items-center gap-2 mb-1"><h3 class="text-xl font-bold text-gray-900 dark:text-white">Radii</h3><span class="badge badge-green">Token</span></div>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">Border-radius scale from none (0) to full (9999px). Emitted as <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">--mastors-radius-{key}</code>.</p>
+      <div class="code-block mb-4">
+        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+        <pre><code class="language-scss">@use "@mastors/core/scss/tokens/radii" as ra;
+
+.btn   { border-radius: ra.radius("md"); }   // 0.375rem
+.badge { border-radius: ra.radius("full"); } // 9999px
+.card  { border-radius: ra.radius("xl"); }   // 0.75rem</code></pre>
+      </div>
+      <div class="demo-box flex flex-wrap gap-4 items-center">
+        <div class="w-14 h-14 bg-brand-500 flex items-center justify-center" style="border-radius:0"><span class="text-white text-xs">none</span></div>
+        <div class="w-14 h-14 bg-brand-500 flex items-center justify-center" style="border-radius:0.125rem"><span class="text-white text-xs">sm</span></div>
+        <div class="w-14 h-14 bg-brand-500 flex items-center justify-center" style="border-radius:0.25rem"><span class="text-white text-xs">base</span></div>
+        <div class="w-14 h-14 bg-brand-500 flex items-center justify-center" style="border-radius:0.375rem"><span class="text-white text-xs">md</span></div>
+        <div class="w-14 h-14 bg-brand-500 flex items-center justify-center" style="border-radius:0.5rem"><span class="text-white text-xs">lg</span></div>
+        <div class="w-14 h-14 bg-brand-500 flex items-center justify-center" style="border-radius:0.75rem"><span class="text-white text-xs">xl</span></div>
+        <div class="w-14 h-14 bg-brand-500 flex items-center justify-center" style="border-radius:1rem"><span class="text-white text-xs">2xl</span></div>
+        <div class="w-14 h-14 bg-brand-500 flex items-center justify-center" style="border-radius:1.5rem"><span class="text-white text-xs">3xl</span></div>
+        <div class="w-14 h-14 bg-brand-500 flex items-center justify-center" style="border-radius:9999px"><span class="text-white text-xs">full</span></div>
+      </div>
+    </section>
+
+    <!-- OPACITY TOKENS -->
+    <section id="tokens-opacity" class="section-anchor mb-14">
+      <div class="flex items-center gap-2 mb-1"><h3 class="text-xl font-bold text-gray-900 dark:text-white">Opacity</h3><span class="badge badge-orange">Token</span></div>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">17-step opacity scale 0–100. Emitted as <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">--mastors-opacity-{key}</code>.</p>
+      <div class="code-block mb-4">
+        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+        <pre><code class="language-scss">@use "@mastors/core/scss/tokens/opacity" as op;
+
+.overlay { opacity: op.opacity(50); } // → 0.5
+.disabled { opacity: op.opacity(30); } // → 0.3</code></pre>
+      </div>
+      <div class="demo-box flex flex-wrap gap-2">
+        <div style="opacity:0" class="w-10 h-10 bg-brand-500 rounded text-center text-xs text-white flex items-center justify-center">0</div>
+        <div style="opacity:0.1" class="w-10 h-10 bg-brand-500 rounded text-center text-xs text-white flex items-center justify-center">10</div>
+        <div style="opacity:0.25" class="w-10 h-10 bg-brand-500 rounded text-center text-xs text-white flex items-center justify-center">25</div>
+        <div style="opacity:0.5" class="w-10 h-10 bg-brand-500 rounded text-center text-xs text-white flex items-center justify-center">50</div>
+        <div style="opacity:0.75" class="w-10 h-10 bg-brand-500 rounded text-center text-xs text-white flex items-center justify-center">75</div>
+        <div style="opacity:0.9" class="w-10 h-10 bg-brand-500 rounded text-center text-xs text-white flex items-center justify-center">90</div>
+        <div style="opacity:1" class="w-10 h-10 bg-brand-500 rounded text-center text-xs text-white flex items-center justify-center">100</div>
+      </div>
+    </section>
+
+    <!-- Z-INDEX TOKENS -->
+    <section id="tokens-zindex" class="section-anchor mb-14">
+      <div class="flex items-center gap-2 mb-1"><h3 class="text-xl font-bold text-gray-900 dark:text-white">Z-Index</h3><span class="badge badge-blue">Token</span></div>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">Named stacking layers for predictable layering. Emitted as <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">--mastors-z-{key}</code>.</p>
+      <div class="code-block mb-4">
+        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+        <pre><code class="language-scss">@use "@mastors/core/scss/tokens/z-index" as zi;
+
+.dropdown { z-index: zi.z("dropdown"); } // 100
+.modal    { z-index: zi.z("modal"); }    // 400
+.toast    { z-index: zi.z("toast"); }    // 500
+.tooltip  { z-index: zi.z("tooltip"); } // 600</code></pre>
+      </div>
+      <div class="demo-box overflow-x-auto">
+        <table>
+          <thead><tr><th>Key</th><th>Value</th><th>Use case</th></tr></thead>
+          <tbody>
+            <tr><td class="font-mono text-xs">base</td><td class="font-mono text-xs">0</td><td class="text-xs text-gray-500">Default document flow</td></tr>
+            <tr><td class="font-mono text-xs">raised</td><td class="font-mono text-xs">10</td><td class="text-xs text-gray-500">Slightly elevated elements</td></tr>
+            <tr><td class="font-mono text-xs">dropdown</td><td class="font-mono text-xs">100</td><td class="text-xs text-gray-500">Dropdown menus</td></tr>
+            <tr><td class="font-mono text-xs">sticky</td><td class="font-mono text-xs">200</td><td class="text-xs text-gray-500">Sticky headers/sidebars</td></tr>
+            <tr><td class="font-mono text-xs">overlay</td><td class="font-mono text-xs">300</td><td class="text-xs text-gray-500">Overlay backdrops</td></tr>
+            <tr><td class="font-mono text-xs">modal</td><td class="font-mono text-xs">400</td><td class="text-xs text-gray-500">Modal dialogs</td></tr>
+            <tr><td class="font-mono text-xs">toast</td><td class="font-mono text-xs">500</td><td class="text-xs text-gray-500">Toast notifications</td></tr>
+            <tr><td class="font-mono text-xs">tooltip</td><td class="font-mono text-xs">600</td><td class="text-xs text-gray-500">Tooltips</td></tr>
+            <tr><td class="font-mono text-xs">max</td><td class="font-mono text-xs">9999</td><td class="text-xs text-gray-500">Escape hatch</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- TRANSITIONS TOKENS -->
+    <section id="tokens-transitions" class="section-anchor mb-14">
+      <div class="flex items-center gap-2 mb-1"><h3 class="text-xl font-bold text-gray-900 dark:text-white">Transitions</h3><span class="badge badge-purple">Token</span></div>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">Duration tokens (75ms–1000ms) and easing curves (linear, in, out, in-out, bounce). Emitted as <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">--mastors-duration-{key}</code> and <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">--mastors-easing-{key}</code>.</p>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+        <pre><code class="language-scss">@use "@mastors/core/scss/tokens/transitions" as tr;
+
+.btn {
+  transition: background-color tr.duration("150") tr.easing("in-out");
+}
+
+// Values:
+// tr.duration("75")   → 75ms
+// tr.duration("300")  → 300ms
+// tr.easing("out")    → cubic-bezier(0, 0, 0.2, 1)
+// tr.easing("bounce") → cubic-bezier(0.34, 1.56, 0.64, 1)</code></pre>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         THEMING
+    ═══════════════════════════════════════════════════════ -->
+    <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6 mt-2 border-b border-gray-200 dark:border-gray-800 pb-3">
+      <i class="fa-solid fa-circle-half-stroke text-brand-500 mr-2"></i>Theming
+    </h2>
+
+    <section id="themes" class="section-anchor mb-14">
+      <div class="flex items-center gap-2 mb-1"><h3 class="text-xl font-bold text-gray-900 dark:text-white">Light &amp; Dark Themes</h3><span class="badge badge-blue">Theme</span></div>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">Themes are toggled via <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">.dark</code> / <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">[data-theme="dark"]</code> on any ancestor element (strategy: class, default) or via <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">prefers-color-scheme</code> (strategy: media). Themes redefine semantic custom properties — no class changes needed on individual components.</p>
+      <div class="code-block mb-4">
+        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+        <pre><code class="language-html">&lt;!-- Class strategy (default) --&gt;
+&lt;html class="dark"&gt;
+&lt;!-- or --&gt;
+&lt;html data-theme="dark"&gt;
+
+&lt;!-- Toggle with JS --&gt;
+&lt;script&gt;
+  document.documentElement.classList.toggle('dark');
+&lt;/script&gt;</code></pre>
+      </div>
+      <div class="code-block mb-4">
+        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+        <pre><code class="language-scss">// Override dark strategy to media query:
+// In your entry scss BEFORE @use "@mastors/core"
+// (or via custom theme overrides)
+$dark-mode-strategy: "media"; // default: "class"
+@use "@mastors/core";</code></pre>
+      </div>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="rounded-xl border border-gray-200 p-5 bg-white">
+          <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Light theme</p>
+          <div class="space-y-1.5 text-xs font-mono">
+            <div class="flex items-center gap-2"><span class="w-4 h-4 rounded" style="background:#fff;border:1px solid #e5e7eb"></span><span>--mastors-bg: #fff</span></div>
+            <div class="flex items-center gap-2"><span class="w-4 h-4 rounded" style="background:#f9fafb;border:1px solid #e5e7eb"></span><span>--mastors-bg-subtle: #f9fafb</span></div>
+            <div class="flex items-center gap-2"><span class="w-4 h-4 rounded" style="background:#111827;border:1px solid #e5e7eb"></span><span>--mastors-text: #111827</span></div>
+            <div class="flex items-center gap-2"><span class="w-4 h-4 rounded" style="background:#2563eb"></span><span>--mastors-accent: #2563eb</span></div>
+            <div class="flex items-center gap-2"><span class="w-4 h-4 rounded" style="background:#e5e7eb"></span><span>--mastors-border: #e5e7eb</span></div>
+          </div>
+        </div>
+        <div class="rounded-xl border border-gray-700 p-5 bg-gray-950">
+          <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Dark theme</p>
+          <div class="space-y-1.5 text-xs font-mono text-gray-300">
+            <div class="flex items-center gap-2"><span class="w-4 h-4 rounded" style="background:#030712;border:1px solid #374151"></span><span>--mastors-bg: #030712</span></div>
+            <div class="flex items-center gap-2"><span class="w-4 h-4 rounded" style="background:#111827;border:1px solid #374151"></span><span>--mastors-bg-subtle: #111827</span></div>
+            <div class="flex items-center gap-2"><span class="w-4 h-4 rounded" style="background:#f9fafb;border:1px solid #374151"></span><span>--mastors-text: #f9fafb</span></div>
+            <div class="flex items-center gap-2"><span class="w-4 h-4 rounded" style="background:#60a5fa"></span><span>--mastors-accent: #60a5fa</span></div>
+            <div class="flex items-center gap-2"><span class="w-4 h-4 rounded" style="background:#374151"></span><span>--mastors-border: #374151</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="semantic" class="section-anchor mb-14">
+      <div class="flex items-center gap-2 mb-1"><h3 class="text-xl font-bold text-gray-900 dark:text-white">Semantic Layer</h3><span class="badge badge-green">Theme</span></div>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">Role-based SCSS variables that map to CSS custom properties. Use these in your components instead of raw token references — they update automatically when the theme changes.</p>
+      <div class="code-block mb-4">
+        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+        <pre><code class="language-scss">@use "@mastors/core/scss/semantic/colors"    as sc;
+@use "@mastors/core/scss/semantic/spacing"   as ss;
+@use "@mastors/core/scss/semantic/typography" as st;
+
+.card {
+  background: sc.$color-surface;
+  color:       sc.$color-text;
+  border:      1px solid sc.$color-border;
+  padding:     ss.$space-component;
+  font-family: st.$font-body;
+}
+
+// All $color-* variables resolve to var(--mastors-*) 
+// so they inherit the active theme at runtime.</code></pre>
+      </div>
+      <div class="demo-box overflow-x-auto">
+        <table>
+          <thead><tr><th>Variable</th><th>Custom Property</th><th>Role</th></tr></thead>
+          <tbody>
+            <tr><td class="font-mono text-xs">$color-bg</td><td class="font-mono text-xs">--mastors-bg</td><td class="text-xs">Page background</td></tr>
+            <tr><td class="font-mono text-xs">$color-surface</td><td class="font-mono text-xs">--mastors-surface</td><td class="text-xs">Card / panel surface</td></tr>
+            <tr><td class="font-mono text-xs">$color-surface-raised</td><td class="font-mono text-xs">--mastors-surface-raised</td><td class="text-xs">Dropdowns, tooltips</td></tr>
+            <tr><td class="font-mono text-xs">$color-text</td><td class="font-mono text-xs">--mastors-text</td><td class="text-xs">Primary text</td></tr>
+            <tr><td class="font-mono text-xs">$color-text-muted</td><td class="font-mono text-xs">--mastors-text-muted</td><td class="text-xs">Secondary text</td></tr>
+            <tr><td class="font-mono text-xs">$color-text-subtle</td><td class="font-mono text-xs">--mastors-text-subtle</td><td class="text-xs">Placeholder / tertiary</td></tr>
+            <tr><td class="font-mono text-xs">$color-border</td><td class="font-mono text-xs">--mastors-border</td><td class="text-xs">Default border</td></tr>
+            <tr><td class="font-mono text-xs">$color-accent</td><td class="font-mono text-xs">--mastors-accent</td><td class="text-xs">Brand / primary action</td></tr>
+            <tr><td class="font-mono text-xs">$color-accent-hover</td><td class="font-mono text-xs">--mastors-accent-hover</td><td class="text-xs">Accent hover state</td></tr>
+            <tr><td class="font-mono text-xs">$space-inline</td><td class="font-mono text-xs">0.25rem (spacing(1))</td><td class="text-xs">Tight inline gap</td></tr>
+            <tr><td class="font-mono text-xs">$space-component</td><td class="font-mono text-xs">1rem (spacing(4))</td><td class="text-xs">Component padding</td></tr>
+            <tr><td class="font-mono text-xs">$space-section</td><td class="font-mono text-xs">4rem (spacing(16))</td><td class="text-xs">Between sections</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         UTILITIES
+    ═══════════════════════════════════════════════════════ -->
+    <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6 mt-2 border-b border-gray-200 dark:border-gray-800 pb-3">
+      <i class="fa-solid fa-toolbox text-brand-500 mr-2"></i>Utilities
+    </h2>
+
+    <!-- SPACING UTILITIES -->
+    <section id="util-spacing" class="section-anchor mb-14">
+      <div class="flex items-center gap-2 mb-1"><h3 class="text-xl font-bold text-gray-900 dark:text-white">Spacing Utilities</h3><span class="badge badge-blue">Utility</span></div>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">Margin, padding, and gap utilities generated from spacing tokens. Supports all directional variants, logical properties, and <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">auto</code> for margins.</p>
+      <div class="code-block mb-4">
+        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+        <pre><code class="language-html">&lt;!-- Margin --&gt;
+&lt;div class="m-4"&gt;margin: 1rem&lt;/div&gt;
+&lt;div class="mx-auto"&gt;margin-inline: auto&lt;/div&gt;
+&lt;div class="my-8"&gt;margin-block: 2rem&lt;/div&gt;
+&lt;div class="mt-2 mb-6"&gt;margin-top + margin-bottom&lt;/div&gt;
+&lt;div class="ms-4 me-4"&gt;margin-inline-start/end (logical)&lt;/div&gt;
+
+&lt;!-- Padding --&gt;
+&lt;div class="p-6"&gt;padding: 1.5rem&lt;/div&gt;
+&lt;div class="px-4 py-2"&gt;padding-x + padding-y&lt;/div&gt;
+&lt;div class="ps-4 pe-4"&gt;padding-inline-start/end&lt;/div&gt;
+
+&lt;!-- Gap --&gt;
+&lt;div class="flex gap-4"&gt;gap: 1rem&lt;/div&gt;
+&lt;div class="grid gap-x-6 gap-y-3"&gt;column + row gap&lt;/div&gt;</code></pre>
+      </div>
+      <div class="demo-box space-y-3">
+        <div class="bg-brand-100 dark:bg-brand-900/30 text-brand-800 dark:text-brand-300 text-xs font-mono" style="padding:1rem">p-4 (1rem)</div>
+        <div class="bg-brand-100 dark:bg-brand-900/30 text-brand-800 dark:text-brand-300 text-xs font-mono" style="padding:0.5rem 1.5rem">py-2 px-6</div>
+        <div class="flex" style="gap:1rem">
+          <div class="bg-success-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 text-xs font-mono px-3 py-1.5">gap-4 child</div>
+          <div class="bg-success-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 text-xs font-mono px-3 py-1.5">gap-4 child</div>
+          <div class="bg-success-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 text-xs font-mono px-3 py-1.5">gap-4 child</div>
+        </div>
+      </div>
+      <div class="mt-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-3 text-xs text-gray-500 dark:text-gray-400">
+        <strong>All spacing keys:</strong> 0, px, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64, 72, 80, 96
+        <br/>Plus <code>auto</code> for margin only.
+      </div>
+    </section>
+
+    <!-- DISPLAY UTILITIES -->
+    <section id="util-display" class="section-anchor mb-14">
+      <div class="flex items-center gap-2 mb-1"><h3 class="text-xl font-bold text-gray-900 dark:text-white">Display</h3><span class="badge badge-blue">Utility</span><span class="badge badge-green ml-1">Responsive</span></div>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">Generates display classes including responsive variants (e.g. <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">md:flex</code>, <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">lg:hidden</code>).</p>
+      <div class="code-block mb-4">
+        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+        <pre><code class="language-html">&lt;div class="block"&gt;&lt;/div&gt;
+&lt;div class="inline-block"&gt;&lt;/div&gt;
+&lt;div class="inline"&gt;&lt;/div&gt;
+&lt;div class="flex"&gt;&lt;/div&gt;
+&lt;div class="inline-flex"&gt;&lt;/div&gt;
+&lt;div class="grid"&gt;&lt;/div&gt;
+&lt;div class="inline-grid"&gt;&lt;/div&gt;
+&lt;div class="table"&gt;&lt;/div&gt;
+&lt;div class="contents"&gt;&lt;/div&gt;
+&lt;div class="hidden"&gt;&lt;/div&gt;         &lt;!-- display: none --&gt;
+
+&lt;!-- Responsive --&gt;
+&lt;div class="hidden md:block"&gt;Shows from md up&lt;/div&gt;
+&lt;div class="flex lg:hidden"&gt;Hidden from lg up&lt;/div&gt;</code></pre>
+      </div>
+    </section>
+
+    <!-- POSITION UTILITIES -->
+    <section id="util-position" class="section-anchor mb-14">
+      <div class="flex items-center gap-2 mb-1"><h3 class="text-xl font-bold text-gray-900 dark:text-white">Position</h3><span class="badge badge-blue">Utility</span><span class="badge badge-green ml-1">Responsive</span></div>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">Positioning classes + inset utilities for top/right/bottom/left values.</p>
+      <div class="code-block mb-4">
+        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+        <pre><code class="language-html">&lt;div class="relative"&gt;
+  &lt;div class="absolute top-0 right-0"&gt;top-right corner&lt;/div&gt;
+  &lt;div class="absolute inset-0"&gt;full overlay&lt;/div&gt;
+  &lt;div class="absolute inset-x-0 bottom-0"&gt;bottom bar&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="sticky top-0"&gt;Sticky header&lt;/div&gt;
+&lt;div class="fixed bottom-0 right-0"&gt;Floating btn&lt;/div&gt;</code></pre>
+      </div>
+      <p class="text-xs text-gray-500 dark:text-gray-400">Inset keys: <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded">0</code>, <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded">auto</code>, <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded">full</code> (100%), <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded">1/2</code> (50%)</p>
+    </section>
+
+    <!-- SIZING UTILITIES -->
+    <section id="util-sizing" class="section-anchor mb-14">
+      <div class="flex items-center gap-2 mb-1"><h3 class="text-xl font-bold text-gray-900 dark:text-white">Sizing</h3><span class="badge badge-blue">Utility</span></div>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">Width and height utilities generated from sizing tokens. Includes min-width, max-width, min-height, max-height shortcuts.</p>
+      <div class="code-block mb-4">
+        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+        <pre><code class="language-html">&lt;div class="w-full h-screen"&gt;Full width, screen height&lt;/div&gt;
+&lt;div class="w-1/2 h-32"&gt;50% width, 8rem height&lt;/div&gt;
+&lt;div class="w-fit"&gt;Width: fit-content&lt;/div&gt;
+
+&lt;!-- Min / Max --&gt;
+&lt;div class="min-w-0 max-w-prose"&gt;Prose width (65ch)&lt;/div&gt;
+&lt;div class="min-h-screen"&gt;Min 100vh height&lt;/div&gt;
+&lt;div class="min-h-svh"&gt;Min 100svh (small viewport)&lt;/div&gt;
+&lt;div class="min-h-dvh"&gt;Min 100dvh (dynamic viewport)&lt;/div&gt;</code></pre>
+      </div>
+    </section>
+
+    <!-- TYPOGRAPHY UTILITIES -->
+    <section id="util-typography" class="section-anchor mb-14">
+      <div class="flex items-center gap-2 mb-1"><h3 class="text-xl font-bold text-gray-900 dark:text-white">Typography Utilities</h3><span class="badge badge-purple">Utility</span><span class="badge badge-green ml-1">Responsive</span></div>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">Text size, weight, family, alignment, leading, tracking, decoration, transform, whitespace, word-break, and more.</p>
+      <div class="code-block mb-4">
+        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+        <pre><code class="language-html">&lt;!-- Size --&gt;
+&lt;p class="text-xs"&gt; &lt;p class="text-sm"&gt; &lt;p class="text-base"&gt;
+&lt;p class="text-lg"&gt; &lt;p class="text-xl"&gt; &lt;p class="text-2xl"&gt;
+&lt;p class="text-3xl"&gt; ... &lt;p class="text-9xl"&gt;
+
+&lt;!-- Weight --&gt;
+&lt;p class="font-thin"&gt; &lt;p class="font-light"&gt; &lt;p class="font-normal"&gt;
+&lt;p class="font-medium"&gt; &lt;p class="font-semibold"&gt; &lt;p class="font-bold"&gt;
+&lt;p class="font-extrabold"&gt; &lt;p class="font-black"&gt;
+
+&lt;!-- Family --&gt;
+&lt;p class="font-sans"&gt; &lt;p class="font-serif"&gt; &lt;p class="font-mono"&gt;
+
+&lt;!-- Align (responsive) --&gt;
+&lt;p class="text-left"&gt; &lt;p class="text-center"&gt; &lt;p class="text-right"&gt;
+&lt;p class="md:text-center"&gt;
+
+&lt;!-- Line height --&gt;
+&lt;p class="leading-none"&gt; &lt;p class="leading-tight"&gt; &lt;p class="leading-normal"&gt;
+&lt;p class="leading-relaxed"&gt; &lt;p class="leading-loose"&gt;
+
+&lt;!-- Letter spacing --&gt;
+&lt;p class="tracking-tight"&gt; &lt;p class="tracking-normal"&gt; &lt;p class="tracking-wide"&gt;
+&lt;p class="tracking-widest"&gt;
+
+&lt;!-- Decoration --&gt;
+&lt;p class="underline"&gt; &lt;p class="line-through"&gt; &lt;p class="no-underline"&gt;
+&lt;p class="decoration-wavy decoration-2"&gt;
+
+&lt;!-- Transform --&gt;
+&lt;p class="uppercase"&gt; &lt;p class="lowercase"&gt; &lt;p class="capitalize"&gt;
+
+&lt;!-- Style --&gt;
+&lt;p class="italic"&gt; &lt;p class="not-italic"&gt;
+
+&lt;!-- Misc --&gt;
+&lt;p class="antialiased"&gt; &lt;p class="text-ellipsis"&gt;
+&lt;p class="whitespace-nowrap"&gt; &lt;p class="break-words"&gt;
+
+&lt;!-- List --&gt;
+&lt;ul class="list-disc list-inside"&gt; &lt;ol class="list-decimal"&gt;</code></pre>
+      </div>
+      <div class="demo-box space-y-2">
+        <p class="text-xs font-mono text-gray-400">Size scale →</p>
+        <p style="font-size:0.75rem">text-xs — The quick brown fox</p>
+        <p style="font-size:0.875rem">text-sm — The quick brown fox</p>
+        <p style="font-size:1rem">text-base — The quick brown fox</p>
+        <p style="font-size:1.25rem;font-weight:600">text-xl font-semibold</p>
+        <p style="font-size:2.25rem;font-weight:700;line-height:1.1">text-4xl font-bold</p>
+        <p style="text-decoration:underline;text-decoration-style:wavy;text-decoration-color:#3b82f6">decoration-wavy text-blue</p>
+        <p style="letter-spacing:0.1em;text-transform:uppercase;font-size:0.75rem;color:#6b7280">TRACKING-WIDEST UPPERCASE</p>
+      </div>
+    </section>
+
+    <!-- COLOR UTILITIES -->
+    <section id="util-colors" class="section-anchor mb-14">
+      <div class="flex items-center gap-2 mb-1"><h3 class="text-xl font-bold text-gray-900 dark:text-white">Color Utilities</h3><span class="badge badge-blue">Utility</span></div>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">Text color, background color, and border color classes for both semantic and primitive palettes.</p>
+      <div class="code-block mb-4">
+        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+        <pre><code class="language-html">&lt;!-- Semantic text colors --&gt;
+&lt;p class="text-default"&gt;Default text&lt;/p&gt;
+&lt;p class="text-muted"&gt;Muted text&lt;/p&gt;
+&lt;p class="text-subtle"&gt;Subtle text&lt;/p&gt;
+&lt;p class="text-accent"&gt;Accent text&lt;/p&gt;
+&lt;p class="text-inverse"&gt;Inverse text&lt;/p&gt;
+
+&lt;!-- Primitive text colors --&gt;
+&lt;p class="text-primary-600"&gt;Primary 600&lt;/p&gt;
+&lt;p class="text-success-500"&gt;Success 500&lt;/p&gt;
+&lt;p class="text-error-500"&gt;Error 500&lt;/p&gt;
+&lt;p class="text-white"&gt; &lt;p class="text-black"&gt;
+&lt;p class="text-current"&gt; &lt;p class="text-transparent"&gt;
+
+&lt;!-- Semantic backgrounds --&gt;
+&lt;div class="bg-default"&gt; &lt;div class="bg-subtle"&gt;
+&lt;div class="bg-surface"&gt; &lt;div class="bg-accent"&gt;
+
+&lt;!-- Primitive backgrounds --&gt;
+&lt;div class="bg-primary-50"&gt; &lt;div class="bg-neutral-100"&gt;
+&lt;div class="bg-warning-200"&gt; &lt;div class="bg-white"&gt;
+&lt;div class="bg-transparent"&gt;</code></pre>
+      </div>
+      <div class="demo-box flex flex-wrap gap-2">
+        <span class="px-3 py-1 rounded text-xs font-semibold" style="background:#dbeafe;color:#1d4ed8">bg-primary-100 text-primary-700</span>
+        <span class="px-3 py-1 rounded text-xs font-semibold" style="background:#dcfce7;color:#15803d">bg-success-100 text-success-700</span>
+        <span class="px-3 py-1 rounded text-xs font-semibold" style="background:#fef3c7;color:#b45309">bg-warning-100 text-warning-700</span>
+        <span class="px-3 py-1 rounded text-xs font-semibold" style="background:#fee2e2;color:#b91c1c">bg-error-100 text-error-700</span>
+        <span class="px-3 py-1 rounded text-xs font-semibold" style="background:#cffafe;color:#0e7490">bg-info-100 text-info-700</span>
+      </div>
+    </section>
+
+    <!-- BORDER UTILITIES -->
+    <section id="util-borders" class="section-anchor mb-14">
+      <div class="flex items-center gap-2 mb-1"><h3 class="text-xl font-bold text-gray-900 dark:text-white">Borders</h3><span class="badge badge-blue">Utility</span></div>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">Border width, style, color, and radius classes.</p>
+      <div class="code-block mb-4">
+        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+        <pre><code class="language-html">&lt;!-- Border width --&gt;
+&lt;div class="border"&gt;1px solid&lt;/div&gt;
+&lt;div class="border-0"&gt;no border&lt;/div&gt;
+&lt;div class="border-2"&gt;2px solid&lt;/div&gt;
+&lt;div class="border-4"&gt;4px solid&lt;/div&gt;
+&lt;div class="border-t"&gt;top only&lt;/div&gt;
+&lt;div class="border-b"&gt;bottom only&lt;/div&gt;
+
+&lt;!-- Border style --&gt;
+&lt;div class="border border-dashed"&gt;dashed&lt;/div&gt;
+&lt;div class="border border-dotted"&gt;dotted&lt;/div&gt;
+
+&lt;!-- Border color --&gt;
+&lt;div class="border border-default"&gt;semantic border&lt;/div&gt;
+&lt;div class="border border-strong"&gt;strong border&lt;/div&gt;
+&lt;div class="border border-transparent"&gt;transparent&lt;/div&gt;
+
+&lt;!-- Border radius --&gt;
+&lt;div class="rounded-none"&gt;   &lt;div class="rounded-sm"&gt;
+&lt;div class="rounded"&gt;       &lt;div class="rounded-md"&gt;
+&lt;div class="rounded-lg"&gt;    &lt;div class="rounded-xl"&gt;
+&lt;div class="rounded-2xl"&gt;   &lt;div class="rounded-3xl"&gt;
+&lt;div class="rounded-full"&gt;
+
+&lt;!-- Directional radius --&gt;
+&lt;div class="rounded-t-lg"&gt;  &lt;!-- top corners --&gt;
+&lt;div class="rounded-b-xl"&gt;  &lt;!-- bottom corners --&gt;
+&lt;div class="rounded-l-full"&gt; &lt;!-- left corners --&gt;</code></pre>
+      </div>
+      <div class="demo-box flex flex-wrap gap-3">
+        <div class="w-12 h-12 bg-brand-200 dark:bg-brand-900 border-2 border-brand-500" style="border-radius:0"></div>
+        <div class="w-12 h-12 bg-brand-200 dark:bg-brand-900 border-2 border-brand-500" style="border-radius:0.25rem"></div>
+        <div class="w-12 h-12 bg-brand-200 dark:bg-brand-900 border-2 border-brand-500" style="border-radius:0.5rem"></div>
+        <div class="w-12 h-12 bg-brand-200 dark:bg-brand-900 border-2 border-brand-500" style="border-radius:1rem"></div>
+        <div class="w-12 h-12 bg-brand-200 dark:bg-brand-900 border-2 border-brand-500" style="border-radius:9999px"></div>
+        <div class="w-24 h-12 bg-brand-100 dark:bg-brand-900/30 border border-dashed border-brand-400 flex items-center justify-center text-xs text-brand-600 dark:text-brand-400" style="border-radius:0.5rem">dashed</div>
+        <div class="w-24 h-12 bg-brand-100 dark:bg-brand-900/30 border border-dotted border-brand-400 flex items-center justify-center text-xs text-brand-600 dark:text-brand-400" style="border-radius:0.5rem">dotted</div>
+      </div>
+    </section>
+
+    <!-- SHADOW UTILITIES -->
+    <section id="util-shadows" class="section-anchor mb-14">
+      <div class="flex items-center gap-2 mb-1"><h3 class="text-xl font-bold text-gray-900 dark:text-white">Shadow Utilities</h3><span class="badge badge-blue">Utility</span></div>
+      <div class="code-block mb-4">
+        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+        <pre><code class="language-html">&lt;div class="shadow-xs"&gt;Extra small shadow&lt;/div&gt;
+&lt;div class="shadow-sm"&gt;Small shadow&lt;/div&gt;
+&lt;div class="shadow"&gt;Default (md) shadow&lt;/div&gt;
+&lt;div class="shadow-md"&gt;Medium shadow&lt;/div&gt;
+&lt;div class="shadow-lg"&gt;Large shadow&lt;/div&gt;
+&lt;div class="shadow-xl"&gt;XL shadow&lt;/div&gt;
+&lt;div class="shadow-2xl"&gt;2XL shadow&lt;/div&gt;
+&lt;div class="shadow-inner"&gt;Inset shadow&lt;/div&gt;
+&lt;div class="shadow-none"&gt;No shadow&lt;/div&gt;</code></pre>
+      </div>
+    </section>
+
+    <!-- OPACITY UTILITIES -->
+    <section id="util-opacity" class="section-anchor mb-14">
+      <div class="flex items-center gap-2 mb-1"><h3 class="text-xl font-bold text-gray-900 dark:text-white">Opacity Utilities</h3><span class="badge badge-orange">Utility</span></div>
+      <div class="code-block mb-4">
+        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+        <pre><code class="language-html">&lt;div class="opacity-0"&gt;   &lt;!-- 0 --&gt;
+&lt;div class="opacity-5"&gt;   &lt;!-- 0.05 --&gt;
+&lt;div class="opacity-10"&gt;  &lt;!-- 0.1 --&gt;
+&lt;div class="opacity-25"&gt;  &lt;!-- 0.25 --&gt;
+&lt;div class="opacity-50"&gt;  &lt;!-- 0.5 --&gt;
+&lt;div class="opacity-75"&gt;  &lt;!-- 0.75 --&gt;
+&lt;div class="opacity-90"&gt;  &lt;!-- 0.9 --&gt;
+&lt;div class="opacity-100"&gt; &lt;!-- 1 --&gt;</code></pre>
+      </div>
+    </section>
+
+    <!-- TRANSFORM UTILITIES -->
+    <section id="util-transform" class="section-anchor mb-14">
+      <div class="flex items-center gap-2 mb-1"><h3 class="text-xl font-bold text-gray-900 dark:text-white">Transform</h3><span class="badge badge-blue">Utility</span></div>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">Translate, rotate, scale, and transform-origin classes. Use <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">.transform-gpu</code> to promote to a composite layer.</p>
+      <div class="code-block mb-4">
+        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+        <pre><code class="language-html">&lt;!-- Translate --&gt;
+&lt;div class="translate-x-4"&gt;  &lt;!-- translateX(1rem) --&gt;
+&lt;div class="translate-y-2"&gt;  &lt;!-- translateY(0.5rem) --&gt;
+&lt;div class="-translate-y-1"&gt; &lt;!-- translateY(-0.25rem) --&gt;
+&lt;div class="translate-x-full"&gt; &lt;!-- translateX(100%) --&gt;
+
+&lt;!-- Rotate --&gt;
+&lt;div class="rotate-45"&gt;   &lt;!-- 45deg --&gt;
+&lt;div class="rotate-90"&gt;   &lt;!-- 90deg --&gt;
+&lt;div class="rotate-180"&gt;  &lt;!-- 180deg --&gt;
+&lt;div class="-rotate-45"&gt;  &lt;!-- -45deg --&gt;
+
+&lt;!-- Scale --&gt;
+&lt;div class="scale-0"&gt;    &lt;!-- 0 --&gt;
+&lt;div class="scale-50"&gt;   &lt;!-- 0.5 --&gt;
+&lt;div class="scale-100"&gt;  &lt;!-- 1 (normal) --&gt;
+&lt;div class="scale-105"&gt;  &lt;!-- 1.05 --&gt;
+&lt;div class="scale-110"&gt;  &lt;!-- 1.1 --&gt;
+&lt;div class="scale-150"&gt;  &lt;!-- 1.5 --&gt;
+&lt;div class="scale-x-75"&gt; &lt;!-- scaleX only --&gt;
+
+&lt;!-- Origin --&gt;
+&lt;div class="origin-center"&gt; &lt;div class="origin-top"&gt;
+&lt;div class="origin-bottom-right"&gt;
+
+&lt;!-- GPU acceleration --&gt;
+&lt;div class="transform-gpu"&gt;  &lt;!-- translateZ(0) --&gt;
+&lt;div class="transform-none"&gt; &lt;!-- removes transform --&gt;</code></pre>
+      </div>
+      <div class="demo-box flex flex-wrap gap-6 items-center">
+        <div class="w-12 h-12 bg-brand-500 rounded-lg flex items-center justify-center text-white text-xs" style="transform:rotate(45deg)">45°</div>
+        <div class="w-12 h-12 bg-success-500 rounded-lg flex items-center justify-center text-white text-xs" style="transform:scale(1.25)">1.25</div>
+        <div class="w-12 h-12 bg-warning-500 rounded-lg flex items-center justify-center text-white text-xs" style="transform:translateX(1rem)">+1rem</div>
+      </div>
+    </section>
+
+    <!-- ANIMATION UTILITIES -->
+    <section id="util-animation" class="section-anchor mb-14">
+      <div class="flex items-center gap-2 mb-1"><h3 class="text-xl font-bold text-gray-900 dark:text-white">Animation & Transitions</h3><span class="badge badge-purple">Utility</span></div>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">Built-in keyframe animations (spin, ping, pulse, bounce, fade-in, fade-out, slide-up, slide-down, scale-in) plus transition property, duration, easing, and delay utilities.</p>
+      <div class="code-block mb-4">
+        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+        <pre><code class="language-html">&lt;!-- Animations --&gt;
+&lt;div class="animate-spin"&gt;Spinner&lt;/div&gt;
+&lt;div class="animate-ping"&gt;Ping dot&lt;/div&gt;
+&lt;div class="animate-pulse"&gt;Pulsing skeleton&lt;/div&gt;
+&lt;div class="animate-bounce"&gt;Bouncing indicator&lt;/div&gt;
+&lt;div class="animate-fade-in"&gt;Fade in on mount&lt;/div&gt;
+&lt;div class="animate-fade-out"&gt;Fade out&lt;/div&gt;
+&lt;div class="animate-slide-up"&gt;Slide up&lt;/div&gt;
+&lt;div class="animate-slide-down"&gt;Slide down&lt;/div&gt;
+&lt;div class="animate-scale-in"&gt;Scale in&lt;/div&gt;
+&lt;div class="animate-none"&gt;No animation&lt;/div&gt;
+
+&lt;!-- Transitions --&gt;
+&lt;div class="transition"&gt;All common properties&lt;/div&gt;
+&lt;div class="transition-colors"&gt;Colors only&lt;/div&gt;
+&lt;div class="transition-opacity"&gt;Opacity only&lt;/div&gt;
+&lt;div class="transition-transform"&gt;Transform only&lt;/div&gt;
+&lt;div class="transition-shadow"&gt;Shadow only&lt;/div&gt;
+&lt;div class="transition-none"&gt;Disable&lt;/div&gt;
+
+&lt;!-- Duration --&gt;
+&lt;div class="duration-75"&gt;  75ms
+&lt;div class="duration-150"&gt; 150ms
+&lt;div class="duration-300"&gt; 300ms
+&lt;div class="duration-700"&gt; 700ms
+&lt;div class="duration-1000"&gt; 1s
+
+&lt;!-- Easing --&gt;
+&lt;div class="ease-linear"&gt;  &lt;div class="ease-in"&gt;
+&lt;div class="ease-out"&gt;     &lt;div class="ease-in-out"&gt;
+&lt;div class="ease-bounce"&gt;
+
+&lt;!-- Delay --&gt;
+&lt;div class="delay-150"&gt; &lt;div class="delay-300"&gt; &lt;div class="delay-700"&gt;
+
+&lt;!-- Fill mode / Play state --&gt;
+&lt;div class="fill-forwards"&gt;  &lt;div class="fill-both"&gt;
+&lt;div class="animation-paused"&gt; &lt;div class="animation-running"&gt;
+
+&lt;!-- Repeat --&gt;
+&lt;div class="animate-repeat-infinite"&gt; &lt;div class="animate-repeat-1"&gt;</code></pre>
+      </div>
+      <div class="demo-box flex flex-wrap gap-8 items-center">
+        <div>
+          <div class="w-8 h-8 border-4 border-brand-200 border-t-brand-600 rounded-full demo-spin"></div>
+          <p class="text-xs text-gray-400 mt-1 text-center">spin</p>
+        </div>
+        <div>
+          <div class="w-4 h-4 bg-brand-400 rounded-full demo-pulse mx-auto"></div>
+          <p class="text-xs text-gray-400 mt-1 text-center">pulse</p>
+        </div>
+        <div>
+          <div class="w-4 h-4 bg-success-400 rounded-full demo-bounce mx-auto"></div>
+          <p class="text-xs text-gray-400 mt-1 text-center">bounce</p>
+        </div>
+        <div class="demo-fade-in">
+          <div class="px-3 py-1.5 bg-brand-50 dark:bg-brand-900/30 border border-brand-200 dark:border-brand-800 rounded text-xs text-brand-600 dark:text-brand-400">fade-in</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- OVERFLOW UTILITIES -->
+    <section id="util-overflow" class="section-anchor mb-14">
+      <div class="flex items-center gap-2 mb-1"><h3 class="text-xl font-bold text-gray-900 dark:text-white">Overflow</h3><span class="badge badge-blue">Utility</span></div>
+      <div class="code-block mb-4">
+        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+        <pre><code class="language-html">&lt;div class="overflow-auto"&gt;    &lt;!-- scroll when needed --&gt;
+&lt;div class="overflow-hidden"&gt;  &lt;!-- clip content --&gt;
+&lt;div class="overflow-scroll"&gt;  &lt;!-- always show scrollbar --&gt;
+&lt;div class="overflow-visible"&gt; &lt;!-- default --&gt;
+&lt;div class="overflow-clip"&gt;    &lt;!-- clip without scrollbar --&gt;
+
+&lt;!-- Axis-specific --&gt;
+&lt;div class="overflow-x-auto overflow-y-hidden"&gt;Horizontal scroll&lt;/div&gt;</code></pre>
+      </div>
+    </section>
+
+    <!-- CURSOR UTILITIES -->
+    <section id="util-cursor" class="section-anchor mb-14">
+      <div class="flex items-center gap-2 mb-1"><h3 class="text-xl font-bold text-gray-900 dark:text-white">Cursor</h3><span class="badge badge-orange">Utility</span></div>
+      <div class="code-block mb-4">
+        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+        <pre><code class="language-html">&lt;div class="cursor-auto"&gt;        auto
+&lt;div class="cursor-default"&gt;     default arrow
+&lt;div class="cursor-pointer"&gt;     hand pointer
+&lt;div class="cursor-wait"&gt;        wait spinner
+&lt;div class="cursor-text"&gt;        I-beam
+&lt;div class="cursor-move"&gt;        move
+&lt;div class="cursor-not-allowed"&gt; blocked
+&lt;div class="cursor-grab"&gt;        grab hand
+&lt;div class="cursor-grabbing"&gt;    grabbing hand
+&lt;div class="cursor-zoom-in"&gt;     zoom in
+&lt;div class="cursor-crosshair"&gt;   crosshair
+&lt;div class="cursor-none"&gt;        hidden cursor</code></pre>
+      </div>
+      <div class="demo-box flex flex-wrap gap-2">
+        <span class="cursor-pointer px-3 py-1.5 bg-gray-100 dark:bg-gray-800 rounded text-xs">pointer</span>
+        <span style="cursor:not-allowed" class="px-3 py-1.5 bg-gray-100 dark:bg-gray-800 rounded text-xs">not-allowed</span>
+        <span style="cursor:grab" class="px-3 py-1.5 bg-gray-100 dark:bg-gray-800 rounded text-xs">grab</span>
+        <span style="cursor:crosshair" class="px-3 py-1.5 bg-gray-100 dark:bg-gray-800 rounded text-xs">crosshair</span>
+        <span style="cursor:zoom-in" class="px-3 py-1.5 bg-gray-100 dark:bg-gray-800 rounded text-xs">zoom-in</span>
+      </div>
+    </section>
+
+    <!-- INTERACTION UTILITIES -->
+    <section id="util-interaction" class="section-anchor mb-14">
+      <div class="flex items-center gap-2 mb-1"><h3 class="text-xl font-bold text-gray-900 dark:text-white">Interaction</h3><span class="badge badge-blue">Utility</span></div>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">User-select, resize, scroll behavior, scroll snap, touch action, and state-variant pseudo-class utilities (hover:, focus:, disabled:).</p>
+      <div class="code-block mb-4">
+        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+        <pre><code class="language-html">&lt;!-- User select --&gt;
+&lt;div class="select-none"&gt;Cannot select&lt;/div&gt;
+&lt;div class="select-text"&gt;Can select text&lt;/div&gt;
+&lt;div class="select-all"&gt;Select all on click&lt;/div&gt;
+
+&lt;!-- Resize --&gt;
+&lt;textarea class="resize-none"&gt;No resize&lt;/textarea&gt;
+&lt;textarea class="resize-y"&gt;Vertical resize&lt;/textarea&gt;
+&lt;textarea class="resize"&gt;Both directions&lt;/textarea&gt;
+
+&lt;!-- Scroll --&gt;
+&lt;div class="scroll-smooth"&gt;Smooth scrolling&lt;/div&gt;
+
+&lt;!-- Scroll snap --&gt;
+&lt;div class="snap-x snap-mandatory overflow-x-auto"&gt;
+  &lt;div class="snap-start"&gt;Snap item 1&lt;/div&gt;
+  &lt;div class="snap-center"&gt;Snap item 2&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Touch --&gt;
+&lt;div class="touch-pan-x"&gt;Horizontal pan only&lt;/div&gt;
+&lt;div class="touch-manipulation"&gt;Fast tap, no zoom&lt;/div&gt;
+&lt;div class="touch-none"&gt;Disable touch&lt;/div&gt;
+
+&lt;!-- Pointer events --&gt;
+&lt;div class="pointer-events-none"&gt;Click-through&lt;/div&gt;
+&lt;div class="pointer-events-auto"&gt;Default&lt;/div&gt;
+
+&lt;!-- State variants --&gt;
+&lt;button class="hover:bg-accent hover:scale-105"&gt;Hover effects&lt;/button&gt;
+&lt;button class="focus:ring focus:ring-2"&gt;Focus ring&lt;/button&gt;
+&lt;button class="disabled:opacity-50 disabled:cursor-not-allowed"&gt;Disabled&lt;/button&gt;
+&lt;a class="hover:underline hover:text-accent"&gt;Hover link&lt;/a&gt;</code></pre>
+      </div>
+    </section>
+
+    <!-- LAYOUT UTILITIES -->
+    <section id="util-layout" class="section-anchor mb-14">
+      <div class="flex items-center gap-2 mb-1"><h3 class="text-xl font-bold text-gray-900 dark:text-white">Layout</h3><span class="badge badge-blue">Utility</span><span class="badge badge-green ml-1">Responsive</span></div>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">Aspect ratio, object-fit, object-position, float, clear, isolation, mix-blend-mode, background blend, appearance, and will-change.</p>
+      <div class="code-block mb-4">
+        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+        <pre><code class="language-html">&lt;!-- Aspect ratio --&gt;
+&lt;div class="aspect-auto"&gt;   &lt;div class="aspect-square"&gt;
+&lt;div class="aspect-video"&gt;  &lt;!-- 16/9 --&gt;
+&lt;div class="aspect-4-3"&gt;    &lt;div class="aspect-3-2"&gt;
+&lt;div class="aspect-21-9"&gt;   &lt;div class="aspect-9-16"&gt;
+&lt;div class="aspect-golden"&gt; &lt;!-- 1.618 --&gt;
+
+&lt;!-- Object fit --&gt;
+&lt;img class="object-cover"&gt;    &lt;img class="object-contain"&gt;
+&lt;img class="object-fill"&gt;     &lt;img class="object-scale-down"&gt;
+
+&lt;!-- Object position --&gt;
+&lt;img class="object-center"&gt;   &lt;img class="object-top"&gt;
+&lt;img class="object-bottom"&gt;   &lt;img class="object-left"&gt;
+
+&lt;!-- Float (responsive) --&gt;
+&lt;div class="float-left"&gt; &lt;div class="float-right"&gt; &lt;div class="float-none"&gt;
+&lt;div class="lg:float-right"&gt;
+
+&lt;!-- Isolation --&gt;
+&lt;div class="isolate"&gt;New stacking context&lt;/div&gt;
+
+&lt;!-- Mix blend mode --&gt;
+&lt;div class="mix-blend-multiply"&gt;
+&lt;div class="mix-blend-screen"&gt;
+&lt;div class="mix-blend-overlay"&gt;
+
+&lt;!-- Background blend --&gt;
+&lt;div class="bg-blend-multiply"&gt;
+
+&lt;!-- Appearance --&gt;
+&lt;select class="appearance-none"&gt;Custom styled select&lt;/select&gt;
+
+&lt;!-- Will change --&gt;
+&lt;div class="will-change-transform"&gt; &lt;div class="will-change-scroll"&gt;</code></pre>
+      </div>
+      <div class="demo-box flex flex-wrap gap-4 items-start">
+        <div class="bg-brand-200 dark:bg-brand-900 overflow-hidden" style="aspect-ratio:1/1;width:60px"><p class="text-xs text-center p-1 text-brand-800 dark:text-brand-300">square</p></div>
+        <div class="bg-brand-200 dark:bg-brand-900 overflow-hidden" style="aspect-ratio:16/9;width:96px"><p class="text-xs text-center p-1 text-brand-800 dark:text-brand-300">16/9</p></div>
+        <div class="bg-brand-200 dark:bg-brand-900 overflow-hidden" style="aspect-ratio:4/3;width:80px"><p class="text-xs text-center p-1 text-brand-800 dark:text-brand-300">4/3</p></div>
+      </div>
+    </section>
+
+    <!-- Z-INDEX UTILITIES -->
+    <section id="util-zindex" class="section-anchor mb-14">
+      <div class="flex items-center gap-2 mb-1"><h3 class="text-xl font-bold text-gray-900 dark:text-white">Z-Index Utilities</h3><span class="badge badge-blue">Utility</span></div>
+      <div class="code-block mb-4">
+        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+        <pre><code class="language-html">&lt;div class="z-base"&gt;     z-index: 0&lt;/div&gt;
+&lt;div class="z-raised"&gt;   z-index: 10&lt;/div&gt;
+&lt;div class="z-dropdown"&gt; z-index: 100&lt;/div&gt;
+&lt;div class="z-sticky"&gt;   z-index: 200&lt;/div&gt;
+&lt;div class="z-overlay"&gt;  z-index: 300&lt;/div&gt;
+&lt;div class="z-modal"&gt;    z-index: 400&lt;/div&gt;
+&lt;div class="z-toast"&gt;    z-index: 500&lt;/div&gt;
+&lt;div class="z-tooltip"&gt;  z-index: 600&lt;/div&gt;
+&lt;div class="z-max"&gt;      z-index: 9999&lt;/div&gt;</code></pre>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         HELPERS
+    ═══════════════════════════════════════════════════════ -->
+    <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6 mt-2 border-b border-gray-200 dark:border-gray-800 pb-3">
+      <i class="fa-solid fa-wrench text-brand-500 mr-2"></i>Helpers
+    </h2>
+
+    <section id="helpers" class="section-anchor mb-14">
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-6">Pre-built helper classes for common patterns: text truncation, line clamping, aspect ratios, clearfix, and visually-hidden content.</p>
+
+      <div class="space-y-8">
+        <!-- Truncate -->
+        <div>
+          <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Truncate &amp; Line Clamp</h4>
+          <div class="code-block mb-3">
+            <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+            <pre><code class="language-html">&lt;p class="truncate"&gt;Single line truncation with ellipsis...&lt;/p&gt;
+
+&lt;p class="line-clamp-1"&gt;Clamp to 1 line&lt;/p&gt;
+&lt;p class="line-clamp-2"&gt;Clamp to 2 lines&lt;/p&gt;
+&lt;p class="line-clamp-3"&gt;Clamp to 3 lines — max 3 visible&lt;/p&gt;
+&lt;p class="line-clamp-6"&gt;Clamp to 6 lines&lt;/p&gt;
+
+&lt;p class="break-words"&gt;Break long overflow-wrap words&lt;/p&gt;
+&lt;p class="break-all"&gt;Break at any character&lt;/p&gt;
+&lt;p class="break-keep"&gt;Keep words together (CJK)&lt;/p&gt;</code></pre>
+          </div>
+          <div class="demo-box">
+            <p class="text-sm truncate" style="max-width:200px">This is a very long sentence that should be truncated with an ellipsis at the end when it overflows.</p>
+            <p class="text-sm mt-2" style="-webkit-line-clamp:2;display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden">This paragraph is clamped to two lines using the line-clamp-2 class. It will be hidden after the second visible line no matter how much content there is below this point.</p>
+          </div>
+        </div>
+
+        <!-- Ratio helpers -->
+        <div>
+          <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Ratio Helpers</h4>
+          <div class="code-block mb-3">
+            <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+            <pre><code class="language-html">&lt;div class="ratio-square"&gt;1:1 ratio&lt;/div&gt;
+&lt;div class="ratio-video"&gt;16:9 ratio&lt;/div&gt;
+&lt;div class="ratio-portrait"&gt;3:4 ratio&lt;/div&gt;
+&lt;div class="ratio-wide"&gt;21:9 ultra-wide&lt;/div&gt;
+&lt;div class="ratio-golden"&gt;Golden ratio (1.618)&lt;/div&gt;</code></pre>
+          </div>
+        </div>
+
+        <!-- Clearfix -->
+        <div>
+          <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Clearfix</h4>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+            <pre><code class="language-html">&lt;!-- Clears floated children with ::after --&gt;
+&lt;div class="clearfix"&gt;
+  &lt;img class="float-left" src="..." /&gt;
+  &lt;p&gt;Text alongside float&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         FUNCTIONS
+    ═══════════════════════════════════════════════════════ -->
+    <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6 mt-2 border-b border-gray-200 dark:border-gray-800 pb-3">
+      <i class="fa-solid fa-function text-brand-500 mr-2"></i>Sass API — Functions
+    </h2>
+
+    <section id="functions" class="section-anchor mb-14">
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-6">Pure Sass functions — zero CSS output when imported alone. Use via <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">@use "@mastors/core/scss/functions/..."</code>.</p>
+
+      <div class="space-y-8">
+        <!-- rem / em -->
+        <div>
+          <h4 class="font-semibold text-gray-900 dark:text-white mb-2">rem() &amp; em() <span class="badge badge-purple ml-1">Unit conversion</span></h4>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+            <pre><code class="language-scss">@use "@mastors/core/scss/functions/rem" as *;
+@use "@mastors/core/scss/functions/em"  as *;
+
+.heading { font-size: rem(32px); }       // → 2rem
+.media   { max-width: em(768px, 16px); } // → 48em</code></pre>
+          </div>
+        </div>
+
+        <!-- color functions -->
+        <div>
+          <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Color Functions</h4>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+            <pre><code class="language-scss">@use "@mastors/core/scss/functions/color" as *;
+
+// tint($color, $pct) — mix with white
+$light-blue: tint(#3b82f6, 40%);
+
+// shade($color, $pct) — mix with black
+$dark-blue:  shade(#3b82f6, 30%);
+
+// alpha($color, $alpha) — set alpha
+$semi:       alpha(#3b82f6, 0.5);
+
+// contrast($bg) — returns black or white for best contrast
+$text-color: contrast(#3b82f6);  // → white
+
+// palette($name, $shade) — shorthand accessor
+$c: palette("primary", 500);
+
+// rgb-color($name, $shade, $opacity) — with optional alpha
+$c: rgb-color("primary", 500, 0.6);
+
+// color-ramp($base, $steps, $dir) — tint/shade ramp
+$ramp: color-ramp(#3b82f6, 5, "tint");</code></pre>
+          </div>
+        </div>
+
+        <!-- math functions -->
+        <div>
+          <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Math Functions</h4>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+            <pre><code class="language-scss">@use "@mastors/core/scss/functions/math" as *;
+
+// fluid($min, $max, $min-vw, $max-vw) — clamp() expression
+font-size: fluid(1rem, 2rem);
+// → clamp(1rem, …vw + …, 2rem)
+
+// clamp-value($min, $val, $max)
+font-size: clamp-value(0.875rem, 4vw, 2rem);
+
+// strip-unit(16px) → 16
+$n: strip-unit(16px);
+
+// round-to(3.14159, 2) → 3.14
+$r: round-to(3.14159);
+
+// lerp($a, $b, $t) — linear interpolation
+$v: lerp(0, 100px, 0.5); // → 50px</code></pre>
+          </div>
+        </div>
+
+        <!-- vars / string functions -->
+        <div>
+          <h4 class="font-semibold text-gray-900 dark:text-white mb-2">vars() — Token Reference Function</h4>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+            <pre><code class="language-scss">@use "@mastors/core/scss/functions/vars" as *;
+
+// Simple token reference (no fallback)
+.card {
+  background: vars(surface);            // var(--mastors-surface)
+  color:       vars(text);              // var(--mastors-text)
+  border:      1px solid vars(border);  // var(--mastors-border)
+}
+
+// With CSS fallback
+.badge {
+  background: vars(accent-subtle, #eff6ff); // var(--mastors-accent-subtle, #eff6ff)
+}
+
+// Path-based accessor (functions/_string.scss)
+// vars($category, $keys...)
+@use "@mastors/core/scss/functions/string" as sf;
+
+color: sf.vars(color, primary, 500); // var(--mastors-color-primary-500)
+gap:   sf.vars(spacing, 4);           // var(--mastors-spacing-4)</code></pre>
+          </div>
+        </div>
+
+        <!-- map helpers -->
+        <div>
+          <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Map Helpers</h4>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+            <pre><code class="language-scss">@use "@mastors/core/scss/functions/map-helpers" as *;
+
+$nested: ("colors": ("blue": #3b82f6));
+$blue: map-deep-get($nested, "colors", "blue"); // → #3b82f6
+
+$merged: map-collect($map-a, $map-b, $map-c); // shallow merge</code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         MIXINS
+    ═══════════════════════════════════════════════════════ -->
+    <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6 mt-2 border-b border-gray-200 dark:border-gray-800 pb-3">
+      <i class="fa-solid fa-puzzle-piece text-brand-500 mr-2"></i>Sass API — Mixins
+    </h2>
+
+    <section id="mixins" class="section-anchor mb-14">
+      <div class="space-y-8">
+
+        <!-- breakpoint -->
+        <div>
+          <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Breakpoint Mixin <span class="badge badge-green ml-1">Responsive</span></h4>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+            <pre><code class="language-scss">@use "@mastors/core/scss/mixins/breakpoint" as *;
+
+.sidebar {
+  display: none;
+
+  // Mobile-first: apply at sm and above (min-width: 640px)
+  @include bp(sm)  { display: block; }
+  @include bp(md)  { width: 240px; }
+  @include bp(lg)  { width: 300px; }
+  @include bp(2xl) { width: 360px; }
+}
+
+// Aliases — all three are equivalent
+@include respond-to(md) { ... }
+@include breakpoint-up(md) { ... }
+
+// Below a breakpoint (max-width)
+@include breakpoint-down(lg) { ... }
+
+// Available keys: xs(0) sm(640px) md(768px) lg(1024px) xl(1280px) 2xl(1536px)</code></pre>
+          </div>
+        </div>
+
+        <!-- container mixin -->
+        <div>
+          <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Container Mixin</h4>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+            <pre><code class="language-scss">@use "@mastors/core/scss/mixins/container" as *;
+
+.page-wrapper {
+  @include container;
+  // → width: 100%; margin-inline: auto; padding-inline: 1rem;
+  //   max-width: 640px @sm, 768px @md, 1024px @lg,
+  //              1280px @xl, 1400px @2xl
+}</code></pre>
+          </div>
+        </div>
+
+        <!-- elevation mixin -->
+        <div>
+          <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Elevation Mixin</h4>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+            <pre><code class="language-scss">@use "@mastors/core/scss/mixins/elevation" as *;
+
+.card { @include elevation("md"); }   // box-shadow: md token
+.nav  { @include elevation("lg"); }   // box-shadow: lg token
+// Keys: xs sm md lg xl 2xl inner none</code></pre>
+          </div>
+        </div>
+
+        <!-- transition mixin -->
+        <div>
+          <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Transition Mixin</h4>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+            <pre><code class="language-scss">@use "@mastors/core/scss/mixins/transition" as *;
+
+.btn {
+  // transition($props, $duration, $easing)
+  @include transition((background-color, color), "150", "in-out");
+  // → transition: background-color 150ms cubic-bezier(0.4,0,0.2,1),
+  //               color 150ms cubic-bezier(0.4,0,0.2,1);
+}
+
+.modal { @include transition((transform, opacity), "300", "out"); }</code></pre>
+          </div>
+        </div>
+
+        <!-- pseudo mixin -->
+        <div>
+          <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Pseudo Mixin</h4>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+            <pre><code class="language-scss">@use "@mastors/core/scss/mixins/pseudo" as *;
+
+.badge::before {
+  @include pseudo($display: inline-block, $pos: relative, $content: "");
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+}</code></pre>
+          </div>
+        </div>
+
+        <!-- theme mixin -->
+        <div>
+          <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Theme Mixin</h4>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+            <pre><code class="language-scss">@use "@mastors/core/scss/mixins/theme" as *;
+
+.card {
+  background: #fff;
+
+  @include dark-mode {
+    background: #1f2937;
+    color: #f9fafb;
+  }
+
+  @include light-mode {
+    box-shadow: 0 1px 3px rgb(0 0 0 / 10%);
+  }
+
+  // Named theme (data-theme="ocean")
+  @include theme("ocean") {
+    background: #083344;
+    color: #ecfeff;
+  }
+}</code></pre>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         RESPONSIVE
+    ═══════════════════════════════════════════════════════ -->
+    <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6 mt-2 border-b border-gray-200 dark:border-gray-800 pb-3">
+      <i class="fa-solid fa-mobile-screen text-brand-500 mr-2"></i>Responsive
+    </h2>
+
+    <!-- BREAKPOINTS -->
+    <section id="breakpoints" class="section-anchor mb-14">
+      <div class="flex items-center gap-2 mb-1"><h3 class="text-xl font-bold text-gray-900 dark:text-white">Breakpoints</h3><span class="badge badge-green">Engine</span></div>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">Mobile-first breakpoints used by the responsive engine to generate prefixed utility variants. <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">xs</code> is the base (no prefix).</p>
+      <div class="code-block mb-4">
+        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+        <pre><code class="language-html">&lt;!-- Pattern: {bp}:{utility} --&gt;
+&lt;div class="hidden sm:block"&gt;      Shown sm+&lt;/div&gt;
+&lt;div class="block md:hidden"&gt;      Hidden md+&lt;/div&gt;
+&lt;div class="flex-col lg:flex-row"&gt; Row from lg&lt;/div&gt;
+&lt;div class="text-sm xl:text-base"&gt; Bigger on xl&lt;/div&gt;</code></pre>
+      </div>
+      <div class="demo-box overflow-x-auto">
+        <table>
+          <thead><tr><th>Key</th><th>min-width</th><th>Breakpoint</th></tr></thead>
+          <tbody>
+            <tr><td class="font-mono text-xs">xs</td><td class="font-mono text-xs">0px</td><td class="text-xs">All screens (no prefix)</td></tr>
+            <tr><td class="font-mono text-xs">sm</td><td class="font-mono text-xs">640px</td><td class="text-xs">Large phones +</td></tr>
+            <tr><td class="font-mono text-xs">md</td><td class="font-mono text-xs">768px</td><td class="text-xs">Tablets +</td></tr>
+            <tr><td class="font-mono text-xs">lg</td><td class="font-mono text-xs">1024px</td><td class="text-xs">Laptops +</td></tr>
+            <tr><td class="font-mono text-xs">xl</td><td class="font-mono text-xs">1280px</td><td class="text-xs">Desktops +</td></tr>
+            <tr><td class="font-mono text-xs">2xl</td><td class="font-mono text-xs">1536px</td><td class="text-xs">Wide screens +</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="mt-3 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3 text-xs text-blue-700 dark:text-blue-300">
+        <i class="fa-solid fa-circle-info mr-1"></i>
+        Only utilities with <code>responsive: true</code> in their config generate breakpoint variants. Currently enabled: display, position, text-align, float, clear.
+      </div>
+    </section>
+
+    <!-- FLUID TYPE -->
+    <section id="fluid-type" class="section-anchor mb-14">
+      <div class="flex items-center gap-2 mb-1"><h3 class="text-xl font-bold text-gray-900 dark:text-white">Fluid Typography</h3><span class="badge badge-purple">Responsive</span></div>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">Uses <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">clamp()</code> to scale font sizes smoothly between two viewport widths. No media queries needed.</p>
+      <div class="code-block mb-4">
+        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+        <pre><code class="language-scss">@use "@mastors/core/scss/responsive/fluid-type" as ft;
+
+// Mixin — apply fluid font-size to the element
+.hero-title {
+  @include ft.apply-fluid-type(2rem, 4rem);
+  // → font-size: clamp(2rem, …vw + …, 4rem);
+}
+
+// Custom viewport range
+.headline {
+  @include ft.apply-fluid-type(1.5rem, 3rem, 480px, 1400px);
+}
+
+// Function — use inside any property value
+.lead {
+  font-size: ft.fluid-type(1rem, 1.5rem);
+}
+
+// Pre-built fluid heading scale (opt-in)
+// Scales h1–h6 + p fluidly across 320px–1280px
+@include ft.fluid-scale();
+// h1: clamp(2rem, …, 3.75rem)
+// h2: clamp(1.5rem, …, 3rem)
+// h3: clamp(1.25rem, …, 2.25rem)
+// h4: clamp(1.125rem, …, 1.875rem)
+// h5: clamp(1rem, …, 1.5rem)
+// h6: clamp(0.875rem, …, 1.25rem)
+// p:  clamp(0.875rem, …, 1.125rem)</code></pre>
+          </div>
+    </section>
+
+    <!-- CONTAINER QUERIES -->
+    <section id="container-queries" class="section-anchor mb-14">
+      <div class="flex items-center gap-2 mb-1"><h3 class="text-xl font-bold text-gray-900 dark:text-white">Container Queries</h3><span class="badge badge-orange">Responsive</span></div>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">CSS container query helpers. Supports inline-size and size containment types.</p>
+      <div class="code-block mb-4">
+        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+        <pre><code class="language-html">&lt;!-- Step 1: Create containment context --&gt;
+&lt;div class="cq-inline"&gt;  &lt;!-- container-type: inline-size --&gt;
+  &lt;div class="cq-size"&gt;  &lt;!-- container-type: size --&gt;
+
+&lt;!-- data attribute shorthand --&gt;
+&lt;div data-container&gt;     &lt;!-- container-type: inline-size --&gt;</code></pre>
+      </div>
+      <div class="code-block mb-4">
+        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+        <pre><code class="language-scss">@use "@mastors/core/scss/responsive/container-queries" as cq;
+
+// Inside any component SCSS file:
+.card {
+  // When the container is at least 40rem wide
+  @include cq.cq(40rem) {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+  }
+
+  // Named container query
+  @include cq.cq(30rem, "sidebar") {
+    font-size: 0.875rem;
+  }
+}</code></pre>
+          </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         ACCESSIBILITY
+    ═══════════════════════════════════════════════════════ -->
+    <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6 mt-2 border-b border-gray-200 dark:border-gray-800 pb-3">
+      <i class="fa-solid fa-universal-access text-brand-500 mr-2"></i>Accessibility
+    </h2>
+
+    <section id="a11y" class="section-anchor mb-14">
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-6">Built-in accessibility features: focus rings, reduced motion, screen-reader utilities, and print helpers.</p>
+
+      <div class="space-y-8">
+        <!-- Screen reader -->
+        <div>
+          <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Screen Reader Utilities</h4>
+          <div class="code-block mb-3">
+            <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+            <pre><code class="language-html">&lt;!-- Visually hidden but accessible to screen readers --&gt;
+&lt;span class="sr-only"&gt;Menu (screen reader label)&lt;/span&gt;
+
+&lt;!-- Undo sr-only — make visible again --&gt;
+&lt;span class="not-sr-only"&gt;Now visible&lt;/span&gt;
+
+&lt;!-- Legacy aliases (all equivalent to sr-only) --&gt;
+&lt;span class="visually-hidden"&gt;Hidden visually&lt;/span&gt;
+&lt;span class="vh"&gt;Shorthand alias&lt;/span&gt;
+
+&lt;!-- Shown when focused (skip links pattern) --&gt;
+&lt;a class="visually-hidden-focusable" href="#main"&gt;
+  Skip to main content
+&lt;/a&gt;</code></pre>
+          </div>
+        </div>
+
+        <!-- Focus ring -->
+        <div>
+          <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Focus Ring</h4>
+          <p class="text-gray-500 dark:text-gray-400 text-xs mb-2">Automatically applied to <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded">:focus-visible</code>. Mouse users do not see the ring (<code class="bg-gray-100 dark:bg-gray-800 px-1 rounded">:focus:not(:focus-visible) { outline: none }</code>).</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+            <pre><code class="language-css">/* Auto-applied by accessibility/_focus.scss */
+:focus-visible {
+  outline: 2px solid var(--mastors-color-primary-500, #3b82f6);
+  outline-offset: 2px;
+  border-radius: 2px;
+}</code></pre>
+          </div>
+        </div>
+
+        <!-- Reduced motion -->
+        <div>
+          <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Reduced Motion</h4>
+          <p class="text-gray-500 dark:text-gray-400 text-xs mb-2">Respects the OS-level "reduce motion" preference. All animations and transitions are disabled to near-zero duration automatically.</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+            <pre><code class="language-css">/* Auto-applied — no class needed */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration:        0.01ms !important;
+    animation-iteration-count: 1      !important;
+    transition-duration:       0.01ms !important;
+    scroll-behavior:           auto   !important;
+  }
+}</code></pre>
+          </div>
+        </div>
+
+        <!-- Print -->
+        <div>
+          <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Print Utilities</h4>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+            <pre><code class="language-html">&lt;!-- Hide in print, show on screen --&gt;
+&lt;nav class="print:hidden"&gt;Navigation&lt;/nav&gt;
+
+&lt;!-- Show only in print --&gt;
+&lt;div class="screen:hidden"&gt;Print-only watermark&lt;/div&gt;
+
+&lt;!-- Page break control --&gt;
+&lt;section class="print:break-inside-avoid"&gt;...&lt;/section&gt;
+&lt;div class="print:break-before"&gt;New page before this&lt;/div&gt;
+&lt;div class="print:break-after"&gt;New page after this&lt;/div&gt;
+
+&lt;!-- Print-safe colors --&gt;
+&lt;p class="print:text-black print:bg-white"&gt;Print-safe&lt;/p&gt;
+&lt;div class="print:shadow-none print:border-none"&gt;Clean print&lt;/div&gt;</code></pre>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         BASE / RESET
+    ═══════════════════════════════════════════════════════ -->
+    <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6 mt-2 border-b border-gray-200 dark:border-gray-800 pb-3">
+      <i class="fa-solid fa-layer-group text-brand-500 mr-2"></i>Base
+    </h2>
+
+    <section id="base" class="section-anchor mb-14">
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-6">The base layer applies an opinionated modern CSS reset and emits all token-based CSS custom properties on <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">:root</code>.</p>
+
+      <div class="space-y-6">
+        <div>
+          <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Reset Highlights</h4>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+            <pre><code class="language-css">/* box-sizing: border-box on everything */
+*, *::before, *::after { box-sizing: border-box; }
+
+/* Zero margin/padding everywhere */
+* { margin: 0; padding: 0; }
+
+/* Smooth scroll + tab-size */
+html { text-size-adjust: 100%; tab-size: 4; scroll-behavior: smooth; }
+
+/* Font smoothing */
+body { -webkit-font-smoothing: antialiased; }
+
+/* Block images, max 100% */
+img, picture, video, canvas, svg { display: block; max-width: 100%; }
+
+/* Form elements inherit font */
+input, button, textarea, select { font: inherit; }
+
+/* Break long words in headings/paragraphs */
+p, h1, h2, h3, h4, h5, h6 { overflow-wrap: break-word; }
+
+/* Removed list styles */
+ol, ul { list-style: none; }
+
+/* Links inherit color and text-decoration */
+a { color: inherit; text-decoration: inherit; }
+
+/* Collapsed table borders */
+table { border-collapse: collapse; border-spacing: 0; }
+
+/* Cursor on interactive elements */
+button, [role="button"] { cursor: pointer; }</code></pre>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="font-semibold text-gray-900 dark:text-white mb-2">:root Custom Properties</h4>
+          <p class="text-gray-500 dark:text-gray-400 text-xs mb-2">Every token map is emitted as CSS custom properties on <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded">:root</code> via the generator.</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+            <pre><code class="language-css">:root {
+  /* Colors — nested: --mastors-color-primary-50 … -950 */
+  --mastors-color-primary-500: #3b82f6;
+  --mastors-color-success-500: #22c55e;
+  /* … (6 palettes × 11 shades + white + black) … */
+
+  /* Spacing */
+  --mastors-spacing-4: 1rem;
+
+  /* Typography */
+  --mastors-font-size-xl: 1.25rem;
+  --mastors-font-weight-bold: 700;
+
+  /* Radii */
+  --mastors-radius-md: 0.375rem;
+
+  /* Shadows */
+  --mastors-shadow-md: 0 4px 6px -1px rgb(0 0 0/10%),...;
+
+  /* Transitions */
+  --mastors-duration-300: 300ms;
+  --mastors-easing-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Z-index */
+  --mastors-z-modal: 400;
+
+  /* Opacity */
+  --mastors-opacity-50: 0.5;
+}</code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="mt-8 pt-8 border-t border-gray-200 dark:border-gray-800 text-center text-sm text-gray-400 dark:text-gray-600">
+      <p>@mastors/core Documentation — Generated from source SCSS</p>
+      <p class="mt-1 text-xs">Packages path: <code class="bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded">packages/core/scss</code></p>
+    </footer>
+
+  </main><!-- end main -->
+</div><!-- end flex wrapper -->
+
+<!-- Sidebar overlay for mobile -->
+<div id="sidebar-overlay" class="fixed inset-0 bg-black/40 z-30 lg:hidden hidden" onclick="closeSidebar()"></div>
+
+<script>
+  // ─── Highlight.js init ──────────────────────────────────────
+  document.addEventListener('DOMContentLoaded', () => {
+    hljs.highlightAll();
+  });
+
+  // ─── Dark mode ──────────────────────────────────────────────
+  const html = document.documentElement;
+  const darkBtn = document.getElementById('dark-toggle');
+  const darkIcon = document.getElementById('dark-icon');
+
+  function applyDark(on) {
+    if (on) {
+      html.classList.add('dark');
+      darkIcon.className = 'fa-solid fa-sun text-sm';
+    } else {
+      html.classList.remove('dark');
+      darkIcon.className = 'fa-solid fa-moon text-sm';
+    }
+    localStorage.setItem('mastors-dark', on ? '1' : '0');
+  }
+
+  // Init from storage or system preference
+  const stored = localStorage.getItem('mastors-dark');
+  if (stored === '1' || (stored === null && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    applyDark(true);
+  }
+
+  darkBtn.addEventListener('click', () => applyDark(!html.classList.contains('dark')));
+
+  // ─── Copy code ──────────────────────────────────────────────
+  function copyCode(btn) {
+    const pre = btn.closest('.code-block').querySelector('pre');
+    navigator.clipboard.writeText(pre.innerText).then(() => {
+      btn.innerHTML = '<i class="fa-solid fa-check mr-1"></i>Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.innerHTML = '<i class="fa-regular fa-copy mr-1"></i>Copy';
+        btn.classList.remove('copied');
+      }, 1800);
+    });
+  }
+
+  // ─── Sidebar toggle (mobile) ─────────────────────────────────
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+
+  document.getElementById('sidebar-toggle').addEventListener('click', () => {
+    sidebar.classList.remove('-translate-x-full');
+    overlay.classList.remove('hidden');
+  });
+
+  function closeSidebar() {
+    sidebar.classList.add('-translate-x-full');
+    overlay.classList.add('hidden');
+  }
+
+  // Close sidebar on nav link click (mobile)
+  sidebar.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      if (window.innerWidth < 1024) closeSidebar();
+    });
+  });
+
+  // ─── Active nav link (scroll spy) ───────────────────────────
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-link');
+
+  function setActive() {
+    let current = '';
+    sections.forEach(sec => {
+      if (window.scrollY >= sec.offsetTop - 90) current = sec.id;
+    });
+    navLinks.forEach(link => {
+      link.classList.remove('active');
+      if (link.getAttribute('href') === '#' + current) link.classList.add('active');
+    });
+  }
+
+  window.addEventListener('scroll', setActive, { passive: true });
+  setActive();
+
+  // ─── Search filter ───────────────────────────────────────────
+  function filterSearch(val) {
+    const links = document.querySelectorAll('#sidebar .nav-link');
+    const q = val.toLowerCase().trim();
+    if (!q) {
+      links.forEach(l => l.parentElement.style.display = '');
+      return;
+    }
+    links.forEach(link => {
+      const text = link.textContent.toLowerCase();
+      link.parentElement.style.display = text.includes(q) ? '' : 'none';
+    });
+  }
+</script>
+</body>
+</html>
