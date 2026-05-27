@@ -1422,3 +1422,235 @@
     </section>
 
     <hr class="my-10 border-gray-200 dark:border-gray-800" />
+    <!-- ══════════════════════════════════════════════════════════
+         RESPONSIVE
+    ══════════════════════════════════════════════════════════ -->
+    <section id="responsive">
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-1 flex items-center gap-2">
+        <i class="fa-solid fa-mobile-screen text-brand-500 text-lg"></i> Responsive Variants
+      </h2>
+      <p class="text-gray-600 dark:text-gray-300 mb-5">
+        All utilities marked <span class="badge badge-green">Responsive</span> generate breakpoint-prefixed variants via the <code>@mastors/core</code> responsive engine.
+        Class pattern: <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-sm">.{bp}:{class}</code>
+      </p>
+
+      <!-- Breakpoint table -->
+      <div class="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-800 mb-6">
+        <table class="ref-table w-full text-sm">
+          <thead><tr class="text-left">
+            <th class="px-4 py-2 font-semibold text-gray-600 dark:text-gray-300">Prefix</th>
+            <th class="px-4 py-2 font-semibold text-gray-600 dark:text-gray-300">Min-width</th>
+            <th class="px-4 py-2 font-semibold text-gray-600 dark:text-gray-300">Device target</th>
+          </tr></thead>
+          <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">sm:</td><td class="px-4 py-2 font-mono text-gray-600 dark:text-gray-300">640px</td><td class="px-4 py-2 text-gray-500 dark:text-gray-400">Large phones / small tablets</td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">md:</td><td class="px-4 py-2 font-mono text-gray-600 dark:text-gray-300">768px</td><td class="px-4 py-2 text-gray-500 dark:text-gray-400">Tablets</td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">lg:</td><td class="px-4 py-2 font-mono text-gray-600 dark:text-gray-300">1024px</td><td class="px-4 py-2 text-gray-500 dark:text-gray-400">Laptops</td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">xl:</td><td class="px-4 py-2 font-mono text-gray-600 dark:text-gray-300">1280px</td><td class="px-4 py-2 text-gray-500 dark:text-gray-400">Desktops</td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">2xl:</td><td class="px-4 py-2 font-mono text-gray-600 dark:text-gray-300">1536px</td><td class="px-4 py-2 text-gray-500 dark:text-gray-400">Large screens</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Responsive utilities table -->
+      <h3 class="font-semibold text-gray-800 dark:text-gray-200 mb-2">Responsive-enabled utilities</h3>
+      <div class="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-800 mb-6">
+        <table class="ref-table w-full text-sm">
+          <thead><tr class="text-left">
+            <th class="px-4 py-2 font-semibold text-gray-600 dark:text-gray-300">Utility</th>
+            <th class="px-4 py-2 font-semibold text-gray-600 dark:text-gray-300">Example class</th>
+          </tr></thead>
+          <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 text-gray-700 dark:text-gray-300">Display</td><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">md:grid, lg:inline-grid</td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 text-gray-700 dark:text-gray-300">Template Columns</td><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">sm:grid-cols-2, lg:grid-cols-4</td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 text-gray-700 dark:text-gray-300">Template Rows</td><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">md:grid-rows-3</td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 text-gray-700 dark:text-gray-300">Auto Flow</td><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">lg:grid-flow-col</td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 text-gray-700 dark:text-gray-300">justify-items</td><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">md:justify-items-center</td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 text-gray-700 dark:text-gray-300">align-items</td><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">lg:items-start</td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 text-gray-700 dark:text-gray-300">place-items</td><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">xl:place-items-center</td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 text-gray-700 dark:text-gray-300">justify-self</td><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">sm:justify-self-end</td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 text-gray-700 dark:text-gray-300">align-self</td><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">md:self-center</td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 text-gray-700 dark:text-gray-300">place-self</td><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">lg:place-self-stretch</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden mb-4">
+        <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-800 flex gap-2 items-center bg-gray-50 dark:bg-gray-800/50">
+          <i class="fa-brands fa-html5 text-orange-400"></i>
+          <span class="text-xs font-semibold text-gray-500 dark:text-gray-400">Responsive example — 1 → 2 → 4 columns</span>
+        </div>
+        <div class="p-4 relative code-wrapper">
+          <button class="copy-btn" onclick="copyCode(this)"><i class="fa-solid fa-copy mr-1"></i>Copy</button>
+          <pre><code class="language-html">&lt;div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"&gt;
+  &lt;div&gt;Card A&lt;/div&gt;
+  &lt;div&gt;Card B&lt;/div&gt;
+  &lt;div&gt;Card C&lt;/div&gt;
+  &lt;div&gt;Card D&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Flow switches to column layout on large screens --&gt;
+&lt;div class="grid grid-flow-row lg:grid-flow-col gap-3"&gt;
+  &lt;div&gt;Item 1&lt;/div&gt;
+  &lt;div&gt;Item 2&lt;/div&gt;
+  &lt;div&gt;Item 3&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <hr class="my-10 border-gray-200 dark:border-gray-800" />
+
+    <!-- ══════════════════════════════════════════════════════════
+         FULL REFERENCE
+    ══════════════════════════════════════════════════════════ -->
+    <section id="reference">
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-1 flex items-center gap-2">
+        <i class="fa-solid fa-book text-brand-500 text-lg"></i> Full Class Reference
+      </h2>
+      <p class="text-gray-600 dark:text-gray-300 mb-6">Every utility class generated by <code>@mastors/gridder</code> in one place.</p>
+
+      <!-- Col Span full ref -->
+      <div class="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-800 mb-6">
+        <table class="ref-table w-full text-xs">
+          <thead><tr class="text-left">
+            <th class="px-3 py-2 font-bold text-gray-600 dark:text-gray-300" colspan="3">Column Placement</th>
+          </tr>
+          <tr class="text-left border-t border-gray-100 dark:border-gray-800">
+            <th class="px-3 py-2 font-semibold text-gray-600 dark:text-gray-300">Class</th>
+            <th class="px-3 py-2 font-semibold text-gray-600 dark:text-gray-300">Property</th>
+            <th class="px-3 py-2 font-semibold text-gray-600 dark:text-gray-300">Value</th>
+          </tr></thead>
+          <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+            <tr class="bg-white dark:bg-gray-900"><td class="px-3 py-1.5 font-mono text-brand-600 dark:text-brand-400">.col-span-{1-12}</td><td class="px-3 py-1.5 font-mono text-gray-500">grid-column</td><td class="px-3 py-1.5 font-mono text-gray-500">span N / span N</td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-3 py-1.5 font-mono text-brand-600 dark:text-brand-400">.col-span-full</td><td class="px-3 py-1.5 font-mono text-gray-500">grid-column</td><td class="px-3 py-1.5 font-mono text-gray-500">1 / -1</td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-3 py-1.5 font-mono text-brand-600 dark:text-brand-400">.col-auto</td><td class="px-3 py-1.5 font-mono text-gray-500">grid-column</td><td class="px-3 py-1.5 font-mono text-gray-500">auto</td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-3 py-1.5 font-mono text-brand-600 dark:text-brand-400">.col-start-{1-13}</td><td class="px-3 py-1.5 font-mono text-gray-500">grid-column-start</td><td class="px-3 py-1.5 font-mono text-gray-500">N</td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-3 py-1.5 font-mono text-brand-600 dark:text-brand-400">.col-start-auto</td><td class="px-3 py-1.5 font-mono text-gray-500">grid-column-start</td><td class="px-3 py-1.5 font-mono text-gray-500">auto</td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-3 py-1.5 font-mono text-brand-600 dark:text-brand-400">.col-end-{1-13}</td><td class="px-3 py-1.5 font-mono text-gray-500">grid-column-end</td><td class="px-3 py-1.5 font-mono text-gray-500">N</td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-3 py-1.5 font-mono text-brand-600 dark:text-brand-400">.col-end-auto</td><td class="px-3 py-1.5 font-mono text-gray-500">grid-column-end</td><td class="px-3 py-1.5 font-mono text-gray-500">auto</td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-3 py-1.5 font-mono text-brand-600 dark:text-brand-400">.grid-col-{1-12}</td><td class="px-3 py-1.5 font-mono text-gray-500">grid-column</td><td class="px-3 py-1.5 font-mono text-gray-500">N</td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-3 py-1.5 font-mono text-brand-600 dark:text-brand-400">.grid-col-auto</td><td class="px-3 py-1.5 font-mono text-gray-500">grid-column</td><td class="px-3 py-1.5 font-mono text-gray-500">auto</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-800 mb-6">
+        <table class="ref-table w-full text-xs">
+          <thead><tr class="text-left">
+            <th class="px-3 py-2 font-bold text-gray-600 dark:text-gray-300" colspan="3">Row Placement</th>
+          </tr>
+          <tr class="text-left border-t border-gray-100 dark:border-gray-800">
+            <th class="px-3 py-2 font-semibold text-gray-600 dark:text-gray-300">Class</th>
+            <th class="px-3 py-2 font-semibold text-gray-600 dark:text-gray-300">Property</th>
+            <th class="px-3 py-2 font-semibold text-gray-600 dark:text-gray-300">Value</th>
+          </tr></thead>
+          <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+            <tr class="bg-white dark:bg-gray-900"><td class="px-3 py-1.5 font-mono text-brand-600 dark:text-brand-400">.row-span-{1-6}</td><td class="px-3 py-1.5 font-mono text-gray-500">grid-row</td><td class="px-3 py-1.5 font-mono text-gray-500">span N / span N</td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-3 py-1.5 font-mono text-brand-600 dark:text-brand-400">.row-span-full</td><td class="px-3 py-1.5 font-mono text-gray-500">grid-row</td><td class="px-3 py-1.5 font-mono text-gray-500">1 / -1</td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-3 py-1.5 font-mono text-brand-600 dark:text-brand-400">.row-auto</td><td class="px-3 py-1.5 font-mono text-gray-500">grid-row</td><td class="px-3 py-1.5 font-mono text-gray-500">auto</td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-3 py-1.5 font-mono text-brand-600 dark:text-brand-400">.row-start-{1-7}</td><td class="px-3 py-1.5 font-mono text-gray-500">grid-row-start</td><td class="px-3 py-1.5 font-mono text-gray-500">N</td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-3 py-1.5 font-mono text-brand-600 dark:text-brand-400">.row-start-auto</td><td class="px-3 py-1.5 font-mono text-gray-500">grid-row-start</td><td class="px-3 py-1.5 font-mono text-gray-500">auto</td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-3 py-1.5 font-mono text-brand-600 dark:text-brand-400">.row-end-{1-7}</td><td class="px-3 py-1.5 font-mono text-gray-500">grid-row-end</td><td class="px-3 py-1.5 font-mono text-gray-500">N</td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-3 py-1.5 font-mono text-brand-600 dark:text-brand-400">.row-end-auto</td><td class="px-3 py-1.5 font-mono text-gray-500">grid-row-end</td><td class="px-3 py-1.5 font-mono text-gray-500">auto</td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-3 py-1.5 font-mono text-brand-600 dark:text-brand-400">.grid-row-{1-6}</td><td class="px-3 py-1.5 font-mono text-gray-500">grid-row</td><td class="px-3 py-1.5 font-mono text-gray-500">N</td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-3 py-1.5 font-mono text-brand-600 dark:text-brand-400">.grid-row-auto</td><td class="px-3 py-1.5 font-mono text-gray-500">grid-row</td><td class="px-3 py-1.5 font-mono text-gray-500">auto</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Peer dep note -->
+      <div class="mt-6 p-4 rounded-xl bg-brand-50 dark:bg-brand-900/20 border border-brand-200 dark:border-brand-800 flex gap-3">
+        <i class="fa-solid fa-circle-info text-brand-500 mt-0.5 flex-shrink-0"></i>
+        <div class="text-sm text-brand-800 dark:text-brand-300">
+          <p class="font-semibold mb-1">Source files</p>
+          <p>Entry: <code>scss/index.scss</code> → imports mixins, utilities, and responsive engine.<br/>
+          Root alias: <code>_index.scss</code> → forwards <code>scss/index.scss</code> so <code>@use "@mastors/gridder"</code> works without a bundler alias.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="mt-16 pb-10 text-center text-xs text-gray-400 dark:text-gray-600">
+      <p>@mastors/gridder v1.2.7 · MIT License · <a href="https://github.com/KEHEM-IT/Mastors" class="text-brand-500 hover:underline" target="_blank" rel="noopener">GitHub</a></p>
+    </footer>
+
+  </main>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     BACK TO TOP
+═══════════════════════════════════════════════════════════════ -->
+<button id="backTop"
+  class="fixed bottom-6 right-6 z-50 w-10 h-10 rounded-full bg-brand-500 hover:bg-brand-600 text-white shadow-lg flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300"
+  onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">
+  <i class="fa-solid fa-chevron-up text-sm"></i>
+</button>
+
+<script>
+  // ── Dark mode ──────────────────────────────────────────────
+  const html = document.documentElement;
+  const saved = localStorage.getItem('gridder-theme');
+  if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    html.classList.add('dark');
+  }
+  document.getElementById('darkToggle').addEventListener('click', () => {
+    html.classList.toggle('dark');
+    localStorage.setItem('gridder-theme', html.classList.contains('dark') ? 'dark' : 'light');
+  });
+
+  // ── Mobile sidebar ─────────────────────────────────────────
+  const sidebar  = document.getElementById('sidebar');
+  const overlay  = document.getElementById('overlay');
+  document.getElementById('menuBtn').addEventListener('click', () => {
+    sidebar.classList.remove('-translate-x-full');
+    overlay.classList.add('show');
+  });
+  function closeSidebar() {
+    sidebar.classList.add('-translate-x-full');
+    overlay.classList.remove('show');
+  }
+  // Close sidebar on nav-link click (mobile)
+  sidebar.querySelectorAll('.nav-link').forEach(l => l.addEventListener('click', () => {
+    if (window.innerWidth < 768) closeSidebar();
+  }));
+
+  // ── Copy code ──────────────────────────────────────────────
+  function copyCode(btn) {
+    const code = btn.closest('.code-wrapper').querySelector('code');
+    navigator.clipboard.writeText(code.innerText).then(() => {
+      btn.classList.add('copied');
+      btn.innerHTML = '<i class="fa-solid fa-check mr-1"></i>Copied!';
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        btn.innerHTML = '<i class="fa-solid fa-copy mr-1"></i>Copy';
+      }, 2000);
+    });
+  }
+
+  // ── Active nav link on scroll ─────────────────────────────
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-link');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector(`.nav-link[href="#${e.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  sections.forEach(s => observer.observe(s));
+
+  // ── Back to top ────────────────────────────────────────────
+  const backTop = document.getElementById('backTop');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 400) {
+      backTop.classList.remove('opacity-0', 'pointer-events-none');
+    } else {
+      backTop.classList.add('opacity-0', 'pointer-events-none');
+    }
+  }, { passive: true });
+</script>
+</body>
+</html>
