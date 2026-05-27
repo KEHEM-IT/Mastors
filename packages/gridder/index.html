@@ -1,0 +1,1424 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>@mastors/gridder — Documentation</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Prism.js for syntax highlighting -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-scss.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50:  '#f0f4ff',
+              100: '#dde6ff',
+              200: '#c2d1ff',
+              300: '#9ab4ff',
+              400: '#708dff',
+              500: '#4f63f5',
+              600: '#3a43e8',
+              700: '#2f33cc',
+              800: '#282ca5',
+              900: '#252982',
+            },
+          },
+        },
+      },
+    }
+  </script>
+
+  <style>
+    /* ── Base ─────────────────────────────────────────────────── */
+    body { font-family: 'Inter', sans-serif; }
+    code, pre, .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+    /* ── Sidebar scrollbar ───────────────────────────────────── */
+    #sidebar::-webkit-scrollbar { width: 4px; }
+    #sidebar::-webkit-scrollbar-track { background: transparent; }
+    #sidebar::-webkit-scrollbar-thumb { background: #4f63f5; border-radius: 4px; }
+
+    /* ── Prism overrides ─────────────────────────────────────── */
+    pre[class*="language-"] {
+      border-radius: 0.5rem;
+      margin: 0;
+      font-size: 0.82rem;
+      line-height: 1.7;
+    }
+    .token.comment { color: #7c8fa6 !important; }
+
+    /* ── Copy button ─────────────────────────────────────────── */
+    .copy-btn {
+      position: absolute;
+      top: 0.6rem;
+      right: 0.6rem;
+      padding: 0.2rem 0.55rem;
+      font-size: 0.7rem;
+      border-radius: 0.3rem;
+      background: #4f63f5;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity .2s, background .2s;
+    }
+    .code-wrapper:hover .copy-btn { opacity: 1; }
+    .copy-btn.copied { background: #10b981; }
+
+    /* ── Demo grid cells ─────────────────────────────────────── */
+    .demo-cell {
+      background: linear-gradient(135deg, #4f63f5 0%, #9ab4ff 100%);
+      border-radius: 6px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 0.6rem 0.4rem;
+      min-height: 44px;
+    }
+    .demo-cell.alt  { background: linear-gradient(135deg, #f59e0b 0%, #fde68a 100%); color: #78350f; }
+    .demo-cell.rose { background: linear-gradient(135deg, #f43f5e 0%, #fda4af 100%); color: #fff; }
+    .demo-cell.em   { background: linear-gradient(135deg, #10b981 0%, #6ee7b7 100%); color: #fff; }
+
+    /* ── Nav active ──────────────────────────────────────────── */
+    .nav-link.active {
+      background: rgba(79,99,245,.15);
+      color: #4f63f5;
+      border-left: 3px solid #4f63f5;
+    }
+    .dark .nav-link.active {
+      background: rgba(79,99,245,.2);
+      color: #9ab4ff;
+      border-left-color: #9ab4ff;
+    }
+
+    /* ── Section fade-in ─────────────────────────────────────── */
+    section { scroll-margin-top: 5rem; }
+
+    /* ── Badge ───────────────────────────────────────────────── */
+    .badge {
+      display: inline-block;
+      padding: 1px 8px;
+      border-radius: 999px;
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: .03em;
+    }
+    .badge-blue  { background: #dde6ff; color: #3a43e8; }
+    .badge-green { background: #d1fae5; color: #047857; }
+    .dark .badge-blue  { background: #282ca5; color: #9ab4ff; }
+    .dark .badge-green { background: #064e3b; color: #6ee7b7; }
+
+    /* ── Table ───────────────────────────────────────────────── */
+    .ref-table th { background: #f0f4ff; }
+    .dark .ref-table th { background: #1e2240; }
+
+    /* ── Mobile overlay ──────────────────────────────────────── */
+    #overlay { display: none; }
+    #overlay.show { display: block; }
+  </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-950 text-gray-800 dark:text-gray-100 transition-colors duration-300">
+
+<!-- ═══════════════════════════════════════════════════════════════
+     TOP NAV
+═══════════════════════════════════════════════════════════════ -->
+<header class="fixed top-0 inset-x-0 z-50 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-sm">
+  <div class="flex items-center justify-between h-14 px-4 md:px-6 max-w-screen-2xl mx-auto">
+
+    <!-- Logo / brand -->
+    <div class="flex items-center gap-3">
+      <button id="menuBtn" class="md:hidden text-gray-500 dark:text-gray-400 hover:text-brand-500" aria-label="Open menu">
+        <i class="fa-solid fa-bars text-lg"></i>
+      </button>
+      <a href="#intro" class="flex items-center gap-2 font-bold text-brand-600 dark:text-brand-400 text-base">
+        <i class="fa-solid fa-grid-2 text-brand-500"></i>
+        <span class="hidden sm:inline">@mastors/</span><span>gridder</span>
+      </a>
+      <span class="badge badge-blue hidden sm:inline">v1.2.7</span>
+    </div>
+
+    <!-- Right controls -->
+    <div class="flex items-center gap-3">
+      <a href="#quick-start" class="hidden sm:inline-flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-400 hover:text-brand-500 dark:hover:text-brand-400 transition-colors">
+        <i class="fa-solid fa-rocket text-xs"></i> Quick Start
+      </a>
+      <a href="https://github.com/KEHEM-IT/Mastors" target="_blank" rel="noopener"
+         class="text-gray-500 dark:text-gray-400 hover:text-brand-500 transition-colors text-lg" aria-label="GitHub">
+        <i class="fa-brands fa-github"></i>
+      </a>
+      <button id="darkToggle"
+        class="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-yellow-400 hover:bg-brand-100 dark:hover:bg-gray-700 transition-colors"
+        aria-label="Toggle dark mode">
+        <i class="fa-solid fa-moon dark:hidden text-sm"></i>
+        <i class="fa-solid fa-sun hidden dark:inline text-sm"></i>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Mobile overlay -->
+<div id="overlay" class="fixed inset-0 z-30 bg-black/50 md:hidden" onclick="closeSidebar()"></div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     LAYOUT WRAPPER
+═══════════════════════════════════════════════════════════════ -->
+<div class="flex pt-14 max-w-screen-2xl mx-auto">
+
+  <!-- ─── SIDEBAR ─────────────────────────────────────────────── -->
+  <aside id="sidebar"
+    class="fixed md:sticky top-14 left-0 z-40 h-[calc(100vh-3.5rem)] w-64 bg-white dark:bg-gray-900
+           border-r border-gray-200 dark:border-gray-800 overflow-y-auto flex-shrink-0
+           -translate-x-full md:translate-x-0 transition-transform duration-300">
+    <nav class="py-4 px-3 space-y-1 text-sm">
+
+      <p class="px-3 pt-1 pb-1 text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500">Getting Started</p>
+      <a class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors" href="#intro"><i class="fa-solid fa-circle-info w-4 text-center"></i> Introduction</a>
+      <a class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors" href="#quick-start"><i class="fa-solid fa-rocket w-4 text-center"></i> Quick Start</a>
+      <a class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors" href="#installation"><i class="fa-solid fa-box-open w-4 text-center"></i> Installation</a>
+
+      <p class="px-3 pt-3 pb-1 text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500">SCSS Mixins</p>
+      <a class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors" href="#mixin-grid-container"><i class="fa-solid fa-puzzle-piece w-4 text-center"></i> grid-container()</a>
+      <a class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors" href="#mixin-grid-item"><i class="fa-solid fa-puzzle-piece w-4 text-center"></i> grid-item()</a>
+      <a class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors" href="#mixin-gridder"><i class="fa-solid fa-puzzle-piece w-4 text-center"></i> gridder()</a>
+      <a class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors" href="#mixin-gridder-areas"><i class="fa-solid fa-puzzle-piece w-4 text-center"></i> gridder-areas()</a>
+
+      <p class="px-3 pt-3 pb-1 text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500">Utility Classes</p>
+      <a class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors" href="#util-display"><i class="fa-solid fa-table-cells w-4 text-center"></i> Display</a>
+      <a class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors" href="#util-cols"><i class="fa-solid fa-table-columns w-4 text-center"></i> Template Columns</a>
+      <a class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors" href="#util-rows"><i class="fa-solid fa-table-rows w-4 text-center"></i> Template Rows</a>
+      <a class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors" href="#util-areas"><i class="fa-solid fa-object-group w-4 text-center"></i> Template Areas</a>
+      <a class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors" href="#util-col-shorthand"><i class="fa-solid fa-arrows-left-right w-4 text-center"></i> Column Shorthand</a>
+      <a class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors" href="#util-row-shorthand"><i class="fa-solid fa-arrows-up-down w-4 text-center"></i> Row Shorthand</a>
+      <a class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors" href="#util-flow"><i class="fa-solid fa-shuffle w-4 text-center"></i> Auto Flow</a>
+      <a class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors" href="#util-auto-cols-rows"><i class="fa-solid fa-expand w-4 text-center"></i> Auto Cols / Rows</a>
+      <a class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors" href="#util-gap"><i class="fa-solid fa-maximize w-4 text-center"></i> Gap</a>
+      <a class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors" href="#util-col-span"><i class="fa-solid fa-left-right w-4 text-center"></i> Col Span / Start / End</a>
+      <a class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors" href="#util-row-span"><i class="fa-solid fa-up-down w-4 text-center"></i> Row Span / Start / End</a>
+      <a class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors" href="#util-alignment"><i class="fa-solid fa-align-center w-4 text-center"></i> Alignment</a>
+
+      <p class="px-3 pt-3 pb-1 text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500">Layouts & Patterns</p>
+      <a class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors" href="#layout-presets"><i class="fa-solid fa-layer-group w-4 text-center"></i> Layout Presets</a>
+      <a class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors" href="#responsive"><i class="fa-solid fa-mobile-screen w-4 text-center"></i> Responsive</a>
+      <a class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors" href="#reference"><i class="fa-solid fa-book w-4 text-center"></i> Full Reference</a>
+
+    </nav>
+  </aside>
+
+  <!-- ─── MAIN CONTENT ──────────────────────────────────────────── -->
+  <main class="flex-1 min-w-0 px-4 md:px-10 py-10 max-w-4xl">
+
+    <!-- ══════════════════════════════════════════════════════════
+         INTRO
+    ══════════════════════════════════════════════════════════ -->
+    <section id="intro">
+      <div class="flex items-start gap-4 mb-6">
+        <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-brand-500 flex items-center justify-center text-white text-xl shadow-lg">
+          <i class="fa-solid fa-grid-2"></i>
+        </div>
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900 dark:text-white">@mastors/gridder</h1>
+          <p class="text-gray-500 dark:text-gray-400 mt-1">Complete CSS Grid utility class system for the Mastors Framework</p>
+          <div class="flex flex-wrap gap-2 mt-2">
+            <span class="badge badge-blue">v1.2.7</span>
+            <span class="badge badge-green">MIT</span>
+            <span class="badge badge-blue">SCSS</span>
+            <span class="badge badge-green">Responsive</span>
+          </div>
+        </div>
+      </div>
+      <p class="text-gray-600 dark:text-gray-300 leading-relaxed mb-4">
+        <strong>@mastors/gridder</strong> is the dedicated CSS Grid package of the Mastors Framework. It provides
+        a complete suite of utility classes, SCSS mixins, and named-area layout presets to build any grid layout
+        without writing custom CSS. The package plugs into <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-sm">@mastors/core</code>
+        for its class-generation engine and responsive breakpoint system.
+      </p>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
+        <div class="rounded-xl border border-gray-200 dark:border-gray-800 p-4 bg-white dark:bg-gray-900 flex gap-3 items-start">
+          <i class="fa-solid fa-bolt text-brand-500 mt-0.5"></i>
+          <div><p class="font-semibold text-sm">12-column system</p><p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Full 1–12 column &amp; 1–6 row track classes</p></div>
+        </div>
+        <div class="rounded-xl border border-gray-200 dark:border-gray-800 p-4 bg-white dark:bg-gray-900 flex gap-3 items-start">
+          <i class="fa-solid fa-mobile-screen text-brand-500 mt-0.5"></i>
+          <div><p class="font-semibold text-sm">Fully responsive</p><p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Breakpoint-prefixed variants: sm, md, lg, xl, 2xl</p></div>
+        </div>
+        <div class="rounded-xl border border-gray-200 dark:border-gray-800 p-4 bg-white dark:bg-gray-900 flex gap-3 items-start">
+          <i class="fa-solid fa-puzzle-piece text-brand-500 mt-0.5"></i>
+          <div><p class="font-semibold text-sm">4 powerful mixins</p><p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">grid-container, grid-item, gridder, gridder-areas</p></div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="my-10 border-gray-200 dark:border-gray-800" />
+
+    <!-- ══════════════════════════════════════════════════════════
+         QUICK START
+    ══════════════════════════════════════════════════════════ -->
+    <section id="quick-start">
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
+        <i class="fa-solid fa-rocket text-brand-500 text-lg"></i> Quick Start
+      </h2>
+      <p class="text-gray-600 dark:text-gray-300 mb-5">The fastest way to get a grid going — just add classes to your HTML.</p>
+
+      <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden mb-6">
+        <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-800 flex items-center gap-2 bg-gray-50 dark:bg-gray-800/50">
+          <i class="fa-brands fa-html5 text-orange-400"></i>
+          <span class="text-xs font-semibold text-gray-500 dark:text-gray-400">HTML</span>
+        </div>
+        <div class="p-4 relative code-wrapper">
+          <button class="copy-btn" onclick="copyCode(this)"><i class="fa-solid fa-copy mr-1"></i>Copy</button>
+          <pre><code class="language-html">&lt;div class="grid grid-cols-3 gap-4"&gt;
+  &lt;div&gt;Column 1&lt;/div&gt;
+  &lt;div&gt;Column 2&lt;/div&gt;
+  &lt;div&gt;Column 3&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+        </div>
+      </div>
+
+      <!-- Live demo -->
+      <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden mb-2">
+        <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-800 flex items-center gap-2 bg-gray-50 dark:bg-gray-800/50">
+          <i class="fa-solid fa-eye text-brand-400"></i>
+          <span class="text-xs font-semibold text-gray-500 dark:text-gray-400">Live Preview</span>
+        </div>
+        <div class="p-4">
+          <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;">
+            <div class="demo-cell">Column 1</div>
+            <div class="demo-cell alt">Column 2</div>
+            <div class="demo-cell rose">Column 3</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="my-10 border-gray-200 dark:border-gray-800" />
+
+    <!-- ══════════════════════════════════════════════════════════
+         INSTALLATION
+    ══════════════════════════════════════════════════════════ -->
+    <section id="installation">
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
+        <i class="fa-solid fa-box-open text-brand-500 text-lg"></i> Installation
+      </h2>
+      <p class="text-gray-600 dark:text-gray-300 mb-5">Install the package inside a Mastors monorepo workspace or as a standalone npm dependency.</p>
+
+      <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden mb-4">
+        <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-800 flex gap-2 items-center bg-gray-50 dark:bg-gray-800/50">
+          <i class="fa-solid fa-terminal text-green-400"></i>
+          <span class="text-xs font-semibold text-gray-500 dark:text-gray-400">Shell</span>
+        </div>
+        <div class="p-4 relative code-wrapper">
+          <button class="copy-btn" onclick="copyCode(this)"><i class="fa-solid fa-copy mr-1"></i>Copy</button>
+          <pre><code class="language-css">npm install @mastors/gridder</code></pre>
+        </div>
+      </div>
+
+      <p class="text-sm text-gray-600 dark:text-gray-300 mb-3 font-medium">Import in your SCSS entry point:</p>
+      <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden mb-4">
+        <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-800 flex gap-2 items-center bg-gray-50 dark:bg-gray-800/50">
+          <i class="fa-brands fa-sass text-pink-400"></i>
+          <span class="text-xs font-semibold text-gray-500 dark:text-gray-400">SCSS</span>
+        </div>
+        <div class="p-4 relative code-wrapper">
+          <button class="copy-btn" onclick="copyCode(this)"><i class="fa-solid fa-copy mr-1"></i>Copy</button>
+          <pre><code class="language-scss">// Full utility + responsive layer
+@use "@mastors/gridder";
+
+// Or target just the mixins
+@use "@mastors/gridder/scss/mixins/grid-container" as gc;</code></pre>
+        </div>
+      </div>
+
+      <p class="text-sm text-gray-600 dark:text-gray-300 mb-3 font-medium">Or link the pre-built CSS directly:</p>
+      <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden">
+        <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-800 flex gap-2 items-center bg-gray-50 dark:bg-gray-800/50">
+          <i class="fa-brands fa-html5 text-orange-400"></i>
+          <span class="text-xs font-semibold text-gray-500 dark:text-gray-400">HTML</span>
+        </div>
+        <div class="p-4 relative code-wrapper">
+          <button class="copy-btn" onclick="copyCode(this)"><i class="fa-solid fa-copy mr-1"></i>Copy</button>
+          <pre><code class="language-html">&lt;link rel="stylesheet" href="node_modules/@mastors/gridder/dist/mastors-gridder.css" /&gt;</code></pre>
+        </div>
+      </div>
+      <div class="mt-4 flex items-start gap-2 p-3 rounded-lg bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 text-sm text-amber-800 dark:text-amber-300">
+        <i class="fa-solid fa-triangle-exclamation mt-0.5 flex-shrink-0"></i>
+        <span><strong>Peer dependencies:</strong> <code>@mastors/core ≥1.0.0</code> is required for the class-generation engine and gap utilities. Sass ≥1.80.0 is required when using the SCSS source.</span>
+      </div>
+    </section>
+
+    <hr class="my-10 border-gray-200 dark:border-gray-800" />
+    <!-- ══════════════════════════════════════════════════════════
+         MIXIN: grid-container()
+    ══════════════════════════════════════════════════════════ -->
+    <section id="mixin-grid-container">
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-1 flex items-center gap-2">
+        <i class="fa-solid fa-puzzle-piece text-brand-500 text-lg"></i> <code>grid-container()</code>
+      </h2>
+      <p class="text-gray-600 dark:text-gray-300 mb-2">Configure a complete CSS Grid layout in a single mixin call. All parameters are optional and default to sensible values.</p>
+      <p class="text-xs text-gray-500 dark:text-gray-400 mb-5 font-mono">File: <code>scss/mixins/_grid-container.scss</code></p>
+
+      <!-- Signature -->
+      <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden mb-4">
+        <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-800 flex gap-2 items-center bg-gray-50 dark:bg-gray-800/50">
+          <i class="fa-brands fa-sass text-pink-400"></i>
+          <span class="text-xs font-semibold text-gray-500 dark:text-gray-400">Mixin Signature</span>
+        </div>
+        <div class="p-4 relative code-wrapper">
+          <button class="copy-btn" onclick="copyCode(this)"><i class="fa-solid fa-copy mr-1"></i>Copy</button>
+          <pre><code class="language-scss">@mixin grid-container(
+  $cols:      null,       // grid-template-columns value
+  $rows:      null,       // grid-template-rows value
+  $gap:       null,       // shorthand gap (row + column)
+  $col-gap:   null,       // column-gap only
+  $row-gap:   null,       // row-gap only
+  $flow:      row,        // grid-auto-flow (default: row)
+  $auto-cols: null,       // grid-auto-columns
+  $auto-rows: null,       // grid-auto-rows
+  $inline:    false       // true → display: inline-grid
+)</code></pre>
+        </div>
+      </div>
+
+      <!-- Usage example -->
+      <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden mb-4">
+        <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-800 flex gap-2 items-center bg-gray-50 dark:bg-gray-800/50">
+          <i class="fa-brands fa-sass text-pink-400"></i>
+          <span class="text-xs font-semibold text-gray-500 dark:text-gray-400">SCSS Usage</span>
+        </div>
+        <div class="p-4 relative code-wrapper">
+          <button class="copy-btn" onclick="copyCode(this)"><i class="fa-solid fa-copy mr-1"></i>Copy</button>
+          <pre><code class="language-scss">@use "@mastors/gridder/scss/mixins/grid-container" as gc;
+
+.my-layout {
+  @include gc.grid-container(
+    $cols:    repeat(3, minmax(0, 1fr)),
+    $gap:     1.5rem,
+    $flow:    row
+  );
+}
+
+// Inline grid with fixed columns and row gap only
+.card-row {
+  @include gc.grid-container(
+    $cols:    repeat(4, 200px),
+    $row-gap: 1rem,
+    $inline:  true
+  );
+}</code></pre>
+        </div>
+      </div>
+
+      <!-- Live demo -->
+      <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden">
+        <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-800 flex gap-2 items-center bg-gray-50 dark:bg-gray-800/50">
+          <i class="fa-solid fa-eye text-brand-400"></i>
+          <span class="text-xs font-semibold text-gray-500 dark:text-gray-400">Result — 3-column 1.5rem gap grid</span>
+        </div>
+        <div class="p-4">
+          <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.5rem;">
+            <div class="demo-cell">Item 1</div>
+            <div class="demo-cell alt">Item 2</div>
+            <div class="demo-cell rose">Item 3</div>
+            <div class="demo-cell em">Item 4</div>
+            <div class="demo-cell">Item 5</div>
+            <div class="demo-cell alt">Item 6</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="my-10 border-gray-200 dark:border-gray-800" />
+
+    <!-- ══════════════════════════════════════════════════════════
+         MIXIN: grid-item()
+    ══════════════════════════════════════════════════════════ -->
+    <section id="mixin-grid-item">
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-1 flex items-center gap-2">
+        <i class="fa-solid fa-puzzle-piece text-brand-500 text-lg"></i> <code>grid-item()</code>
+      </h2>
+      <p class="text-gray-600 dark:text-gray-300 mb-5">Place a grid item using span and optional start position. Applied to child elements of a grid container.</p>
+
+      <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden mb-4">
+        <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-800 flex gap-2 items-center bg-gray-50 dark:bg-gray-800/50">
+          <i class="fa-brands fa-sass text-pink-400"></i>
+          <span class="text-xs font-semibold text-gray-500 dark:text-gray-400">Mixin Signature</span>
+        </div>
+        <div class="p-4 relative code-wrapper">
+          <button class="copy-btn" onclick="copyCode(this)"><i class="fa-solid fa-copy mr-1"></i>Copy</button>
+          <pre><code class="language-scss">@mixin grid-item(
+  $col-span:  null,   // columns to span
+  $row-span:  null,   // rows to span
+  $col-start: null,   // explicit column start line
+  $row-start: null    // explicit row start line
+)</code></pre>
+        </div>
+      </div>
+
+      <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden mb-4">
+        <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-800 flex gap-2 items-center bg-gray-50 dark:bg-gray-800/50">
+          <i class="fa-brands fa-sass text-pink-400"></i>
+          <span class="text-xs font-semibold text-gray-500 dark:text-gray-400">SCSS Usage</span>
+        </div>
+        <div class="p-4 relative code-wrapper">
+          <button class="copy-btn" onclick="copyCode(this)"><i class="fa-solid fa-copy mr-1"></i>Copy</button>
+          <pre><code class="language-scss">@use "@mastors/gridder/scss/mixins/grid-container" as gc;
+
+.feature-card {
+  @include gc.grid-item($col-span: 2, $row-span: 1);
+}
+
+// Start at column 3, span 2 columns
+.hero-block {
+  @include gc.grid-item($col-span: 2, $col-start: 3);
+}</code></pre>
+        </div>
+      </div>
+
+      <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden">
+        <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-800 flex gap-2 items-center bg-gray-50 dark:bg-gray-800/50">
+          <i class="fa-solid fa-eye text-brand-400"></i>
+          <span class="text-xs font-semibold text-gray-500 dark:text-gray-400">Result — hero spans 2 cols, starts at col 1</span>
+        </div>
+        <div class="p-4">
+          <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;">
+            <div class="demo-cell rose" style="grid-column:span 2/span 2;">Hero (col-span 2)</div>
+            <div class="demo-cell alt">Sidebar</div>
+            <div class="demo-cell">Card A</div>
+            <div class="demo-cell em">Card B</div>
+            <div class="demo-cell">Card C</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="my-10 border-gray-200 dark:border-gray-800" />
+    <!-- ══════════════════════════════════════════════════════════
+         MIXIN: gridder()
+    ══════════════════════════════════════════════════════════ -->
+    <section id="mixin-gridder">
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-1 flex items-center gap-2">
+        <i class="fa-solid fa-puzzle-piece text-brand-500 text-lg"></i> <code>gridder()</code>
+      </h2>
+      <p class="text-gray-600 dark:text-gray-300 mb-5">Place a grid item using a named grid area or explicit row/column line placement. Optionally controls self-alignment.</p>
+
+      <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden mb-4">
+        <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-800 flex gap-2 items-center bg-gray-50 dark:bg-gray-800/50">
+          <i class="fa-brands fa-sass text-pink-400"></i>
+          <span class="text-xs font-semibold text-gray-500 dark:text-gray-400">Mixin Signature</span>
+        </div>
+        <div class="p-4 relative code-wrapper">
+          <button class="copy-btn" onclick="copyCode(this)"><i class="fa-solid fa-copy mr-1"></i>Copy</button>
+          <pre><code class="language-scss">@mixin gridder(
+  $area,              // row-start (named area) OR row-start line number
+  $col-start: null,   // column-start line (triggers explicit mode)
+  $row-end:   null,   // row-end line
+  $col-end:   null,   // column-end line
+  $align:     null,   // align-self value
+  $justify:   null    // justify-self value
+)</code></pre>
+        </div>
+      </div>
+
+      <div class="mb-3 p-3 rounded-lg bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 text-sm text-blue-800 dark:text-blue-300 flex gap-2">
+        <i class="fa-solid fa-circle-info mt-0.5 flex-shrink-0"></i>
+        <span>When <strong>only <code>$area</code> is supplied</strong>, the mixin emits <code>grid-area: &lt;name&gt;</code> (named area mode). When any of <code>$col-start</code>, <code>$row-end</code>, or <code>$col-end</code> are supplied, it emits the full <code>grid-area: row-start / col-start / row-end / col-end</code> shorthand (explicit line mode).</span>
+      </div>
+
+      <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden mb-4">
+        <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-800 flex gap-2 items-center bg-gray-50 dark:bg-gray-800/50">
+          <i class="fa-brands fa-sass text-pink-400"></i>
+          <span class="text-xs font-semibold text-gray-500 dark:text-gray-400">SCSS Usage — Named area</span>
+        </div>
+        <div class="p-4 relative code-wrapper">
+          <button class="copy-btn" onclick="copyCode(this)"><i class="fa-solid fa-copy mr-1"></i>Copy</button>
+          <pre><code class="language-scss">@use "@mastors/gridder/scss/mixins/grid-container" as gc;
+
+.page { @include gc.grid-container($cols: 1fr 3fr, $rows: auto 1fr auto); }
+.page__header { @include gc.gridder(header); }
+.page__sidebar { @include gc.gridder(sidebar, $align: start); }
+.page__main { @include gc.gridder(main); }
+.page__footer { @include gc.gridder(footer); }</code></pre>
+        </div>
+      </div>
+
+      <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden mb-4">
+        <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-800 flex gap-2 items-center bg-gray-50 dark:bg-gray-800/50">
+          <i class="fa-brands fa-sass text-pink-400"></i>
+          <span class="text-xs font-semibold text-gray-500 dark:text-gray-400">SCSS Usage — Explicit lines</span>
+        </div>
+        <div class="p-4 relative code-wrapper">
+          <button class="copy-btn" onclick="copyCode(this)"><i class="fa-solid fa-copy mr-1"></i>Copy</button>
+          <pre><code class="language-scss">// Places item from row-line 1 → 3, col-line 2 → 4
+.hero {
+  @include gc.gridder(1, $col-start: 2, $row-end: 3, $col-end: 4);
+  // Outputs: grid-area: 1 / 2 / 3 / 4;
+}</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <hr class="my-10 border-gray-200 dark:border-gray-800" />
+
+    <!-- ══════════════════════════════════════════════════════════
+         MIXIN: gridder-areas()
+    ══════════════════════════════════════════════════════════ -->
+    <section id="mixin-gridder-areas">
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-1 flex items-center gap-2">
+        <i class="fa-solid fa-puzzle-piece text-brand-500 text-lg"></i> <code>gridder-areas()</code>
+      </h2>
+      <p class="text-gray-600 dark:text-gray-300 mb-5">Emit <code>grid-template-areas</code> from a variadic list of quoted row strings — one string per row, space-separated area names within each string.</p>
+
+      <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden mb-4">
+        <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-800 flex gap-2 items-center bg-gray-50 dark:bg-gray-800/50">
+          <i class="fa-brands fa-sass text-pink-400"></i>
+          <span class="text-xs font-semibold text-gray-500 dark:text-gray-400">Mixin Signature</span>
+        </div>
+        <div class="p-4 relative code-wrapper">
+          <button class="copy-btn" onclick="copyCode(this)"><i class="fa-solid fa-copy mr-1"></i>Copy</button>
+          <pre><code class="language-scss">@mixin gridder-areas($rows...)
+// Each $row is a quoted string of space-separated area names</code></pre>
+        </div>
+      </div>
+
+      <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden mb-4">
+        <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-800 flex gap-2 items-center bg-gray-50 dark:bg-gray-800/50">
+          <i class="fa-brands fa-sass text-pink-400"></i>
+          <span class="text-xs font-semibold text-gray-500 dark:text-gray-400">SCSS Usage</span>
+        </div>
+        <div class="p-4 relative code-wrapper">
+          <button class="copy-btn" onclick="copyCode(this)"><i class="fa-solid fa-copy mr-1"></i>Copy</button>
+          <pre><code class="language-scss">@use "@mastors/gridder/scss/mixins/grid-container" as gc;
+
+.app-layout {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  grid-template-rows: auto 1fr auto;
+
+  @include gc.gridder-areas(
+    "header  header",
+    "sidebar main",
+    "footer  footer"
+  );
+}
+
+// Children
+.app-header  { @include gc.gridder(header); }
+.app-sidebar { @include gc.gridder(sidebar); }
+.app-main    { @include gc.gridder(main); }
+.app-footer  { @include gc.gridder(footer); }</code></pre>
+        </div>
+      </div>
+
+      <!-- Live demo -->
+      <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden">
+        <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-800 flex gap-2 items-center bg-gray-50 dark:bg-gray-800/50">
+          <i class="fa-solid fa-eye text-brand-400"></i>
+          <span class="text-xs font-semibold text-gray-500 dark:text-gray-400">Result — named area layout</span>
+        </div>
+        <div class="p-4">
+          <div style="display:grid;grid-template-columns:140px 1fr;grid-template-rows:auto 1fr auto;grid-template-areas:'header header' 'sidebar main' 'footer footer';gap:0.5rem;min-height:180px;">
+            <div class="demo-cell rose" style="grid-area:header;">Header</div>
+            <div class="demo-cell alt" style="grid-area:sidebar;">Sidebar</div>
+            <div class="demo-cell em" style="grid-area:main;">Main</div>
+            <div class="demo-cell" style="grid-area:footer;">Footer</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="my-10 border-gray-200 dark:border-gray-800" />
+    <!-- ══════════════════════════════════════════════════════════
+         UTILITY: Display
+    ══════════════════════════════════════════════════════════ -->
+    <section id="util-display">
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-1 flex items-center gap-2">
+        <i class="fa-solid fa-table-cells text-brand-500 text-lg"></i> Display
+      </h2>
+      <p class="text-gray-600 dark:text-gray-300 mb-5">Switch an element into a grid formatting context.</p>
+
+      <div class="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-800 mb-4">
+        <table class="ref-table w-full text-sm">
+          <thead><tr class="text-left">
+            <th class="px-4 py-2 font-semibold text-gray-600 dark:text-gray-300">Class</th>
+            <th class="px-4 py-2 font-semibold text-gray-600 dark:text-gray-300">CSS Output</th>
+            <th class="px-4 py-2 font-semibold text-gray-600 dark:text-gray-300">Responsive</th>
+          </tr></thead>
+          <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">.grid</td><td class="px-4 py-2 font-mono text-gray-600 dark:text-gray-300">display: grid</td><td class="px-4 py-2"><span class="badge badge-green">Yes</span></td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">.inline-grid</td><td class="px-4 py-2 font-mono text-gray-600 dark:text-gray-300">display: inline-grid</td><td class="px-4 py-2"><span class="badge badge-green">Yes</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden mb-4">
+        <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-800 flex gap-2 items-center bg-gray-50 dark:bg-gray-800/50">
+          <i class="fa-brands fa-html5 text-orange-400"></i>
+          <span class="text-xs font-semibold text-gray-500 dark:text-gray-400">HTML</span>
+        </div>
+        <div class="p-4 relative code-wrapper">
+          <button class="copy-btn" onclick="copyCode(this)"><i class="fa-solid fa-copy mr-1"></i>Copy</button>
+          <pre><code class="language-html">&lt;div class="grid grid-cols-2 gap-4"&gt;...&lt;/div&gt;
+&lt;span class="inline-grid grid-cols-2 gap-2"&gt;...&lt;/span&gt;</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <hr class="my-10 border-gray-200 dark:border-gray-800" />
+
+    <!-- ══════════════════════════════════════════════════════════
+         UTILITY: Template Columns
+    ══════════════════════════════════════════════════════════ -->
+    <section id="util-cols">
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-1 flex items-center gap-2">
+        <i class="fa-solid fa-table-columns text-brand-500 text-lg"></i> Template Columns
+      </h2>
+      <p class="text-gray-600 dark:text-gray-300 mb-5">Set <code>grid-template-columns</code>. Fixed counts use equal <code>minmax(0, 1fr)</code> tracks.</p>
+
+      <div class="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-800 mb-4">
+        <table class="ref-table w-full text-sm">
+          <thead><tr class="text-left">
+            <th class="px-4 py-2 font-semibold text-gray-600 dark:text-gray-300">Class</th>
+            <th class="px-4 py-2 font-semibold text-gray-600 dark:text-gray-300">CSS Output</th>
+            <th class="px-4 py-2 font-semibold text-gray-600 dark:text-gray-300">Responsive</th>
+          </tr></thead>
+          <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">.grid-cols-1 … .grid-cols-12</td><td class="px-4 py-2 font-mono text-gray-600 dark:text-gray-300">repeat(N, minmax(0, 1fr))</td><td class="px-4 py-2"><span class="badge badge-green">Yes</span></td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">.grid-cols-none</td><td class="px-4 py-2 font-mono text-gray-600 dark:text-gray-300">none</td><td class="px-4 py-2"><span class="badge badge-green">Yes</span></td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">.grid-cols-subgrid</td><td class="px-4 py-2 font-mono text-gray-600 dark:text-gray-300">subgrid</td><td class="px-4 py-2"><span class="badge badge-blue">No</span></td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">.grid-cols-auto</td><td class="px-4 py-2 font-mono text-gray-600 dark:text-gray-300">auto</td><td class="px-4 py-2"><span class="badge badge-blue">No</span></td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">.grid-cols-min</td><td class="px-4 py-2 font-mono text-gray-600 dark:text-gray-300">min-content</td><td class="px-4 py-2"><span class="badge badge-blue">No</span></td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">.grid-cols-max</td><td class="px-4 py-2 font-mono text-gray-600 dark:text-gray-300">max-content</td><td class="px-4 py-2"><span class="badge badge-blue">No</span></td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">.grid-cols-fr</td><td class="px-4 py-2 font-mono text-gray-600 dark:text-gray-300">minmax(0, 1fr)</td><td class="px-4 py-2"><span class="badge badge-blue">No</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden mb-4">
+        <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-800 flex gap-2 items-center bg-gray-50 dark:bg-gray-800/50">
+          <i class="fa-brands fa-html5 text-orange-400"></i>
+          <span class="text-xs font-semibold text-gray-500 dark:text-gray-400">Example</span>
+        </div>
+        <div class="p-4 relative code-wrapper">
+          <button class="copy-btn" onclick="copyCode(this)"><i class="fa-solid fa-copy mr-1"></i>Copy</button>
+          <pre><code class="language-html">&lt;!-- 4 equal columns --&gt;
+&lt;div class="grid grid-cols-4 gap-3"&gt;
+  &lt;div&gt;A&lt;/div&gt;&lt;div&gt;B&lt;/div&gt;&lt;div&gt;C&lt;/div&gt;&lt;div&gt;D&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Responsive: 1 col on mobile, 3 on md+ --&gt;
+&lt;div class="grid grid-cols-1 md:grid-cols-3 gap-4"&gt;...&lt;/div&gt;</code></pre>
+        </div>
+      </div>
+
+      <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden">
+        <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-800 flex gap-2 items-center bg-gray-50 dark:bg-gray-800/50">
+          <i class="fa-solid fa-eye text-brand-400"></i>
+          <span class="text-xs font-semibold text-gray-500 dark:text-gray-400">Preview — .grid-cols-4</span>
+        </div>
+        <div class="p-4">
+          <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0.75rem;">
+            <div class="demo-cell">A</div>
+            <div class="demo-cell alt">B</div>
+            <div class="demo-cell rose">C</div>
+            <div class="demo-cell em">D</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="my-10 border-gray-200 dark:border-gray-800" />
+
+    <!-- ══════════════════════════════════════════════════════════
+         UTILITY: Template Rows
+    ══════════════════════════════════════════════════════════ -->
+    <section id="util-rows">
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-1 flex items-center gap-2">
+        <i class="fa-solid fa-table-rows text-brand-500 text-lg"></i> Template Rows
+      </h2>
+      <p class="text-gray-600 dark:text-gray-300 mb-5">Set <code>grid-template-rows</code>. Fixed counts 1–6 use equal <code>minmax(0, 1fr)</code> tracks.</p>
+
+      <div class="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-800 mb-4">
+        <table class="ref-table w-full text-sm">
+          <thead><tr class="text-left">
+            <th class="px-4 py-2 font-semibold text-gray-600 dark:text-gray-300">Class</th>
+            <th class="px-4 py-2 font-semibold text-gray-600 dark:text-gray-300">CSS Output</th>
+            <th class="px-4 py-2 font-semibold text-gray-600 dark:text-gray-300">Responsive</th>
+          </tr></thead>
+          <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">.grid-rows-1 … .grid-rows-6</td><td class="px-4 py-2 font-mono text-gray-600 dark:text-gray-300">repeat(N, minmax(0, 1fr))</td><td class="px-4 py-2"><span class="badge badge-green">Yes</span></td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">.grid-rows-none</td><td class="px-4 py-2 font-mono text-gray-600 dark:text-gray-300">none</td><td class="px-4 py-2"><span class="badge badge-green">Yes</span></td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">.grid-rows-subgrid</td><td class="px-4 py-2 font-mono text-gray-600 dark:text-gray-300">subgrid</td><td class="px-4 py-2"><span class="badge badge-blue">No</span></td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">.grid-rows-auto</td><td class="px-4 py-2 font-mono text-gray-600 dark:text-gray-300">auto</td><td class="px-4 py-2"><span class="badge badge-blue">No</span></td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">.grid-rows-min</td><td class="px-4 py-2 font-mono text-gray-600 dark:text-gray-300">min-content</td><td class="px-4 py-2"><span class="badge badge-blue">No</span></td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">.grid-rows-max</td><td class="px-4 py-2 font-mono text-gray-600 dark:text-gray-300">max-content</td><td class="px-4 py-2"><span class="badge badge-blue">No</span></td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">.grid-rows-fr</td><td class="px-4 py-2 font-mono text-gray-600 dark:text-gray-300">minmax(0, 1fr)</td><td class="px-4 py-2"><span class="badge badge-blue">No</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden mb-4">
+        <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-800 flex gap-2 items-center bg-gray-50 dark:bg-gray-800/50">
+          <i class="fa-brands fa-html5 text-orange-400"></i>
+          <span class="text-xs font-semibold text-gray-500 dark:text-gray-400">Example</span>
+        </div>
+        <div class="p-4 relative code-wrapper">
+          <button class="copy-btn" onclick="copyCode(this)"><i class="fa-solid fa-copy mr-1"></i>Copy</button>
+          <pre><code class="language-html">&lt;!-- 3 equal rows, items fill columns automatically --&gt;
+&lt;div class="grid grid-cols-2 grid-rows-3 gap-3" style="height:200px"&gt;
+  &lt;div&gt;1&lt;/div&gt;&lt;div&gt;2&lt;/div&gt;
+  &lt;div&gt;3&lt;/div&gt;&lt;div&gt;4&lt;/div&gt;
+  &lt;div&gt;5&lt;/div&gt;&lt;div&gt;6&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <hr class="my-10 border-gray-200 dark:border-gray-800" />
+    <!-- ══════════════════════════════════════════════════════════
+         UTILITY: Template Areas
+    ══════════════════════════════════════════════════════════ -->
+    <section id="util-areas">
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-1 flex items-center gap-2">
+        <i class="fa-solid fa-object-group text-brand-500 text-lg"></i> Template Areas
+      </h2>
+      <p class="text-gray-600 dark:text-gray-300 mb-5">Named area utility classes and layout presets. Area names cannot be generated atomically, so Gridder provides common placement classes and three ready-to-use layout presets.</p>
+
+      <h3 class="font-semibold text-gray-800 dark:text-gray-200 mb-2 mt-4">Area Placement Classes</h3>
+      <div class="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-800 mb-4">
+        <table class="ref-table w-full text-sm">
+          <thead><tr class="text-left">
+            <th class="px-4 py-2 font-semibold text-gray-600 dark:text-gray-300">Class</th>
+            <th class="px-4 py-2 font-semibold text-gray-600 dark:text-gray-300">CSS Output</th>
+          </tr></thead>
+          <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">.area-header</td><td class="px-4 py-2 font-mono text-gray-600 dark:text-gray-300">grid-area: header</td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">.area-nav</td><td class="px-4 py-2 font-mono text-gray-600 dark:text-gray-300">grid-area: nav</td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">.area-sidebar</td><td class="px-4 py-2 font-mono text-gray-600 dark:text-gray-300">grid-area: sidebar</td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">.area-main</td><td class="px-4 py-2 font-mono text-gray-600 dark:text-gray-300">grid-area: main</td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">.area-aside</td><td class="px-4 py-2 font-mono text-gray-600 dark:text-gray-300">grid-area: aside</td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">.area-footer</td><td class="px-4 py-2 font-mono text-gray-600 dark:text-gray-300">grid-area: footer</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="font-semibold text-gray-800 dark:text-gray-200 mb-2 mt-6">SCSS Mixins for Custom Areas</h3>
+      <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden mb-4">
+        <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-800 flex gap-2 items-center bg-gray-50 dark:bg-gray-800/50">
+          <i class="fa-brands fa-sass text-pink-400"></i>
+          <span class="text-xs font-semibold text-gray-500 dark:text-gray-400">SCSS — define-areas() &amp; area()</span>
+        </div>
+        <div class="p-4 relative code-wrapper">
+          <button class="copy-btn" onclick="copyCode(this)"><i class="fa-solid fa-copy mr-1"></i>Copy</button>
+          <pre><code class="language-scss">@use "@mastors/gridder/scss/utilities/grid-template-areas" as areas;
+
+.page-layout {
+  display: grid;
+  grid-template-columns: 200px 1fr 200px;
+  // define-areas() sets grid-template-areas
+  @include areas.define-areas(
+    "header header  header",
+    "nav    main    aside",
+    "footer footer  footer"
+  );
+}
+
+.page-nav    { @include areas.area(nav); }
+.page-main   { @include areas.area(main); }
+.page-aside  { @include areas.area(aside); }</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <hr class="my-10 border-gray-200 dark:border-gray-800" />
+
+    <!-- ══════════════════════════════════════════════════════════
+         UTILITY: Column Shorthand
+    ══════════════════════════════════════════════════════════ -->
+    <section id="util-col-shorthand">
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-1 flex items-center gap-2">
+        <i class="fa-solid fa-arrows-left-right text-brand-500 text-lg"></i> Column Shorthand
+      </h2>
+      <p class="text-gray-600 dark:text-gray-300 mb-5">Set the <code>grid-column</code> shorthand directly on an item.</p>
+
+      <div class="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-800 mb-4">
+        <table class="ref-table w-full text-sm">
+          <thead><tr class="text-left">
+            <th class="px-4 py-2 font-semibold text-gray-600 dark:text-gray-300">Class</th>
+            <th class="px-4 py-2 font-semibold text-gray-600 dark:text-gray-300">CSS Output</th>
+          </tr></thead>
+          <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">.grid-col-auto</td><td class="px-4 py-2 font-mono text-gray-600 dark:text-gray-300">grid-column: auto</td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">.grid-col-1 … .grid-col-12</td><td class="px-4 py-2 font-mono text-gray-600 dark:text-gray-300">grid-column: N</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden mb-4">
+        <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-800 flex gap-2 items-center bg-gray-50 dark:bg-gray-800/50">
+          <i class="fa-brands fa-html5 text-orange-400"></i>
+          <span class="text-xs font-semibold text-gray-500 dark:text-gray-400">Example</span>
+        </div>
+        <div class="p-4 relative code-wrapper">
+          <button class="copy-btn" onclick="copyCode(this)"><i class="fa-solid fa-copy mr-1"></i>Copy</button>
+          <pre><code class="language-html">&lt;div class="grid grid-cols-3 gap-3"&gt;
+  &lt;div class="grid-col-2"&gt;Placed at column 2&lt;/div&gt;
+  &lt;div class="grid-col-auto"&gt;Auto placed&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <hr class="my-10 border-gray-200 dark:border-gray-800" />
+
+    <!-- ══════════════════════════════════════════════════════════
+         UTILITY: Row Shorthand
+    ══════════════════════════════════════════════════════════ -->
+    <section id="util-row-shorthand">
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-1 flex items-center gap-2">
+        <i class="fa-solid fa-arrows-up-down text-brand-500 text-lg"></i> Row Shorthand
+      </h2>
+      <p class="text-gray-600 dark:text-gray-300 mb-5">Set the <code>grid-row</code> shorthand directly on an item.</p>
+
+      <div class="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-800 mb-4">
+        <table class="ref-table w-full text-sm">
+          <thead><tr class="text-left">
+            <th class="px-4 py-2 font-semibold text-gray-600 dark:text-gray-300">Class</th>
+            <th class="px-4 py-2 font-semibold text-gray-600 dark:text-gray-300">CSS Output</th>
+          </tr></thead>
+          <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">.grid-row-auto</td><td class="px-4 py-2 font-mono text-gray-600 dark:text-gray-300">grid-row: auto</td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">.grid-row-1 … .grid-row-6</td><td class="px-4 py-2 font-mono text-gray-600 dark:text-gray-300">grid-row: N</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <hr class="my-10 border-gray-200 dark:border-gray-800" />
+
+    <!-- ══════════════════════════════════════════════════════════
+         UTILITY: Auto Flow
+    ══════════════════════════════════════════════════════════ -->
+    <section id="util-flow">
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-1 flex items-center gap-2">
+        <i class="fa-solid fa-shuffle text-brand-500 text-lg"></i> Auto Flow
+      </h2>
+      <p class="text-gray-600 dark:text-gray-300 mb-5">Control how the auto-placement algorithm places items using <code>grid-auto-flow</code>.</p>
+
+      <div class="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-800 mb-4">
+        <table class="ref-table w-full text-sm">
+          <thead><tr class="text-left">
+            <th class="px-4 py-2 font-semibold text-gray-600 dark:text-gray-300">Class</th>
+            <th class="px-4 py-2 font-semibold text-gray-600 dark:text-gray-300">CSS Output</th>
+            <th class="px-4 py-2 font-semibold text-gray-600 dark:text-gray-300">Responsive</th>
+          </tr></thead>
+          <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">.grid-flow-row</td><td class="px-4 py-2 font-mono text-gray-600 dark:text-gray-300">grid-auto-flow: row</td><td class="px-4 py-2"><span class="badge badge-green">Yes</span></td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">.grid-flow-col</td><td class="px-4 py-2 font-mono text-gray-600 dark:text-gray-300">grid-auto-flow: column</td><td class="px-4 py-2"><span class="badge badge-green">Yes</span></td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">.grid-flow-dense</td><td class="px-4 py-2 font-mono text-gray-600 dark:text-gray-300">grid-auto-flow: dense</td><td class="px-4 py-2"><span class="badge badge-green">Yes</span></td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">.grid-flow-row-dense</td><td class="px-4 py-2 font-mono text-gray-600 dark:text-gray-300">grid-auto-flow: row dense</td><td class="px-4 py-2"><span class="badge badge-green">Yes</span></td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">.grid-flow-col-dense</td><td class="px-4 py-2 font-mono text-gray-600 dark:text-gray-300">grid-auto-flow: column dense</td><td class="px-4 py-2"><span class="badge badge-green">Yes</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden mb-4">
+        <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-800 flex gap-2 items-center bg-gray-50 dark:bg-gray-800/50">
+          <i class="fa-brands fa-html5 text-orange-400"></i>
+          <span class="text-xs font-semibold text-gray-500 dark:text-gray-400">Example</span>
+        </div>
+        <div class="p-4 relative code-wrapper">
+          <button class="copy-btn" onclick="copyCode(this)"><i class="fa-solid fa-copy mr-1"></i>Copy</button>
+          <pre><code class="language-html">&lt;!-- Column flow: items fill down before moving right --&gt;
+&lt;div class="grid grid-cols-3 grid-flow-col gap-3"&gt;
+  &lt;div&gt;1&lt;/div&gt;&lt;div&gt;2&lt;/div&gt;&lt;div&gt;3&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <hr class="my-10 border-gray-200 dark:border-gray-800" />
+    <!-- ══════════════════════════════════════════════════════════
+         UTILITY: Auto Cols / Rows
+    ══════════════════════════════════════════════════════════ -->
+    <section id="util-auto-cols-rows">
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-1 flex items-center gap-2">
+        <i class="fa-solid fa-expand text-brand-500 text-lg"></i> Auto Columns &amp; Auto Rows
+      </h2>
+      <p class="text-gray-600 dark:text-gray-300 mb-5">Size implicitly created grid tracks with <code>grid-auto-columns</code> and <code>grid-auto-rows</code>.</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+        <div>
+          <h3 class="font-semibold text-gray-800 dark:text-gray-200 mb-2 text-sm">Auto Columns — <code>.auto-cols-*</code></h3>
+          <div class="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-800">
+            <table class="ref-table w-full text-sm">
+              <thead><tr class="text-left">
+                <th class="px-3 py-2 font-semibold text-gray-600 dark:text-gray-300">Class</th>
+                <th class="px-3 py-2 font-semibold text-gray-600 dark:text-gray-300">Value</th>
+              </tr></thead>
+              <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+                <tr class="bg-white dark:bg-gray-900"><td class="px-3 py-2 font-mono text-brand-600 dark:text-brand-400">.auto-cols-auto</td><td class="px-3 py-2 font-mono text-gray-600 dark:text-gray-300">auto</td></tr>
+                <tr class="bg-white dark:bg-gray-900"><td class="px-3 py-2 font-mono text-brand-600 dark:text-brand-400">.auto-cols-min</td><td class="px-3 py-2 font-mono text-gray-600 dark:text-gray-300">min-content</td></tr>
+                <tr class="bg-white dark:bg-gray-900"><td class="px-3 py-2 font-mono text-brand-600 dark:text-brand-400">.auto-cols-max</td><td class="px-3 py-2 font-mono text-gray-600 dark:text-gray-300">max-content</td></tr>
+                <tr class="bg-white dark:bg-gray-900"><td class="px-3 py-2 font-mono text-brand-600 dark:text-brand-400">.auto-cols-fr</td><td class="px-3 py-2 font-mono text-gray-600 dark:text-gray-300">minmax(0, 1fr)</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div>
+          <h3 class="font-semibold text-gray-800 dark:text-gray-200 mb-2 text-sm">Auto Rows — <code>.auto-rows-*</code></h3>
+          <div class="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-800">
+            <table class="ref-table w-full text-sm">
+              <thead><tr class="text-left">
+                <th class="px-3 py-2 font-semibold text-gray-600 dark:text-gray-300">Class</th>
+                <th class="px-3 py-2 font-semibold text-gray-600 dark:text-gray-300">Value</th>
+              </tr></thead>
+              <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+                <tr class="bg-white dark:bg-gray-900"><td class="px-3 py-2 font-mono text-brand-600 dark:text-brand-400">.auto-rows-auto</td><td class="px-3 py-2 font-mono text-gray-600 dark:text-gray-300">auto</td></tr>
+                <tr class="bg-white dark:bg-gray-900"><td class="px-3 py-2 font-mono text-brand-600 dark:text-brand-400">.auto-rows-min</td><td class="px-3 py-2 font-mono text-gray-600 dark:text-gray-300">min-content</td></tr>
+                <tr class="bg-white dark:bg-gray-900"><td class="px-3 py-2 font-mono text-brand-600 dark:text-brand-400">.auto-rows-max</td><td class="px-3 py-2 font-mono text-gray-600 dark:text-gray-300">max-content</td></tr>
+                <tr class="bg-white dark:bg-gray-900"><td class="px-3 py-2 font-mono text-brand-600 dark:text-brand-400">.auto-rows-fr</td><td class="px-3 py-2 font-mono text-gray-600 dark:text-gray-300">minmax(0, 1fr)</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden mb-4">
+        <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-800 flex gap-2 items-center bg-gray-50 dark:bg-gray-800/50">
+          <i class="fa-brands fa-html5 text-orange-400"></i>
+          <span class="text-xs font-semibold text-gray-500 dark:text-gray-400">Example</span>
+        </div>
+        <div class="p-4 relative code-wrapper">
+          <button class="copy-btn" onclick="copyCode(this)"><i class="fa-solid fa-copy mr-1"></i>Copy</button>
+          <pre><code class="language-html">&lt;!-- Column flow with fr-sized implicit columns --&gt;
+&lt;div class="grid grid-flow-col auto-cols-fr gap-4"&gt;
+  &lt;div&gt;Auto A&lt;/div&gt;
+  &lt;div&gt;Auto B&lt;/div&gt;
+  &lt;div&gt;Auto C&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <hr class="my-10 border-gray-200 dark:border-gray-800" />
+
+    <!-- ══════════════════════════════════════════════════════════
+         UTILITY: Gap
+    ══════════════════════════════════════════════════════════ -->
+    <section id="util-gap">
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-1 flex items-center gap-2">
+        <i class="fa-solid fa-maximize text-brand-500 text-lg"></i> Gap
+      </h2>
+      <p class="text-gray-600 dark:text-gray-300 mb-3">Gap utilities are provided by <code>@mastors/core</code> and work for both grid and flex containers. Gridder inherits them automatically.</p>
+      <div class="p-3 rounded-lg bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 text-sm text-blue-800 dark:text-blue-300 flex gap-2 mb-4">
+        <i class="fa-solid fa-circle-info mt-0.5 flex-shrink-0"></i>
+        <span>Classes follow the pattern <code>.gap-{token}</code>, <code>.gap-x-{token}</code> (column-gap), <code>.gap-y-{token}</code> (row-gap) where token maps to your core spacing scale (e.g., <code>0, 1, 2, 3, 4, 6, 8, 10, 12, 16 …</code>).</span>
+      </div>
+
+      <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden mb-4">
+        <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-800 flex gap-2 items-center bg-gray-50 dark:bg-gray-800/50">
+          <i class="fa-brands fa-html5 text-orange-400"></i>
+          <span class="text-xs font-semibold text-gray-500 dark:text-gray-400">Example</span>
+        </div>
+        <div class="p-4 relative code-wrapper">
+          <button class="copy-btn" onclick="copyCode(this)"><i class="fa-solid fa-copy mr-1"></i>Copy</button>
+          <pre><code class="language-html">&lt;div class="grid grid-cols-3 gap-6"&gt;…&lt;/div&gt;      &lt;!-- uniform gap --&gt;
+&lt;div class="grid grid-cols-3 gap-x-8 gap-y-4"&gt;…&lt;/div&gt; &lt;!-- separate axes --&gt;</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <hr class="my-10 border-gray-200 dark:border-gray-800" />
+
+    <!-- ══════════════════════════════════════════════════════════
+         UTILITY: Col Span / Start / End
+    ══════════════════════════════════════════════════════════ -->
+    <section id="util-col-span">
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-1 flex items-center gap-2">
+        <i class="fa-solid fa-left-right text-brand-500 text-lg"></i> Col Span / Start / End
+      </h2>
+      <p class="text-gray-600 dark:text-gray-300 mb-5">Control how many columns an item occupies and where it starts or ends.</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        <!-- Span -->
+        <div class="rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
+          <div class="px-3 py-2 bg-gray-50 dark:bg-gray-800/50 border-b border-gray-200 dark:border-gray-800 text-xs font-semibold text-gray-500 dark:text-gray-400">Col Span</div>
+          <table class="w-full text-xs">
+            <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+              <tr class="bg-white dark:bg-gray-900"><td class="px-3 py-1.5 font-mono text-brand-600 dark:text-brand-400">.col-span-1 … -12</td><td class="px-3 py-1.5 font-mono text-gray-500 dark:text-gray-400">span N / span N</td></tr>
+              <tr class="bg-white dark:bg-gray-900"><td class="px-3 py-1.5 font-mono text-brand-600 dark:text-brand-400">.col-span-full</td><td class="px-3 py-1.5 font-mono text-gray-500 dark:text-gray-400">1 / -1</td></tr>
+              <tr class="bg-white dark:bg-gray-900"><td class="px-3 py-1.5 font-mono text-brand-600 dark:text-brand-400">.col-auto</td><td class="px-3 py-1.5 font-mono text-gray-500 dark:text-gray-400">auto</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- Start -->
+        <div class="rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
+          <div class="px-3 py-2 bg-gray-50 dark:bg-gray-800/50 border-b border-gray-200 dark:border-gray-800 text-xs font-semibold text-gray-500 dark:text-gray-400">Col Start</div>
+          <table class="w-full text-xs">
+            <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+              <tr class="bg-white dark:bg-gray-900"><td class="px-3 py-1.5 font-mono text-brand-600 dark:text-brand-400">.col-start-1 … -13</td><td class="px-3 py-1.5 font-mono text-gray-500 dark:text-gray-400">grid-column-start: N</td></tr>
+              <tr class="bg-white dark:bg-gray-900"><td class="px-3 py-1.5 font-mono text-brand-600 dark:text-brand-400">.col-start-auto</td><td class="px-3 py-1.5 font-mono text-gray-500 dark:text-gray-400">auto</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- End -->
+        <div class="rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
+          <div class="px-3 py-2 bg-gray-50 dark:bg-gray-800/50 border-b border-gray-200 dark:border-gray-800 text-xs font-semibold text-gray-500 dark:text-gray-400">Col End</div>
+          <table class="w-full text-xs">
+            <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+              <tr class="bg-white dark:bg-gray-900"><td class="px-3 py-1.5 font-mono text-brand-600 dark:text-brand-400">.col-end-1 … -13</td><td class="px-3 py-1.5 font-mono text-gray-500 dark:text-gray-400">grid-column-end: N</td></tr>
+              <tr class="bg-white dark:bg-gray-900"><td class="px-3 py-1.5 font-mono text-brand-600 dark:text-brand-400">.col-end-auto</td><td class="px-3 py-1.5 font-mono text-gray-500 dark:text-gray-400">auto</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden mb-4">
+        <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-800 flex gap-2 items-center bg-gray-50 dark:bg-gray-800/50">
+          <i class="fa-brands fa-html5 text-orange-400"></i>
+          <span class="text-xs font-semibold text-gray-500 dark:text-gray-400">Example</span>
+        </div>
+        <div class="p-4 relative code-wrapper">
+          <button class="copy-btn" onclick="copyCode(this)"><i class="fa-solid fa-copy mr-1"></i>Copy</button>
+          <pre><code class="language-html">&lt;div class="grid grid-cols-4 gap-3"&gt;
+  &lt;div class="col-span-2"&gt;Spans 2&lt;/div&gt;
+  &lt;div&gt;Single&lt;/div&gt;
+  &lt;div&gt;Single&lt;/div&gt;
+  &lt;div class="col-span-full"&gt;Full width&lt;/div&gt;
+  &lt;div class="col-start-2 col-span-3"&gt;Start at 2, span 3&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+        </div>
+      </div>
+
+      <!-- Live demo -->
+      <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden">
+        <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-800 flex gap-2 items-center bg-gray-50 dark:bg-gray-800/50">
+          <i class="fa-solid fa-eye text-brand-400"></i>
+          <span class="text-xs font-semibold text-gray-500 dark:text-gray-400">Preview</span>
+        </div>
+        <div class="p-4">
+          <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0.75rem;">
+            <div class="demo-cell" style="grid-column:span 2/span 2;">col-span-2</div>
+            <div class="demo-cell alt">Single</div>
+            <div class="demo-cell rose">Single</div>
+            <div class="demo-cell em" style="grid-column:1/-1;">col-span-full</div>
+            <div class="demo-cell" style="grid-column-start:2;grid-column:span 3/span 3;">col-start-2 col-span-3</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="my-10 border-gray-200 dark:border-gray-800" />
+    <!-- ══════════════════════════════════════════════════════════
+         UTILITY: Row Span / Start / End
+    ══════════════════════════════════════════════════════════ -->
+    <section id="util-row-span">
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-1 flex items-center gap-2">
+        <i class="fa-solid fa-up-down text-brand-500 text-lg"></i> Row Span / Start / End
+      </h2>
+      <p class="text-gray-600 dark:text-gray-300 mb-5">Control how many rows an item occupies and where it starts or ends.</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        <div class="rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
+          <div class="px-3 py-2 bg-gray-50 dark:bg-gray-800/50 border-b border-gray-200 dark:border-gray-800 text-xs font-semibold text-gray-500 dark:text-gray-400">Row Span</div>
+          <table class="w-full text-xs">
+            <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+              <tr class="bg-white dark:bg-gray-900"><td class="px-3 py-1.5 font-mono text-brand-600 dark:text-brand-400">.row-span-1 … -6</td><td class="px-3 py-1.5 font-mono text-gray-500 dark:text-gray-400">span N / span N</td></tr>
+              <tr class="bg-white dark:bg-gray-900"><td class="px-3 py-1.5 font-mono text-brand-600 dark:text-brand-400">.row-span-full</td><td class="px-3 py-1.5 font-mono text-gray-500 dark:text-gray-400">1 / -1</td></tr>
+              <tr class="bg-white dark:bg-gray-900"><td class="px-3 py-1.5 font-mono text-brand-600 dark:text-brand-400">.row-auto</td><td class="px-3 py-1.5 font-mono text-gray-500 dark:text-gray-400">auto</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
+          <div class="px-3 py-2 bg-gray-50 dark:bg-gray-800/50 border-b border-gray-200 dark:border-gray-800 text-xs font-semibold text-gray-500 dark:text-gray-400">Row Start</div>
+          <table class="w-full text-xs">
+            <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+              <tr class="bg-white dark:bg-gray-900"><td class="px-3 py-1.5 font-mono text-brand-600 dark:text-brand-400">.row-start-1 … -7</td><td class="px-3 py-1.5 font-mono text-gray-500 dark:text-gray-400">grid-row-start: N</td></tr>
+              <tr class="bg-white dark:bg-gray-900"><td class="px-3 py-1.5 font-mono text-brand-600 dark:text-brand-400">.row-start-auto</td><td class="px-3 py-1.5 font-mono text-gray-500 dark:text-gray-400">auto</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
+          <div class="px-3 py-2 bg-gray-50 dark:bg-gray-800/50 border-b border-gray-200 dark:border-gray-800 text-xs font-semibold text-gray-500 dark:text-gray-400">Row End</div>
+          <table class="w-full text-xs">
+            <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+              <tr class="bg-white dark:bg-gray-900"><td class="px-3 py-1.5 font-mono text-brand-600 dark:text-brand-400">.row-end-1 … -7</td><td class="px-3 py-1.5 font-mono text-gray-500 dark:text-gray-400">grid-row-end: N</td></tr>
+              <tr class="bg-white dark:bg-gray-900"><td class="px-3 py-1.5 font-mono text-brand-600 dark:text-brand-400">.row-end-auto</td><td class="px-3 py-1.5 font-mono text-gray-500 dark:text-gray-400">auto</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden mb-4">
+        <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-800 flex gap-2 items-center bg-gray-50 dark:bg-gray-800/50">
+          <i class="fa-brands fa-html5 text-orange-400"></i>
+          <span class="text-xs font-semibold text-gray-500 dark:text-gray-400">Example</span>
+        </div>
+        <div class="p-4 relative code-wrapper">
+          <button class="copy-btn" onclick="copyCode(this)"><i class="fa-solid fa-copy mr-1"></i>Copy</button>
+          <pre><code class="language-html">&lt;div class="grid grid-cols-3 grid-rows-3 gap-3" style="height:220px"&gt;
+  &lt;div class="row-span-2"&gt;Tall sidebar (2 rows)&lt;/div&gt;
+  &lt;div&gt;Content A&lt;/div&gt;
+  &lt;div&gt;Content B&lt;/div&gt;
+  &lt;div&gt;Content C&lt;/div&gt;
+  &lt;div class="col-span-2"&gt;Footer (2 cols)&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+        </div>
+      </div>
+
+      <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden">
+        <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-800 flex gap-2 items-center bg-gray-50 dark:bg-gray-800/50">
+          <i class="fa-solid fa-eye text-brand-400"></i>
+          <span class="text-xs font-semibold text-gray-500 dark:text-gray-400">Preview</span>
+        </div>
+        <div class="p-4">
+          <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr));gap:0.75rem;height:200px;">
+            <div class="demo-cell rose" style="grid-row:span 2/span 2;">row-span-2</div>
+            <div class="demo-cell">A</div>
+            <div class="demo-cell alt">B</div>
+            <div class="demo-cell em">C</div>
+            <div class="demo-cell" style="grid-column:span 2/span 2;">col-span-2 footer</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="my-10 border-gray-200 dark:border-gray-800" />
+
+    <!-- ══════════════════════════════════════════════════════════
+         UTILITY: Alignment
+    ══════════════════════════════════════════════════════════ -->
+    <section id="util-alignment">
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-1 flex items-center gap-2">
+        <i class="fa-solid fa-align-center text-brand-500 text-lg"></i> Alignment
+      </h2>
+      <p class="text-gray-600 dark:text-gray-300 mb-5">Align all grid items (container-level) or individual items (self-level) along both axes.</p>
+
+      <!-- justify-items -->
+      <h3 class="font-semibold text-gray-800 dark:text-gray-200 mb-2 mt-4">justify-items — inline axis, all items</h3>
+      <div class="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-800 mb-4">
+        <table class="ref-table w-full text-sm">
+          <thead><tr class="text-left"><th class="px-4 py-2 font-semibold text-gray-600 dark:text-gray-300">Class</th><th class="px-4 py-2 font-semibold text-gray-600 dark:text-gray-300">Value</th><th class="px-4 py-2 font-semibold text-gray-600 dark:text-gray-300">Responsive</th></tr></thead>
+          <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">.justify-items-start</td><td class="px-4 py-2 font-mono text-gray-500 dark:text-gray-400">start</td><td class="px-4 py-2"><span class="badge badge-green">Yes</span></td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">.justify-items-end</td><td class="px-4 py-2 font-mono text-gray-500 dark:text-gray-400">end</td><td class="px-4 py-2"><span class="badge badge-green">Yes</span></td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">.justify-items-center</td><td class="px-4 py-2 font-mono text-gray-500 dark:text-gray-400">center</td><td class="px-4 py-2"><span class="badge badge-green">Yes</span></td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">.justify-items-stretch</td><td class="px-4 py-2 font-mono text-gray-500 dark:text-gray-400">stretch</td><td class="px-4 py-2"><span class="badge badge-green">Yes</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- align-items -->
+      <h3 class="font-semibold text-gray-800 dark:text-gray-200 mb-2 mt-4">align-items (items-*) — block axis, all items</h3>
+      <div class="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-800 mb-4">
+        <table class="ref-table w-full text-sm">
+          <thead><tr class="text-left"><th class="px-4 py-2 font-semibold text-gray-600 dark:text-gray-300">Class</th><th class="px-4 py-2 font-semibold text-gray-600 dark:text-gray-300">Value</th><th class="px-4 py-2 font-semibold text-gray-600 dark:text-gray-300">Responsive</th></tr></thead>
+          <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">.items-start</td><td class="px-4 py-2 font-mono text-gray-500 dark:text-gray-400">start</td><td class="px-4 py-2"><span class="badge badge-green">Yes</span></td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">.items-end</td><td class="px-4 py-2 font-mono text-gray-500 dark:text-gray-400">end</td><td class="px-4 py-2"><span class="badge badge-green">Yes</span></td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">.items-center</td><td class="px-4 py-2 font-mono text-gray-500 dark:text-gray-400">center</td><td class="px-4 py-2"><span class="badge badge-green">Yes</span></td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">.items-stretch</td><td class="px-4 py-2 font-mono text-gray-500 dark:text-gray-400">stretch</td><td class="px-4 py-2"><span class="badge badge-green">Yes</span></td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">.items-baseline</td><td class="px-4 py-2 font-mono text-gray-500 dark:text-gray-400">baseline</td><td class="px-4 py-2"><span class="badge badge-green">Yes</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- place-items -->
+      <h3 class="font-semibold text-gray-800 dark:text-gray-200 mb-2 mt-4">place-items — shorthand (align + justify), all items</h3>
+      <div class="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-800 mb-4">
+        <table class="ref-table w-full text-sm">
+          <thead><tr class="text-left"><th class="px-4 py-2 font-semibold text-gray-600 dark:text-gray-300">Class</th><th class="px-4 py-2 font-semibold text-gray-600 dark:text-gray-300">Value</th></tr></thead>
+          <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">.place-items-start / -end / -center / -stretch</td><td class="px-4 py-2 font-mono text-gray-500 dark:text-gray-400">place-items: &lt;value&gt;</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Self alignment -->
+      <h3 class="font-semibold text-gray-800 dark:text-gray-200 mb-2 mt-4">Self alignment — individual item overrides</h3>
+      <div class="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-800 mb-4">
+        <table class="ref-table w-full text-sm">
+          <thead><tr class="text-left"><th class="px-4 py-2 font-semibold text-gray-600 dark:text-gray-300">Class Pattern</th><th class="px-4 py-2 font-semibold text-gray-600 dark:text-gray-300">Property</th><th class="px-4 py-2 font-semibold text-gray-600 dark:text-gray-300">Values</th></tr></thead>
+          <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">.justify-self-{v}</td><td class="px-4 py-2 font-mono text-gray-500 dark:text-gray-400">justify-self</td><td class="px-4 py-2 text-gray-500 dark:text-gray-400">auto, start, end, center, stretch</td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">.self-{v}</td><td class="px-4 py-2 font-mono text-gray-500 dark:text-gray-400">align-self</td><td class="px-4 py-2 text-gray-500 dark:text-gray-400">auto, start, end, center, stretch, baseline</td></tr>
+            <tr class="bg-white dark:bg-gray-900"><td class="px-4 py-2 font-mono text-brand-600 dark:text-brand-400">.place-self-{v}</td><td class="px-4 py-2 font-mono text-gray-500 dark:text-gray-400">place-self</td><td class="px-4 py-2 text-gray-500 dark:text-gray-400">auto, start, end, center, stretch</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden mb-4">
+        <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-800 flex gap-2 items-center bg-gray-50 dark:bg-gray-800/50">
+          <i class="fa-brands fa-html5 text-orange-400"></i>
+          <span class="text-xs font-semibold text-gray-500 dark:text-gray-400">Example</span>
+        </div>
+        <div class="p-4 relative code-wrapper">
+          <button class="copy-btn" onclick="copyCode(this)"><i class="fa-solid fa-copy mr-1"></i>Copy</button>
+          <pre><code class="language-html">&lt;!-- All items centered vertically --&gt;
+&lt;div class="grid grid-cols-3 items-center gap-4" style="height:120px"&gt;
+  &lt;div&gt;Short&lt;/div&gt;
+  &lt;div&gt;Medium content that's taller&lt;/div&gt;
+  &lt;div class="self-end"&gt;Self end&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <hr class="my-10 border-gray-200 dark:border-gray-800" />
+    <!-- ══════════════════════════════════════════════════════════
+         LAYOUT PRESETS
+    ══════════════════════════════════════════════════════════ -->
+    <section id="layout-presets">
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-1 flex items-center gap-2">
+        <i class="fa-solid fa-layer-group text-brand-500 text-lg"></i> Layout Presets
+      </h2>
+      <p class="text-gray-600 dark:text-gray-300 mb-5">Gridder ships three production-ready named-area layout presets you can drop into any project.</p>
+
+      <!-- Holy Grail -->
+      <div class="mb-8">
+        <h3 class="font-bold text-gray-800 dark:text-gray-100 mb-1 flex items-center gap-2"><span class="badge badge-blue">1</span> Holy Grail Layout — <code class="text-sm">.layout-holy-grail</code></h3>
+        <p class="text-sm text-gray-600 dark:text-gray-300 mb-3">Header spanning full width, three-column middle (nav + main + aside), full-width footer.</p>
+        <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden mb-3">
+          <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-800 flex gap-2 items-center bg-gray-50 dark:bg-gray-800/50">
+            <i class="fa-brands fa-sass text-pink-400"></i>
+            <span class="text-xs font-semibold text-gray-500 dark:text-gray-400">Generated CSS</span>
+          </div>
+          <div class="p-4 relative code-wrapper">
+            <button class="copy-btn" onclick="copyCode(this)"><i class="fa-solid fa-copy mr-1"></i>Copy</button>
+            <pre><code class="language-css">.layout-holy-grail {
+  display: grid;
+  grid-template-areas:
+    "header header  header"
+    "nav    main    aside"
+    "footer footer  footer";
+  grid-template-columns: auto 1fr auto;
+  grid-template-rows: auto 1fr auto;
+}</code></pre>
+          </div>
+        </div>
+        <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden mb-3">
+          <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-800 flex gap-2 items-center bg-gray-50 dark:bg-gray-800/50">
+            <i class="fa-brands fa-html5 text-orange-400"></i>
+            <span class="text-xs font-semibold text-gray-500 dark:text-gray-400">HTML</span>
+          </div>
+          <div class="p-4 relative code-wrapper">
+            <button class="copy-btn" onclick="copyCode(this)"><i class="fa-solid fa-copy mr-1"></i>Copy</button>
+            <pre><code class="language-html">&lt;div class="layout-holy-grail" style="min-height:200px"&gt;
+  &lt;header class="area-header"&gt;Header&lt;/header&gt;
+  &lt;nav class="area-nav"&gt;Nav&lt;/nav&gt;
+  &lt;main class="area-main"&gt;Main Content&lt;/main&gt;
+  &lt;aside class="area-aside"&gt;Aside&lt;/aside&gt;
+  &lt;footer class="area-footer"&gt;Footer&lt;/footer&gt;
+&lt;/div&gt;</code></pre>
+          </div>
+        </div>
+        <!-- Preview -->
+        <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden">
+          <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-800 flex gap-2 items-center bg-gray-50 dark:bg-gray-800/50">
+            <i class="fa-solid fa-eye text-brand-400"></i><span class="text-xs font-semibold text-gray-500 dark:text-gray-400">Preview</span>
+          </div>
+          <div class="p-4">
+            <div style="display:grid;grid-template-areas:'header header header' 'nav main aside' 'footer footer footer';grid-template-columns:auto 1fr auto;grid-template-rows:auto 1fr auto;gap:0.5rem;min-height:180px;">
+              <div class="demo-cell rose" style="grid-area:header;">Header</div>
+              <div class="demo-cell alt" style="grid-area:nav;min-width:80px;">Nav</div>
+              <div class="demo-cell em" style="grid-area:main;">Main</div>
+              <div class="demo-cell" style="grid-area:aside;min-width:80px;">Aside</div>
+              <div class="demo-cell" style="grid-area:footer;">Footer</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="mb-8">
+        <h3 class="font-bold text-gray-800 dark:text-gray-100 mb-1 flex items-center gap-2"><span class="badge badge-blue">2</span> Sidebar Layout — <code class="text-sm">.layout-sidebar</code></h3>
+        <p class="text-sm text-gray-600 dark:text-gray-300 mb-3">Auto-sized sidebar on the left, fluid main content on the right.</p>
+        <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden mb-3">
+          <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-800 flex gap-2 items-center bg-gray-50 dark:bg-gray-800/50">
+            <i class="fa-brands fa-sass text-pink-400"></i><span class="text-xs font-semibold text-gray-500 dark:text-gray-400">Generated CSS</span>
+          </div>
+          <div class="p-4 relative code-wrapper">
+            <button class="copy-btn" onclick="copyCode(this)"><i class="fa-solid fa-copy mr-1"></i>Copy</button>
+            <pre><code class="language-css">.layout-sidebar {
+  display: grid;
+  grid-template-areas: "sidebar main";
+  grid-template-columns: auto 1fr;
+}</code></pre>
+          </div>
+        </div>
+        <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden">
+          <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-800 flex gap-2 items-center bg-gray-50 dark:bg-gray-800/50">
+            <i class="fa-solid fa-eye text-brand-400"></i><span class="text-xs font-semibold text-gray-500 dark:text-gray-400">Preview</span>
+          </div>
+          <div class="p-4">
+            <div style="display:grid;grid-template-areas:'sidebar main';grid-template-columns:120px 1fr;gap:0.5rem;min-height:100px;">
+              <div class="demo-cell alt" style="grid-area:sidebar;">Sidebar</div>
+              <div class="demo-cell em" style="grid-area:main;">Main Content</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dashboard -->
+      <div class="mb-8">
+        <h3 class="font-bold text-gray-800 dark:text-gray-100 mb-1 flex items-center gap-2"><span class="badge badge-blue">3</span> Dashboard Layout — <code class="text-sm">.layout-dashboard</code></h3>
+        <p class="text-sm text-gray-600 dark:text-gray-300 mb-3">Full-width header, sidebar + content area, full-width footer. Ideal for admin dashboards.</p>
+        <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden mb-3">
+          <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-800 flex gap-2 items-center bg-gray-50 dark:bg-gray-800/50">
+            <i class="fa-brands fa-sass text-pink-400"></i><span class="text-xs font-semibold text-gray-500 dark:text-gray-400">Generated CSS</span>
+          </div>
+          <div class="p-4 relative code-wrapper">
+            <button class="copy-btn" onclick="copyCode(this)"><i class="fa-solid fa-copy mr-1"></i>Copy</button>
+            <pre><code class="language-css">.layout-dashboard {
+  display: grid;
+  grid-template-areas:
+    "header  header"
+    "sidebar content"
+    "footer  footer";
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto 1fr auto;
+}</code></pre>
+          </div>
+        </div>
+        <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden">
+          <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-800 flex gap-2 items-center bg-gray-50 dark:bg-gray-800/50">
+            <i class="fa-solid fa-eye text-brand-400"></i><span class="text-xs font-semibold text-gray-500 dark:text-gray-400">Preview</span>
+          </div>
+          <div class="p-4">
+            <div style="display:grid;grid-template-areas:'header header' 'sidebar content' 'footer footer';grid-template-columns:110px 1fr;grid-template-rows:auto 1fr auto;gap:0.5rem;min-height:180px;">
+              <div class="demo-cell rose" style="grid-area:header;">Header</div>
+              <div class="demo-cell alt" style="grid-area:sidebar;">Sidebar</div>
+              <div class="demo-cell em" style="grid-area:content;">Content</div>
+              <div class="demo-cell" style="grid-area:footer;">Footer</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="my-10 border-gray-200 dark:border-gray-800" />
